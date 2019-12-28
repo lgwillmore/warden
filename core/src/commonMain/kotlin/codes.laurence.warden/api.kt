@@ -13,10 +13,7 @@ data class AccessRequest(
 
 data class AccessResponse(
     val access: Access,
-    // The attributes that were originally submitted.
-    val originalRequest: AccessRequest,
-    // The full set of attributes that were evaluated. This may be more than the submitted attributes if more information was retrieved.
-    val enhancedRequest: AccessRequest
+    val request: AccessRequest
 )
 
 sealed class Access {
