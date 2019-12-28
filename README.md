@@ -1,6 +1,6 @@
 # Warden
 
-[![Build Status](https://travis-ci.org/lgwillmore/warden.svg?branch=master)]
+![Build Status](https://travis-ci.org/lgwillmore/warden.svg?branch=master)
 
 A kotlin implementation of light weight Attribute Based Access Control (ABAC).
 
