@@ -20,7 +20,7 @@ class EnforcementPointDefaultTest {
         )
 
         val deniedResponse = AccessResponse(
-            access = Access.Denied("some_policy"),
+            access = Access.Denied(),
             request = AccessRequest(
                 subject = mapOf("foo" to "returned")
             )
