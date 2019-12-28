@@ -19,7 +19,6 @@ data class AccessResponse(
 sealed class Access {
     object Granted : Access()
     data class Denied(
-        val denyingPolicyID: String,
         val properties: Map<String, Any?> = emptyMap()
     ) : Access()
 }
