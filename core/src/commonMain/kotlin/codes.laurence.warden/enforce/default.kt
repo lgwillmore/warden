@@ -7,7 +7,7 @@ import codes.laurence.warden.decision.DecisionPoint
 class EnforcementPointDefault(private val decisionPoint: DecisionPoint): EnforcementPoint {
 
     override suspend fun enforceAuthorization(request: AccessRequest) {
-        val response = decisionPoint.checkAuthorization(request)
+        val response = decisionPoint.checkAuthorized(request)
         when(val access = response.access){
             is Access.Denied -> {
                 throw NotAuthorizedException(response)

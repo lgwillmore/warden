@@ -27,7 +27,7 @@ class EnforcementPointDefaultTest {
         )
 
         val decisionPointMock = mockk<DecisionPoint> {
-            coEvery { checkAuthorization(request) } returns deniedResponse
+            coEvery { checkAuthorized(request) } returns deniedResponse
         }
 
         val testObj = EnforcementPointDefault(decisionPointMock)
@@ -55,7 +55,7 @@ class EnforcementPointDefaultTest {
         )
 
         val decisionPointMock = mockk<DecisionPoint> {
-            coEvery { checkAuthorization(request) } returns grantedResponse
+            coEvery { checkAuthorized(request) } returns grantedResponse
         }
 
         val testObj = EnforcementPointDefault(decisionPointMock)

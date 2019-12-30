@@ -4,5 +4,5 @@ import codes.laurence.warden.AccessRequest
 import codes.laurence.warden.AccessResponse
 
 interface Policy {
-    fun checkAuthorization(request: AccessRequest): AccessResponse
+    fun checkAuthorized(accessRequest: AccessRequest): AccessResponse
 }
