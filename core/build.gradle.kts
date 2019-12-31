@@ -20,6 +20,7 @@ kotlin {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
                 implementation("io.mockk:mockk-common:1.9.3")
+                implementation("com.willowtreeapps.assertk:assertk-common:0.14")
             }
         }
 
@@ -34,6 +35,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("test-junit"))
                 implementation("io.mockk:mockk:1.9.3")
+                implementation("com.willowtreeapps.assertk:assertk-jvm:0.20")
             }
         }
 

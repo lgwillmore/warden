@@ -8,7 +8,7 @@ class EnforcementPointDefault(private val decisionPoint: DecisionPoint): Enforce
 
     override suspend fun enforceAuthorization(request: AccessRequest) {
         val response = decisionPoint.checkAuthorized(request)
-        when(val access = response.access){
+        when(response.access){
             is Access.Denied -> {
                 throw NotAuthorizedException(response)
             }

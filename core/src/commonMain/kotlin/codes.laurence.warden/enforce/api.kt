@@ -5,6 +5,9 @@ import codes.laurence.warden.AccessResponse
 
 interface EnforcementPoint {
 
+    /**
+     * @throws NotAuthorizedException if [codes.laurence.warden.Access] is [codes.laurence.warden.Access.Denied]
+     */
     suspend fun enforceAuthorization(request: AccessRequest)
 
 }

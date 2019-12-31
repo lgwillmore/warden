@@ -59,7 +59,7 @@ class Not(private val policy: Policy) : Policy {
 
     override fun checkAuthorized(accessRequest: AccessRequest): AccessResponse {
         val internal = policy.checkAuthorized(accessRequest)
-        return when (val access = internal.access) {
+        return when (internal.access) {
             is Access.Granted -> {
                 internal.copy(access = Access.Denied())
             }
