@@ -5,15 +5,19 @@ import codes.laurence.warden.test.assertDenied
 import codes.laurence.warden.test.assertGranted
 import kotlin.test.Test
 
+
 class ComparisonOperatorsTest {
     val request17 = AccessRequest().copy(
-        subject = mapOf(Pair("age", 17))
+        subject = mapOf(Pair("age", 17)),
+        resource = mapOf(Pair("limit", 18))
     )
     val request18 = AccessRequest().copy(
-        subject = mapOf(Pair("age", 18))
+        subject = mapOf(Pair("age", 18)),
+        resource = mapOf(Pair("limit", 18))
     )
     val request19 = AccessRequest().copy(
-        subject = mapOf(Pair("age", 19))
+        subject = mapOf(Pair("age", 19)),
+        resource = mapOf(Pair("limit", 18))
     )
 
     @Test
@@ -22,10 +26,16 @@ class ComparisonOperatorsTest {
         assertDenied(greaterThan18.checkAuthorized(request17), request17)
         assertDenied(greaterThan18.checkAuthorized(request18), request18)
         assertGranted(greaterThan18.checkAuthorized(request19), request19)
+
         greaterThan18 = Exp.subject("age") greaterThan 18
         assertDenied(greaterThan18.checkAuthorized(request17), request17)
         assertDenied(greaterThan18.checkAuthorized(request18), request18)
         assertGranted(greaterThan18.checkAuthorized(request19), request19)
+
+        val greaterThanLimit = Exp.subject("age") greaterThan resourceVal("limit")
+        assertDenied(greaterThanLimit.checkAuthorized(request17), request17)
+        assertDenied(greaterThanLimit.checkAuthorized(request18), request18)
+        assertGranted(greaterThanLimit.checkAuthorized(request19), request19)
     }
 
     @Test
@@ -34,10 +44,16 @@ class ComparisonOperatorsTest {
         assertDenied(greaterThanEqual18.checkAuthorized(request17))
         assertGranted(greaterThanEqual18.checkAuthorized(request18))
         assertGranted(greaterThanEqual18.checkAuthorized(request19))
+
         greaterThanEqual18 = Exp.subject("age") greaterThanEqual 18
         assertDenied(greaterThanEqual18.checkAuthorized(request17))
         assertGranted(greaterThanEqual18.checkAuthorized(request18))
         assertGranted(greaterThanEqual18.checkAuthorized(request19))
+
+        val greaterThanEqualLimit = Exp.subject("age") greaterThanEqual  resourceVal("limit")
+        assertDenied(greaterThanEqualLimit.checkAuthorized(request17), request17)
+        assertGranted(greaterThanEqualLimit.checkAuthorized(request18), request18)
+        assertGranted(greaterThanEqualLimit.checkAuthorized(request19), request19)
     }
 
     @Test
