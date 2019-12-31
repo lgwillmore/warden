@@ -18,11 +18,11 @@ class ComparisonOperatorsTest {
 
     @Test
     fun greaterThan() {
-        var greaterThan18: Policy = allOf { subject("age") greaterThan rawVal(18) }
+        var greaterThan18: Policy = allOf { subject("age") greaterThan 18 }
         assertDenied(greaterThan18.checkAuthorized(request17), request17)
         assertDenied(greaterThan18.checkAuthorized(request18), request18)
         assertGranted(greaterThan18.checkAuthorized(request19), request19)
-        greaterThan18 = Exp.subject("age") greaterThan rawVal(18)
+        greaterThan18 = Exp.subject("age") greaterThan 18
         assertDenied(greaterThan18.checkAuthorized(request17), request17)
         assertDenied(greaterThan18.checkAuthorized(request18), request18)
         assertGranted(greaterThan18.checkAuthorized(request19), request19)
@@ -30,11 +30,11 @@ class ComparisonOperatorsTest {
 
     @Test
     fun greaterThanEqual() {
-        var greaterThanEqual18: Policy = allOf { subject("age") greaterThanEqual rawVal(18) }
+        var greaterThanEqual18: Policy = allOf { subject("age") greaterThanEqual 18 }
         assertDenied(greaterThanEqual18.checkAuthorized(request17))
         assertGranted(greaterThanEqual18.checkAuthorized(request18))
         assertGranted(greaterThanEqual18.checkAuthorized(request19))
-        greaterThanEqual18 = Exp.subject("age") greaterThanEqual rawVal(18)
+        greaterThanEqual18 = Exp.subject("age") greaterThanEqual 18
         assertDenied(greaterThanEqual18.checkAuthorized(request17))
         assertGranted(greaterThanEqual18.checkAuthorized(request18))
         assertGranted(greaterThanEqual18.checkAuthorized(request19))
@@ -42,11 +42,11 @@ class ComparisonOperatorsTest {
 
     @Test
     fun equal() {
-        var equal18: Policy = allOf { subject("age") equalTo rawVal(18) }
+        var equal18: Policy = allOf { subject("age") equalTo 18 }
         assertDenied(equal18.checkAuthorized(request17))
         assertGranted(equal18.checkAuthorized(request18))
         assertDenied(equal18.checkAuthorized(request19))
-        equal18 = Exp.subject("age") equalTo rawVal(18)
+        equal18 = Exp.subject("age") equalTo 18
         assertDenied(equal18.checkAuthorized(request17))
         assertGranted(equal18.checkAuthorized(request18))
         assertDenied(equal18.checkAuthorized(request19))
@@ -54,11 +54,11 @@ class ComparisonOperatorsTest {
 
     @Test
     fun lessThan() {
-        var lessThan18: Policy = allOf { subject("age") lessThan rawVal(18) }
+        var lessThan18: Policy = allOf { subject("age") lessThan 18 }
         assertGranted(lessThan18.checkAuthorized(request17))
         assertDenied(lessThan18.checkAuthorized(request18))
         assertDenied(lessThan18.checkAuthorized(request19))
-        lessThan18 = Exp.subject("age") lessThan rawVal(18)
+        lessThan18 = Exp.subject("age") lessThan 18
         assertGranted(lessThan18.checkAuthorized(request17))
         assertDenied(lessThan18.checkAuthorized(request18))
         assertDenied(lessThan18.checkAuthorized(request19))
@@ -66,11 +66,11 @@ class ComparisonOperatorsTest {
 
     @Test
     fun lessThanEqual() {
-        var lessThanEqual18: Policy = allOf { subject("age") lessThanEqual rawVal(18) }
+        var lessThanEqual18: Policy = allOf { subject("age") lessThanEqual 18 }
         assertGranted(lessThanEqual18.checkAuthorized(request17))
         assertGranted(lessThanEqual18.checkAuthorized(request18))
         assertDenied(lessThanEqual18.checkAuthorized(request19))
-        lessThanEqual18 = Exp.subject("age") lessThanEqual rawVal(18)
+        lessThanEqual18 = Exp.subject("age") lessThanEqual 18
         assertGranted(lessThanEqual18.checkAuthorized(request17))
         assertGranted(lessThanEqual18.checkAuthorized(request18))
         assertDenied(lessThanEqual18.checkAuthorized(request19))
@@ -176,11 +176,11 @@ class CollectionOperatorsTest {
             subject = mapOf(Pair("roles", listOf("USER")))
         )
 
-        var policy: Policy = Exp.subject("roles") containsAll rawVal(listOf("ACCOUNT_MANAGER", "SUPERVISOR"))
+        var policy: Policy = Exp.subject("roles") containsAll listOf("ACCOUNT_MANAGER", "SUPERVISOR")
         assertGranted(policy.checkAuthorized(allRoles))
         assertDenied(policy.checkAuthorized(someRoles))
         assertDenied(policy.checkAuthorized(noRoles))
-        policy = allOf { subject("roles") containsAll rawVal(listOf("ACCOUNT_MANAGER", "SUPERVISOR")) }
+        policy = allOf { subject("roles") containsAll listOf("ACCOUNT_MANAGER", "SUPERVISOR") }
         assertGranted(policy.checkAuthorized(allRoles))
         assertDenied(policy.checkAuthorized(someRoles))
         assertDenied(policy.checkAuthorized(noRoles))
@@ -198,11 +198,11 @@ class CollectionOperatorsTest {
             subject = mapOf(Pair("roles", listOf("USER", "ADMIN")))
         )
 
-        var policy: Policy = Exp.subject("roles") containsAny rawVal(listOf("ACCOUNT_MANAGER", "SUPERVISOR"))
+        var policy: Policy = Exp.subject("roles") containsAny listOf("ACCOUNT_MANAGER", "SUPERVISOR")
         assertGranted(policy.checkAuthorized(managerRequest))
         assertGranted(policy.checkAuthorized(supervisorRequest))
         assertDenied(policy.checkAuthorized(neitherRequest))
-        policy = allOf { subject("roles") containsAny rawVal(listOf("ACCOUNT_MANAGER", "SUPERVISOR")) }
+        policy = allOf { subject("roles") containsAny listOf("ACCOUNT_MANAGER", "SUPERVISOR") }
         assertGranted(policy.checkAuthorized(managerRequest))
         assertGranted(policy.checkAuthorized(supervisorRequest))
         assertDenied(policy.checkAuthorized(neitherRequest))
@@ -218,10 +218,10 @@ class CollectionOperatorsTest {
             subject = mapOf(Pair("roles", listOf("USER", "SUPERVISOR")))
         )
 
-        var policy: Policy = Exp.subject("roles") contains rawVal("ACCOUNT_MANAGER")
+        var policy: Policy = Exp.subject("roles") contains "ACCOUNT_MANAGER"
         assertGranted(policy.checkAuthorized(managerRequest))
         assertDenied(policy.checkAuthorized(supervisorRequest))
-        policy = allOf { subject("roles") contains rawVal("ACCOUNT_MANAGER") }
+        policy = allOf { subject("roles") contains "ACCOUNT_MANAGER" }
         assertGranted(policy.checkAuthorized(managerRequest))
         assertDenied(policy.checkAuthorized(supervisorRequest))
     }
@@ -238,11 +238,11 @@ class CollectionOperatorsTest {
             subject = mapOf(Pair("role", "ENGINEER"))
         )
 
-        var policy: Policy = Exp.subject("role") isIn rawVal(listOf("ACCOUNT_MANAGER", "SUPERVISOR"))
+        var policy: Policy = Exp.subject("role") isIn listOf("ACCOUNT_MANAGER", "SUPERVISOR")
         assertGranted(policy.checkAuthorized(managerRequest))
         assertGranted(policy.checkAuthorized(supervisorRequest))
         assertDenied(policy.checkAuthorized(engineerRequest))
-        policy = allOf { subject("role") isIn rawVal(listOf("ACCOUNT_MANAGER", "SUPERVISOR")) }
+        policy = allOf { subject("role") isIn listOf("ACCOUNT_MANAGER", "SUPERVISOR") }
         assertGranted(policy.checkAuthorized(managerRequest))
         assertGranted(policy.checkAuthorized(supervisorRequest))
         assertDenied(policy.checkAuthorized(engineerRequest))

@@ -24,29 +24,33 @@ class Operator internal constructor(
     private val leftValueReference: ValueReference
 ) {
 
-    infix fun equalTo(value: ValueReference) = secondOperand(OperatorType.EQUAL, value)
+    infix fun equalTo(value: Any?) = secondOperand(OperatorType.EQUAL, value)
 
-    infix fun greaterThan(value: ValueReference) = secondOperand(OperatorType.GREATER_THAN, value)
+    infix fun greaterThan(value: Any?) = secondOperand(OperatorType.GREATER_THAN, value)
 
-    infix fun greaterThanEqual(value: ValueReference) = secondOperand(OperatorType.GREATER_THAN_EQUAL, value)
+    infix fun greaterThanEqual(value: Any?) = secondOperand(OperatorType.GREATER_THAN_EQUAL, value)
 
-    infix fun lessThan(value: ValueReference) = secondOperand(OperatorType.LESS_THAN, value)
+    infix fun lessThan(value: Any?) = secondOperand(OperatorType.LESS_THAN, value)
 
-    infix fun lessThanEqual(value: ValueReference) = secondOperand(OperatorType.LESS_THAN_EQUAL, value)
+    infix fun lessThanEqual(value: Any?) = secondOperand(OperatorType.LESS_THAN_EQUAL, value)
 
-    infix fun contains(value: ValueReference) = secondOperand(OperatorType.CONTAINS, value)
+    infix fun contains(value: Any?) = secondOperand(OperatorType.CONTAINS, value)
 
-    infix fun containsAll(value: ValueReference) = secondOperand(OperatorType.CONTAINS_ALL, value)
+    infix fun containsAll(value: Any?) = secondOperand(OperatorType.CONTAINS_ALL, value)
 
-    infix fun containsAny(value: ValueReference) = secondOperand(OperatorType.CONTAINS_ANY, value)
+    infix fun containsAny(value: Any?) = secondOperand(OperatorType.CONTAINS_ANY, value)
 
-    infix fun isIn(value: ValueReference) = secondOperand(OperatorType.IS_IN, value)
+    infix fun isIn(value: Any?) = secondOperand(OperatorType.IS_IN, value)
 
-    private fun secondOperand(operatorType: OperatorType, secondOperand: ValueReference): ExpressionPolicy {
+    private fun secondOperand(operatorType: OperatorType, secondOperand: Any?): ExpressionPolicy {
+        val operandReference = when(secondOperand){
+            is ValueReference -> secondOperand
+            else -> PassThroughReference(secondOperand)
+        }
         return ExpressionPolicy(
             leftOperand = leftValueReference,
             operatorType = operatorType,
-            rightOperand = secondOperand
+            rightOperand = operandReference
         )
     }
 }
