@@ -1,4 +1,4 @@
-group = "codes.laurence"
+group = "codes.laurence.warden"
 version = "1.0-SNAPSHOT"
 
 

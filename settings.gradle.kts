@@ -1,3 +1,3 @@
 rootProject.name = "warden"
-include("core")
+include("core", "ktor")
 

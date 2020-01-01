@@ -6,6 +6,8 @@ repositories {
     mavenCentral()
 }
 
+val mockkVersion: String by project
+
 kotlin {
     jvm()
     sourceSets {
@@ -19,7 +21,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
-                implementation("io.mockk:mockk-common:1.9.3")
+                implementation("io.mockk:mockk-common:$mockkVersion")
                 implementation("com.willowtreeapps.assertk:assertk-common:0.14")
             }
         }

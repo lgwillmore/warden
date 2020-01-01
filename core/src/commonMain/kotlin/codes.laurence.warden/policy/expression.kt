@@ -5,7 +5,14 @@ import codes.laurence.warden.AccessRequest
 import codes.laurence.warden.AccessResponse
 
 /**
- * A policy for basic expressions between attribute values and provided values.
+ * A policy for building basic 2 operand expressions.
+ *
+ * Conceptual Examples:
+ *
+ *      1) Subjects "id" attribute is equal to Resources "owner_id" attribute.
+ *      2) Environments "ip" attribute is equal to 102.132.128.37
+ *      3) Subjects "age" attribute is greater than 18
+ *      4) Subjects "roles" attribute contains any of ["admin", "supervisor"]
  */
 class ExpressionPolicy(
     val leftOperand: ValueReference,
@@ -98,6 +105,9 @@ enum class AttributeType {
     ENVIRONMENT
 }
 
+/**
+ * The available expression Operators
+ */
 enum class OperatorType {
     EQUAL,
     GREATER_THAN,

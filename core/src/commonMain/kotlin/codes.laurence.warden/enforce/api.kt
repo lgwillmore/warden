@@ -17,4 +17,4 @@ interface EnforcementPoint {
 }
 
 
-data class NotAuthorizedException(val accessResponse: AccessResponse) : Exception("Not Authorized")
+data class NotAuthorizedException(val request: AccessRequest, val deniedProperties: Map<String, Any?>) : Exception("Not Authorized")

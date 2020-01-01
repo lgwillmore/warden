@@ -10,7 +10,7 @@ import codes.laurence.warden.policy.Policy
  *
  * Operates on a whitelist basis - if there is not policy that grants access, there is no access.
  */
-class InMemoryDecisionPoint(policies: List<Policy>) : DecisionPoint {
+class DecisionPointInMemory(policies: List<Policy>) : DecisionPoint {
 
     private val allOfContainer = AllOf(policies)
 

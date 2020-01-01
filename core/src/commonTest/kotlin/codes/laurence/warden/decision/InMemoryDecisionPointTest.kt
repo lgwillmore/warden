@@ -4,7 +4,6 @@ import codes.laurence.warden.Access
 import codes.laurence.warden.AccessRequest
 import codes.laurence.warden.AccessResponse
 import codes.laurence.warden.coroutines.runBlockingTest
-import codes.laurence.warden.policy.AllOf
 import codes.laurence.warden.policy.Policy
 import io.mockk.every
 import io.mockk.mockk
@@ -32,7 +31,7 @@ class InMemoryDecisionPointTest {
                 access = Access.Denied(),
                 request = accessRequest
             ),
-            InMemoryDecisionPoint(emptyList()).checkAuthorized(accessRequest)
+            DecisionPointInMemory(emptyList()).checkAuthorized(accessRequest)
         )
     }
 
@@ -41,7 +40,7 @@ class InMemoryDecisionPointTest {
     fun checkAuthorized_onlySomeAuthorized() = runBlockingTest {
         assertEquals(
             denial,
-            InMemoryDecisionPoint(
+            DecisionPointInMemory(
                 listOf(
                     willAuthorizePolicy,
                     willAuthorizePolicy,
@@ -56,7 +55,7 @@ class InMemoryDecisionPointTest {
     fun checkAuthorized_allAuthorized() = runBlockingTest {
         assertEquals(
             granted,
-            InMemoryDecisionPoint(
+            DecisionPointInMemory(
                 listOf(
                     willAuthorizePolicy,
                     willAuthorizePolicy,
@@ -70,7 +69,7 @@ class InMemoryDecisionPointTest {
     fun checkAuthorized_NoneAuthorized() = runBlockingTest {
         assertEquals(
             denial,
-            InMemoryDecisionPoint(
+            DecisionPointInMemory(
                 listOf(
                     willNotAuthorizePolicy,
                     willNotAuthorizePolicy,
