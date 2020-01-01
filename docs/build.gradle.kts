@@ -32,6 +32,8 @@ fun envOrProperty(name: String, required: Boolean = false): String? {
     return result
 }
 
+project.version = "1"
+
 orchid {
     val isProd = envOrProperty("env") == "prod"
     environment = if (isProd) "production" else "debug"
@@ -39,7 +41,7 @@ orchid {
     theme = "Editorial"
 
     // The following properties are optional
-    version = "${project.version}"
+//    version = "${project.version}"
     baseUrl = when {
         isProd && envOrProperty("PULL_REQUEST") == "true" -> envOrProperty("DEPLOY_URL", required = true)
         isProd -> envOrProperty("URL", required = true)
