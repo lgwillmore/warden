@@ -1,5 +1,6 @@
 package code.laurence.warden.ktor
 
+import code.laurence.warden.ktor.Warden.Feature.WARDEN_IGNORED
 import code.laurence.warden.ktor.Warden.Feature.NOT_ENFORCED_MESSAGE
 import codes.laurence.warden.Access
 import codes.laurence.warden.AccessRequest
@@ -14,6 +15,7 @@ import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.response.respondText
 import io.ktor.routing.get
+import io.ktor.routing.route
 import io.ktor.routing.routing
 import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.withTestApplication
@@ -38,9 +40,7 @@ fun Application.testableAppDependencies() {
             }
         )
     ))
-    install(Warden) {
-        enforcementPoint = enforcementPointKtor
-    }
+    install(Warden)
     install(StatusPages) {
         exception<NotAuthorizedException> { cause ->
             call.respondText(
@@ -51,16 +51,24 @@ fun Application.testableAppDependencies() {
     }
 
     routing {
-        get("/authorizationNotEnforced") {
-            call.respondText("You should not be able to get me")
+        route("/authorizationNotEnforced"){
+            get("") {
+                call.respondText("You should not be able to get me")
+            }
+            get("/Ignored"){
+                call.attributes.put(WARDEN_IGNORED, true)
+                call.respondText("You should see me")
+            }
         }
-        get("/authorizationEnforcedGranted") {
-            enforcementPointKtor.enforceAuthorization(AccessRequest(subject = mapOf("access" to "granted")), call)
-            call.respondText("You should see me")
-        }
-        get("/authorizationEnforcedDenied") {
-            enforcementPointKtor.enforceAuthorization(AccessRequest(subject = mapOf("access" to "denied")), call)
-            call.respondText("You should not be able to get me")
+        route("/authorizationEnforced"){
+            get("/Granted"){
+                enforcementPointKtor.enforceAuthorization(AccessRequest(subject = mapOf("access" to "granted")), call)
+                call.respondText("You should see me")
+            }
+            get("/Denied"){
+                enforcementPointKtor.enforceAuthorization(AccessRequest(subject = mapOf("access" to "denied")), call)
+                call.respondText("You should not be able to get me")
+            }
         }
     }
 }
@@ -78,9 +86,23 @@ class WardenTest {
     }
 
     @Test
+    fun `get - enforcement point not called - ignored`() {
+        withTestApplication({ testableAppDependencies() }) {
+            with(handleRequest(HttpMethod.Get, "/authorizationNotEnforced/Ignored")) {
+                assertEquals(HttpStatusCode.OK, response.status())
+                assertEquals("You should see me", response.content)
+            }
+            // Check that ignoring once does not effect other calls
+            with(handleRequest(HttpMethod.Get, "/authorizationNotEnforced")) {
+                assertEquals(HttpStatusCode.Unauthorized, response.status())
+            }
+        }
+    }
+
+    @Test
     fun `get - enforcement point called - granted`() {
         withTestApplication({ testableAppDependencies() }) {
-            with(handleRequest(HttpMethod.Get, "/authorizationEnforcedGranted")) {
+            with(handleRequest(HttpMethod.Get, "/authorizationEnforced/Granted")) {
                 assertEquals(HttpStatusCode.OK, response.status())
                 assertEquals("You should see me", response.content)
             }
@@ -90,7 +112,7 @@ class WardenTest {
     @Test
     fun `get - enforcement point called - denied`() {
         withTestApplication({ testableAppDependencies() }) {
-            with(handleRequest(HttpMethod.Get, "/authorizationEnforcedDenied")) {
+            with(handleRequest(HttpMethod.Get, "/authorizationEnforced/Denied")) {
                 assertEquals(HttpStatusCode.Unauthorized, response.status())
                 assertEquals("Auth Denied", response.content)
             }
