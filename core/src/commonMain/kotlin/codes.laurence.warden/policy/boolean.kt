@@ -55,7 +55,7 @@ class AnyOf(policies: MutableList<Policy>) : Policy, CollectionBasedPolicy(polic
 
 }
 
-class Not(private val policy: Policy) : Policy {
+class Not(val policy: Policy) : Policy {
 
     override fun checkAuthorized(accessRequest: AccessRequest): AccessResponse {
         val internal = policy.checkAuthorized(accessRequest)

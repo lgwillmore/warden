@@ -22,47 +22,35 @@ class ComparisonOperatorsTest {
 
     @Test
     fun greaterThan() {
-        var greaterThan18: Policy = allOf { subject("age") greaterThan 18 }
+        val greaterThan18: Policy = ExpressionPolicy(
+            AttributeReference(AttributeType.SUBJECT, "age"),
+            OperatorType.GREATER_THAN,
+            PassThroughReference(18)
+        )
         assertDenied(greaterThan18.checkAuthorized(request17), request17)
         assertDenied(greaterThan18.checkAuthorized(request18), request18)
         assertGranted(greaterThan18.checkAuthorized(request19), request19)
-
-        greaterThan18 = Exp.subject("age") greaterThan 18
-        assertDenied(greaterThan18.checkAuthorized(request17), request17)
-        assertDenied(greaterThan18.checkAuthorized(request18), request18)
-        assertGranted(greaterThan18.checkAuthorized(request19), request19)
-
-        val greaterThanLimit = Exp.subject("age") greaterThan resourceVal("limit")
-        assertDenied(greaterThanLimit.checkAuthorized(request17), request17)
-        assertDenied(greaterThanLimit.checkAuthorized(request18), request18)
-        assertGranted(greaterThanLimit.checkAuthorized(request19), request19)
     }
 
     @Test
     fun greaterThanEqual() {
-        var greaterThanEqual18: Policy = allOf { subject("age") greaterThanEqual 18 }
+        val greaterThanEqual18: Policy = ExpressionPolicy(
+            AttributeReference(AttributeType.SUBJECT, "age"),
+            OperatorType.GREATER_THAN_EQUAL,
+            PassThroughReference(18)
+        )
         assertDenied(greaterThanEqual18.checkAuthorized(request17))
         assertGranted(greaterThanEqual18.checkAuthorized(request18))
         assertGranted(greaterThanEqual18.checkAuthorized(request19))
-
-        greaterThanEqual18 = Exp.subject("age") greaterThanEqual 18
-        assertDenied(greaterThanEqual18.checkAuthorized(request17))
-        assertGranted(greaterThanEqual18.checkAuthorized(request18))
-        assertGranted(greaterThanEqual18.checkAuthorized(request19))
-
-        val greaterThanEqualLimit = Exp.subject("age") greaterThanEqual  resourceVal("limit")
-        assertDenied(greaterThanEqualLimit.checkAuthorized(request17), request17)
-        assertGranted(greaterThanEqualLimit.checkAuthorized(request18), request18)
-        assertGranted(greaterThanEqualLimit.checkAuthorized(request19), request19)
     }
 
     @Test
     fun equal() {
-        var equal18: Policy = allOf { subject("age") equalTo 18 }
-        assertDenied(equal18.checkAuthorized(request17))
-        assertGranted(equal18.checkAuthorized(request18))
-        assertDenied(equal18.checkAuthorized(request19))
-        equal18 = Exp.subject("age") equalTo 18
+        val equal18: Policy = ExpressionPolicy(
+            AttributeReference(AttributeType.SUBJECT, "age"),
+            OperatorType.EQUAL,
+            PassThroughReference(18)
+        )
         assertDenied(equal18.checkAuthorized(request17))
         assertGranted(equal18.checkAuthorized(request18))
         assertDenied(equal18.checkAuthorized(request19))
@@ -70,11 +58,11 @@ class ComparisonOperatorsTest {
 
     @Test
     fun lessThan() {
-        var lessThan18: Policy = allOf { subject("age") lessThan 18 }
-        assertGranted(lessThan18.checkAuthorized(request17))
-        assertDenied(lessThan18.checkAuthorized(request18))
-        assertDenied(lessThan18.checkAuthorized(request19))
-        lessThan18 = Exp.subject("age") lessThan 18
+        val lessThan18: Policy = ExpressionPolicy(
+            AttributeReference(AttributeType.SUBJECT, "age"),
+            OperatorType.LESS_THAN,
+            PassThroughReference(18)
+        )
         assertGranted(lessThan18.checkAuthorized(request17))
         assertDenied(lessThan18.checkAuthorized(request18))
         assertDenied(lessThan18.checkAuthorized(request19))
@@ -82,11 +70,11 @@ class ComparisonOperatorsTest {
 
     @Test
     fun lessThanEqual() {
-        var lessThanEqual18: Policy = allOf { subject("age") lessThanEqual 18 }
-        assertGranted(lessThanEqual18.checkAuthorized(request17))
-        assertGranted(lessThanEqual18.checkAuthorized(request18))
-        assertDenied(lessThanEqual18.checkAuthorized(request19))
-        lessThanEqual18 = Exp.subject("age") lessThanEqual 18
+        val lessThanEqual18: Policy = ExpressionPolicy(
+            AttributeReference(AttributeType.SUBJECT, "age"),
+            OperatorType.LESS_THAN_EQUAL,
+            PassThroughReference(18)
+        )
         assertGranted(lessThanEqual18.checkAuthorized(request17))
         assertGranted(lessThanEqual18.checkAuthorized(request18))
         assertDenied(lessThanEqual18.checkAuthorized(request19))
@@ -96,7 +84,11 @@ class ComparisonOperatorsTest {
     fun compareNonExistentKey() {
         val requestWithMissingKeys = AccessRequest()
 
-        val somePolicy = Exp.subject("not_here") equalTo resourceVal("not_here")
+        val somePolicy = ExpressionPolicy(
+            AttributeReference(AttributeType.SUBJECT, "not_here"),
+            OperatorType.LESS_THAN_EQUAL,
+            AttributeReference(AttributeType.RESOURCE, "not_here")
+        )
         assertDenied(somePolicy.checkAuthorized(requestWithMissingKeys))
     }
 
@@ -111,11 +103,11 @@ class ComparisonOperatorsTest {
             resource = mapOf(Pair("limit", 18))
         )
 
-        var mustBeOverResourceLimitPolicy: Policy =
-            Exp.subject("age") greaterThanEqual resourceVal("limit")
-        assertGranted(mustBeOverResourceLimitPolicy.checkAuthorized(request18))
-        assertDenied(mustBeOverResourceLimitPolicy.checkAuthorized(request17))
-        mustBeOverResourceLimitPolicy = allOf { subject("age") greaterThanEqual resourceVal("limit") }
+        val mustBeOverResourceLimitPolicy: Policy = ExpressionPolicy(
+            AttributeReference(AttributeType.SUBJECT, "age"),
+            OperatorType.GREATER_THAN_EQUAL,
+            AttributeReference(AttributeType.RESOURCE, "limit")
+        )
         assertGranted(mustBeOverResourceLimitPolicy.checkAuthorized(request18))
         assertDenied(mustBeOverResourceLimitPolicy.checkAuthorized(request17))
     }
@@ -131,10 +123,11 @@ class ComparisonOperatorsTest {
             environment = mapOf(Pair("timeOfRequest", 1))
         )
 
-        var policy: Policy = Exp.resource("expires") greaterThanEqual environmentVal("timeOfRequest")
-        assertDenied(policy.checkAuthorized(expired))
-        assertGranted(policy.checkAuthorized(notExpired))
-        policy = allOf { resource("expires") greaterThanEqual environmentVal("timeOfRequest") }
+        val policy: Policy =  ExpressionPolicy(
+            AttributeReference(AttributeType.RESOURCE, "expires"),
+            OperatorType.GREATER_THAN_EQUAL,
+            AttributeReference(AttributeType.ENVIRONMENT, "timeOfRequest")
+        )
         assertDenied(policy.checkAuthorized(expired))
         assertGranted(policy.checkAuthorized(notExpired))
     }
@@ -150,11 +143,11 @@ class ComparisonOperatorsTest {
             environment = mapOf(Pair("requestSiteID", 3))
         )
 
-        var subjectMustBeOnTheirSitePolicy: Policy =
-            Exp.environment("requestSiteID") equalTo subjectVal("siteID")
-        assertDenied(subjectMustBeOnTheirSitePolicy.checkAuthorized(notOnSite))
-        assertGranted(subjectMustBeOnTheirSitePolicy.checkAuthorized(onSite))
-        subjectMustBeOnTheirSitePolicy = anyOf { environment("requestSiteID") equalTo subjectVal("siteID") }
+        val subjectMustBeOnTheirSitePolicy: Policy = ExpressionPolicy(
+            AttributeReference(AttributeType.ENVIRONMENT, "requestSiteID"),
+            OperatorType.EQUAL,
+            AttributeReference(AttributeType.SUBJECT, "siteID")
+        )
         assertDenied(subjectMustBeOnTheirSitePolicy.checkAuthorized(notOnSite))
         assertGranted(subjectMustBeOnTheirSitePolicy.checkAuthorized(onSite))
     }
@@ -170,10 +163,11 @@ class ComparisonOperatorsTest {
             action = mapOf(Pair("type", "READ"))
         )
 
-        var userMustHaveActionPermission: Policy = Exp.action("type") equalTo subjectVal("permission")
-        assertDenied(userMustHaveActionPermission.checkAuthorized(noReadPermission))
-        assertGranted(userMustHaveActionPermission.checkAuthorized(hasReadPermission))
-        userMustHaveActionPermission = anyOf { action("type") equalTo subjectVal("permission") }
+        val userMustHaveActionPermission: Policy = ExpressionPolicy(
+            AttributeReference(AttributeType.ACTION, "type"),
+            OperatorType.EQUAL,
+            AttributeReference(AttributeType.SUBJECT, "permission")
+        )
         assertDenied(userMustHaveActionPermission.checkAuthorized(noReadPermission))
         assertGranted(userMustHaveActionPermission.checkAuthorized(hasReadPermission))
     }

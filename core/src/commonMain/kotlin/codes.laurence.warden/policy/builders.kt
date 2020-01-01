@@ -49,6 +49,7 @@ fun CollectionBasedPolicy.notAnyOf(builder: CollectionBasedPolicy.() -> Unit) {
 fun subjectVal(key: String) = AttributeReference(AttributeType.SUBJECT, key)
 fun environmentVal(key: String) = AttributeReference(AttributeType.ENVIRONMENT, key)
 fun resourceVal(key: String) = AttributeReference(AttributeType.RESOURCE, key)
+fun actionVal(key: String) = AttributeReference(AttributeType.ACTION, key)
 
 /**
  * Initializing token for an ExpressionPolicy builder.
@@ -79,17 +80,22 @@ class OperatorBuilder(
     infix fun greaterThanEqual(value: Comparable<*>) = secondOperand(OperatorType.GREATER_THAN_EQUAL, value)
     infix fun greaterThanEqual(value: AttributeReference) = secondOperand(OperatorType.GREATER_THAN_EQUAL, value)
 
-    infix fun lessThan(value: Any?) = secondOperand(OperatorType.LESS_THAN, value)
+    infix fun lessThan(value: Comparable<*>) = secondOperand(OperatorType.LESS_THAN, value)
+    infix fun lessThan(value: AttributeReference) = secondOperand(OperatorType.LESS_THAN, value)
 
-    infix fun lessThanEqual(value: Any?) = secondOperand(OperatorType.LESS_THAN_EQUAL, value)
+    infix fun lessThanEqual(value: Comparable<*>) = secondOperand(OperatorType.LESS_THAN_EQUAL, value)
+    infix fun lessThanEqual(value: AttributeReference) = secondOperand(OperatorType.LESS_THAN_EQUAL, value)
 
     infix fun contains(value: Any?) = secondOperand(OperatorType.CONTAINS, value)
 
-    infix fun containsAll(value: Any?) = secondOperand(OperatorType.CONTAINS_ALL, value)
+    infix fun containsAll(value: Collection<*>) = secondOperand(OperatorType.CONTAINS_ALL, value)
+    infix fun containsAll(value: AttributeReference) = secondOperand(OperatorType.CONTAINS_ALL, value)
 
-    infix fun containsAny(value: Any?) = secondOperand(OperatorType.CONTAINS_ANY, value)
+    infix fun containsAny(value: Collection<*>) = secondOperand(OperatorType.CONTAINS_ANY, value)
+    infix fun containsAny(value: AttributeReference) = secondOperand(OperatorType.CONTAINS_ANY, value)
 
-    infix fun isIn(value: Any?) = secondOperand(OperatorType.IS_IN, value)
+    infix fun isIn(value: Collection<*>) = secondOperand(OperatorType.IS_IN, value)
+    infix fun isIn(value: AttributeReference) = secondOperand(OperatorType.IS_IN, value)
 
     private fun secondOperand(operatorType: OperatorType, secondOperand: Any?): ExpressionPolicy {
         val operandReference = when (secondOperand) {
