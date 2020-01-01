@@ -8,4 +8,4 @@
 [build]
   base    = ""
   publish = "docs/build/docs/orchid"
-  command = "./gradlew orchidBuild -Penv=prod"
+  command = "./netlify_build.sh"
