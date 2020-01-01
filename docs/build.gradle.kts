@@ -15,14 +15,23 @@ dependencies {
     orchidRuntime("io.github.javaeden.orchid:OrchidEditorial:$orchidVersion")
 }
 
-orchid{
+fun envOrProperty(name: String, required: Boolean = false): String? {
+    val result = project.findProperty(name) as? String ?: System.getenv(name)
+    check(result != null || required.not()) { "Missing required environment property:\n  export $name=\"...\"" }
+    return result
+}
+
+orchid {
+    val isProd = envOrProperty("env") == "prod"
+    environment = if (isProd) "production" else "debug"
     // Theme is required
     theme = "Editorial"
 
     // The following properties are optional
     version = "${project.version}"
-    baseUrl = "http://localhost:8080"                   // a baseUrl prepended to all generated links. Defaults to '/'
-//    srcDir  = "path/to/new/source/directory"      // defaults to 'src/orchid/resources'
-//    destDir = "path/to/new/destination/directory" // defaults to 'build/docs/orchid'
-    runTask = "build"
+    baseUrl = when {
+        isProd && envOrProperty("PULL_REQUEST") == "true" -> envOrProperty("DEPLOY_URL", required = true)
+        isProd -> envOrProperty("URL", required = true)
+        else -> "http://localhost:8080"
+    }
 }
