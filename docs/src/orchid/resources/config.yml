@@ -1,0 +1,4 @@
+services:
+  generators:
+    externalIndices:
+      - 'https://orchid.netlify.com/meta/all.index.json'

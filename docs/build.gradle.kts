@@ -11,7 +11,18 @@ repositories {
 val orchidVersion: String by project
 
 dependencies {
-    orchidRuntime("io.github.javaeden.orchid:OrchidAll:$orchidVersion")
+    compile("io.github.javaeden.orchid:OrchidCore:$orchidVersion")
+    orchidCompile("io.github.javaeden.orchid:OrchidCore:$orchidVersion")
+    orchidRuntime("io.github.javaeden.orchid:OrchidPosts:$orchidVersion")
+    orchidRuntime("io.github.javaeden.orchid:OrchidPages:$orchidVersion")
+    orchidRuntime("io.github.javaeden.orchid:OrchidWiki:$orchidVersion")
+    orchidRuntime("io.github.javaeden.orchid:OrchidNetlifyCMS:$orchidVersion")
+    orchidRuntime("io.github.javaeden.orchid:OrchidPluginDocs:$orchidVersion")
+    orchidRuntime("io.github.javaeden.orchid:OrchidSearch:$orchidVersion")
+    orchidRuntime("io.github.javaeden.orchid:OrchidWritersBlocks:$orchidVersion")
+    orchidRuntime("io.github.javaeden.orchid:OrchidSyntaxHighlighter:$orchidVersion")
+    orchidRuntime("io.github.javaeden.orchid:OrchidTaxonomies:$orchidVersion")
+    orchidRuntime("io.github.javaeden.orchid:OrchidAsciidoc:$orchidVersion")
     orchidRuntime("io.github.javaeden.orchid:OrchidEditorial:$orchidVersion")
 }
 
