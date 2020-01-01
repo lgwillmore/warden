@@ -11,3 +11,4 @@ before_install:
 
 script:
   - ./gradlew core:allTests
+  - ./gradlew ktor:test
