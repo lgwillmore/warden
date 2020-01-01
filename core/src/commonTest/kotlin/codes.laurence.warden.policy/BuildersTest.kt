@@ -222,7 +222,7 @@ class CollectionBasedBuildersTest {
         val policy = allOf {
             allOf { environment("foo") equalTo 1 }
         }
-        assertThat((policy.policies[0] as AnyOf).policies).isNotEmpty()
+        assertThat((policy.policies[0] as AllOf).policies).isNotEmpty()
     }
 
     @Test

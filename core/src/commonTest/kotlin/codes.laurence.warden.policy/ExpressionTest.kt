@@ -123,7 +123,7 @@ class ComparisonOperatorsTest {
             environment = mapOf(Pair("timeOfRequest", 1))
         )
 
-        val policy: Policy =  ExpressionPolicy(
+        val policy: Policy = ExpressionPolicy(
             AttributeReference(AttributeType.RESOURCE, "expires"),
             OperatorType.GREATER_THAN_EQUAL,
             AttributeReference(AttributeType.ENVIRONMENT, "timeOfRequest")
@@ -186,11 +186,11 @@ class CollectionOperatorsTest {
             subject = mapOf(Pair("roles", listOf("USER")))
         )
 
-        var policy: Policy = Exp.subject("roles") containsAll listOf("ACCOUNT_MANAGER", "SUPERVISOR")
-        assertGranted(policy.checkAuthorized(allRoles))
-        assertDenied(policy.checkAuthorized(someRoles))
-        assertDenied(policy.checkAuthorized(noRoles))
-        policy = allOf { subject("roles") containsAll listOf("ACCOUNT_MANAGER", "SUPERVISOR") }
+        val policy: Policy = ExpressionPolicy(
+            AttributeReference(AttributeType.SUBJECT, "roles"),
+            OperatorType.CONTAINS_ALL,
+            PassThroughReference(listOf("ACCOUNT_MANAGER", "SUPERVISOR"))
+        )
         assertGranted(policy.checkAuthorized(allRoles))
         assertDenied(policy.checkAuthorized(someRoles))
         assertDenied(policy.checkAuthorized(noRoles))
@@ -208,11 +208,11 @@ class CollectionOperatorsTest {
             subject = mapOf(Pair("roles", listOf("USER", "ADMIN")))
         )
 
-        var policy: Policy = Exp.subject("roles") containsAny listOf("ACCOUNT_MANAGER", "SUPERVISOR")
-        assertGranted(policy.checkAuthorized(managerRequest))
-        assertGranted(policy.checkAuthorized(supervisorRequest))
-        assertDenied(policy.checkAuthorized(neitherRequest))
-        policy = allOf { subject("roles") containsAny listOf("ACCOUNT_MANAGER", "SUPERVISOR") }
+        val policy: Policy = ExpressionPolicy(
+            AttributeReference(AttributeType.SUBJECT, "roles"),
+            OperatorType.CONTAINS_ANY,
+            PassThroughReference(listOf("ACCOUNT_MANAGER", "SUPERVISOR"))
+        )
         assertGranted(policy.checkAuthorized(managerRequest))
         assertGranted(policy.checkAuthorized(supervisorRequest))
         assertDenied(policy.checkAuthorized(neitherRequest))
@@ -228,10 +228,12 @@ class CollectionOperatorsTest {
             subject = mapOf(Pair("roles", listOf("USER", "SUPERVISOR")))
         )
 
-        var policy: Policy = Exp.subject("roles") contains "ACCOUNT_MANAGER"
-        assertGranted(policy.checkAuthorized(managerRequest))
-        assertDenied(policy.checkAuthorized(supervisorRequest))
-        policy = allOf { subject("roles") contains "ACCOUNT_MANAGER" }
+        val policy: Policy = ExpressionPolicy(
+            AttributeReference(AttributeType.SUBJECT, "roles"),
+            OperatorType.CONTAINS,
+            PassThroughReference("ACCOUNT_MANAGER")
+        )
+
         assertGranted(policy.checkAuthorized(managerRequest))
         assertDenied(policy.checkAuthorized(supervisorRequest))
     }
@@ -248,11 +250,11 @@ class CollectionOperatorsTest {
             subject = mapOf(Pair("role", "ENGINEER"))
         )
 
-        var policy: Policy = Exp.subject("role") isIn listOf("ACCOUNT_MANAGER", "SUPERVISOR")
-        assertGranted(policy.checkAuthorized(managerRequest))
-        assertGranted(policy.checkAuthorized(supervisorRequest))
-        assertDenied(policy.checkAuthorized(engineerRequest))
-        policy = allOf { subject("role") isIn listOf("ACCOUNT_MANAGER", "SUPERVISOR") }
+        var policy: Policy = ExpressionPolicy(
+            AttributeReference(AttributeType.SUBJECT, "role"),
+            OperatorType.IS_IN,
+            PassThroughReference(listOf("ACCOUNT_MANAGER", "SUPERVISOR"))
+        )
         assertGranted(policy.checkAuthorized(managerRequest))
         assertGranted(policy.checkAuthorized(supervisorRequest))
         assertDenied(policy.checkAuthorized(engineerRequest))
