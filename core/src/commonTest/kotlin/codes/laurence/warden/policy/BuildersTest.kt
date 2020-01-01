@@ -210,7 +210,7 @@ class CollectionBasedBuildersTest {
     }
 
     @Test
-    fun `nested - anyOf`(){
+    fun `nested - anyOf`() {
         val policy = allOf {
             anyOf { environment("foo") equalTo 1 }
         }
@@ -218,7 +218,7 @@ class CollectionBasedBuildersTest {
     }
 
     @Test
-    fun `nested - allOf`(){
+    fun `nested - allOf`() {
         val policy = allOf {
             allOf { environment("foo") equalTo 1 }
         }
@@ -226,7 +226,7 @@ class CollectionBasedBuildersTest {
     }
 
     @Test
-    fun `nested - notAnyOf`(){
+    fun `nested - notAnyOf`() {
         val policy = allOf {
             notAnyOf { environment("foo") equalTo 1 }
         }
@@ -234,7 +234,7 @@ class CollectionBasedBuildersTest {
     }
 
     @Test
-    fun `nested - notAllOf`(){
+    fun `nested - notAllOf`() {
         val policy = allOf {
             notAllOf { environment("foo") equalTo 1 }
         }

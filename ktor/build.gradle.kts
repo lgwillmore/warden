@@ -5,7 +5,7 @@ plugins {
 val ktorVersion: String by project
 val mockkVersion: String by project
 
-dependencies{
+dependencies {
 
     implementation(project(":core"))
 

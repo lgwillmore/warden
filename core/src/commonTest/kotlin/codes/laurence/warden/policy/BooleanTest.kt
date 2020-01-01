@@ -128,7 +128,7 @@ class AnyOfTest {
 class NotTest {
 
     @Test
-    fun checkAuthorized_isWhenInnerIsNot(){
+    fun checkAuthorized_isWhenInnerIsNot() {
         assertEquals(
             denial.copy(access = Access.Granted),
             Not(willNotAuthorizePolicy).checkAuthorized(accessRequest)
@@ -136,7 +136,7 @@ class NotTest {
     }
 
     @Test
-    fun checkAuthorized_isNotWhenInnerIs(){
+    fun checkAuthorized_isNotWhenInnerIs() {
         assertEquals(
             granted.copy(access = Access.Denied()),
             Not(willAuthorizePolicy).checkAuthorized(accessRequest)

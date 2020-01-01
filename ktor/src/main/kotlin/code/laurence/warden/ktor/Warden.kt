@@ -15,7 +15,6 @@ class Warden(config: Configuration) {
 
     class Configuration {
         var enforcementPoint: EnforcementPointKtor = EnforcementPointKtor(DecisionPointInMemory(emptyList()))
-        var callEnforcedAttributeKey = CALL_ENFORCED_ATTRIBUTE_KEY
     }
 
     companion object Feature : ApplicationFeature<ApplicationCallPipeline, Configuration, Warden> {
@@ -29,10 +28,13 @@ class Warden(config: Configuration) {
             val config = Configuration().apply(configure)
             val warden = Warden(config)
 
-
             pipeline.sendPipeline.intercept(ApplicationSendPipeline.After) {
                 if (!call.attributes.contains(CALL_ENFORCED_ATTRIBUTE_KEY)) {
-                    val content = TextContent(NOT_ENFORCED_MESSAGE, contentType = ContentType.Text.Plain, status = HttpStatusCode.Unauthorized)
+                    val content = TextContent(
+                        NOT_ENFORCED_MESSAGE,
+                        contentType = ContentType.Text.Plain,
+                        status = HttpStatusCode.Unauthorized
+                    )
                     proceedWith(content)
                 }
             }
@@ -40,5 +42,3 @@ class Warden(config: Configuration) {
         }
     }
 }
-
-class WardenFeature

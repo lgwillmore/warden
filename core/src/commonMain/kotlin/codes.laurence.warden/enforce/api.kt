@@ -1,7 +1,6 @@
 package codes.laurence.warden.enforce
 
 import codes.laurence.warden.AccessRequest
-import codes.laurence.warden.AccessResponse
 
 
 /**
@@ -17,4 +16,5 @@ interface EnforcementPoint {
 }
 
 
-data class NotAuthorizedException(val request: AccessRequest, val deniedProperties: Map<String, Any?>) : Exception("Not Authorized")
+data class NotAuthorizedException(val request: AccessRequest, val deniedProperties: Map<String, Any?>) :
+    Exception("Not Authorized")

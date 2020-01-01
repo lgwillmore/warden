@@ -4,7 +4,7 @@ fun allOf(builder: CollectionBasedPolicy.() -> Unit) = AllOf(builder)
 fun anyOf(builder: CollectionBasedPolicy.() -> Unit) = AnyOf(builder)
 fun not(policy: Policy): Policy = Not(policy)
 
-private fun addToCollectionHandler(collection:CollectionBasedPolicy):PolicyBuiltHandler {
+private fun addToCollectionHandler(collection: CollectionBasedPolicy): PolicyBuiltHandler {
     return { policy ->
         collection.add(policy)
     }
@@ -71,7 +71,7 @@ typealias PolicyBuiltHandler = (Policy) -> Unit
 class OperatorBuilder(
     private val leftValueReference: ValueReference,
     private val policyBuiltHandler: PolicyBuiltHandler? = null
-){
+) {
     infix fun equalTo(value: Any?) = secondOperand(OperatorType.EQUAL, value)
 
     infix fun greaterThan(value: Comparable<*>) = secondOperand(OperatorType.GREATER_THAN, value)
