@@ -2,12 +2,20 @@ package codes.laurence.warden.decision
 
 import codes.laurence.warden.AccessRequest
 import codes.laurence.warden.AccessResponse
+import codes.laurence.warden.policy.AllOf
+import codes.laurence.warden.policy.Policy
 
-class InMemoryDecisionPoint: DecisionPoint {
+/**
+ * An in memory Decision point.
+ *
+ * Operates on a whitelist basis - if there is not policy that grants access, there is no access.
+ */
+class InMemoryDecisionPoint(policies: List<Policy>) : DecisionPoint {
+
+    private val allOfContainer = AllOf(policies)
 
     override suspend fun checkAuthorized(request: AccessRequest): AccessResponse {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return allOfContainer.checkAuthorized(request)
     }
-
 
 }

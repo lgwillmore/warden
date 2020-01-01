@@ -3,6 +3,10 @@ package codes.laurence.warden.enforce
 import codes.laurence.warden.AccessRequest
 import codes.laurence.warden.AccessResponse
 
+
+/**
+ * Provides a hardened enforcement of the decision provided by a [codes.laurence.warden.decision.DecisionPoint].
+ */
 interface EnforcementPoint {
 
     /**

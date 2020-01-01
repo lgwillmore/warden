@@ -4,7 +4,10 @@ import codes.laurence.warden.Access
 import codes.laurence.warden.AccessRequest
 import codes.laurence.warden.AccessResponse
 
-class AllOf(policies: MutableList<Policy>) : Policy, CollectionBasedPolicy(policies) {
+/**
+ * All of the policies must grant access, and at least 1 must grant access.
+ */
+class AllOf(policies: List<Policy>) : Policy, CollectionBasedPolicy(policies.toMutableList()) {
 
     constructor(builder: CollectionBasedPolicy.() -> Unit) : this(mutableListOf()) {
         this.builder()
@@ -30,6 +33,9 @@ class AllOf(policies: MutableList<Policy>) : Policy, CollectionBasedPolicy(polic
 
 }
 
+/**
+ * At least 1 policy must grant access.
+ */
 class AnyOf(policies: MutableList<Policy>) : Policy, CollectionBasedPolicy(policies) {
 
     constructor(builder: CollectionBasedPolicy.() -> Unit) : this(mutableListOf()) {
@@ -55,6 +61,9 @@ class AnyOf(policies: MutableList<Policy>) : Policy, CollectionBasedPolicy(polic
 
 }
 
+/**
+ * Will grant access if the policy does not grant access.
+ */
 class Not(val policy: Policy) : Policy {
 
     override fun checkAuthorized(accessRequest: AccessRequest): AccessResponse {

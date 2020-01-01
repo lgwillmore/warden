@@ -250,7 +250,7 @@ class CollectionOperatorsTest {
             subject = mapOf(Pair("role", "ENGINEER"))
         )
 
-        var policy: Policy = ExpressionPolicy(
+        val policy: Policy = ExpressionPolicy(
             AttributeReference(AttributeType.SUBJECT, "role"),
             OperatorType.IS_IN,
             PassThroughReference(listOf("ACCOUNT_MANAGER", "SUPERVISOR"))
