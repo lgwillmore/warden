@@ -11,19 +11,8 @@ repositories {
 val orchidVersion: String by project
 
 dependencies {
-    compile("io.github.javaeden.orchid:OrchidCore:$orchidVersion")
-    orchidCompile("io.github.javaeden.orchid:OrchidCore:$orchidVersion")
-    orchidRuntime("io.github.javaeden.orchid:OrchidPosts:$orchidVersion")
-    orchidRuntime("io.github.javaeden.orchid:OrchidPages:$orchidVersion")
-    orchidRuntime("io.github.javaeden.orchid:OrchidWiki:$orchidVersion")
-    orchidRuntime("io.github.javaeden.orchid:OrchidNetlifyCMS:$orchidVersion")
-    orchidRuntime("io.github.javaeden.orchid:OrchidPluginDocs:$orchidVersion")
-    orchidRuntime("io.github.javaeden.orchid:OrchidSearch:$orchidVersion")
-    orchidRuntime("io.github.javaeden.orchid:OrchidWritersBlocks:$orchidVersion")
-    orchidRuntime("io.github.javaeden.orchid:OrchidSyntaxHighlighter:$orchidVersion")
-    orchidRuntime("io.github.javaeden.orchid:OrchidTaxonomies:$orchidVersion")
-    orchidRuntime("io.github.javaeden.orchid:OrchidAsciidoc:$orchidVersion")
-    orchidRuntime("io.github.javaeden.orchid:OrchidEditorial:$orchidVersion")
+    orchidRuntime("io.github.javaeden.orchid:OrchidAll:$orchidVersion")
+    orchidRuntime("io.github.javaeden.orchid:OrchidBsDoc:$orchidVersion")
 }
 
 fun envOrProperty(name: String, required: Boolean = false): String? {
@@ -38,7 +27,7 @@ orchid {
     val isProd = envOrProperty("env") == "prod"
     environment = if (isProd) "production" else "debug"
     // Theme is required
-    theme = "Editorial"
+    theme = "BsDoc"
 
     // The following properties are optional
 //    version = "${project.version}"
