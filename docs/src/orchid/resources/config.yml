@@ -6,7 +6,7 @@ theme:
       title: 'Home'
       url: '/'
     - type: 'page'
-      itemId: 'Attribute Based Access Control (ABAC)'
+      itemId: 'ABAC Overview'
   legacySearch: false
   metaComponents:
     - type: orchidSearch
