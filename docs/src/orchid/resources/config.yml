@@ -7,6 +7,8 @@ theme:
       url: '/'
     - type: 'page'
       itemId: 'ABAC Overview'
+    - type: 'page'
+      itemId: 'Quick Start'
   legacySearch: false
   metaComponents:
     - type: orchidSearch
