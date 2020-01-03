@@ -12,7 +12,7 @@ val orchidVersion: String by project
 
 dependencies {
     orchidRuntime("io.github.javaeden.orchid:OrchidAll:$orchidVersion")
-    orchidRuntime("io.github.javaeden.orchid:OrchidBsDoc:$orchidVersion")
+//    orchidRuntime("io.github.javaeden.orchid:OrchidBsDoc:$orchidVersion")
 }
 
 fun envOrProperty(name: String, required: Boolean = false): String? {
@@ -27,7 +27,7 @@ orchid {
     val isProd = envOrProperty("env") == "prod"
     environment = if (isProd) "production" else "debug"
     // Theme is required
-    theme = "BsDoc"
+    theme = "Editorial"
 
     // The following properties are optional
 //    version = "${project.version}"

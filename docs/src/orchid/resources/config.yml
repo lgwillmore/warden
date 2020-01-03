@@ -1,3 +1,16 @@
+theme:
+  social:
+    github: 'lgwillmore/warden'
+  menu:
+    - type: 'link'
+      title: 'Home'
+      url: '/'
+    - type: 'page'
+      itemId: 'Attribute Based Access Control (ABAC)'
+  legacySearch: false
+  metaComponents:
+    - type: orchidSearch
+
 services:
   generators:
     externalIndices:
