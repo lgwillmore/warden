@@ -7,7 +7,13 @@ title: 'Warden'
 
 Attribute Based Access Control (ABAC) is an approach to defining and enforcing authorization rules.
 
-You can find a brief introduction to the concepts involved in ABAC [here]({{ link('ABAC Overview') }}), and will probably help as you learn more.
+You can find a brief introduction to the concepts involved in ABAC [here]({{ link('ABAC Overview') }}).
+
+## The Case for ABAC
+ - Defining the rules for authorization separately from your routing provides all the benefits of low coupling.
+ - Your authorization rules are business rules and are formulated against business domain objects, not URLs.
+ - Role based authorization is a subset of the rules that can be defined with ABAC. You will likely find your needs extending beyond Role Based Authorization quickly.
+ - With ABAC, your authorization rules can be leveraged across systems, languages, frontend, backend.
 
 ## Aims of this project
  - Be lightweight and developer friendly

@@ -12,7 +12,6 @@ val orchidVersion: String by project
 
 dependencies {
     orchidRuntime("io.github.javaeden.orchid:OrchidAll:$orchidVersion")
-//    orchidRuntime("io.github.javaeden.orchid:OrchidBsDoc:$orchidVersion")
 }
 
 fun envOrProperty(name: String, required: Boolean = false): String? {

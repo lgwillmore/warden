@@ -8,7 +8,9 @@ theme:
     - type: 'page'
       itemId: 'ABAC Overview'
     - type: 'page'
-      itemId: 'Quick Start'
+      itemId: 'Quick Intro'
+    - type: 'page'
+      itemId: 'FAQ'
   legacySearch: false
   metaComponents:
     - type: orchidSearch

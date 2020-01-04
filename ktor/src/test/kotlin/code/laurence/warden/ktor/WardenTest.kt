@@ -1,11 +1,10 @@
 package code.laurence.warden.ktor
 
-import code.laurence.warden.ktor.Warden.Feature.WARDEN_IGNORED
 import code.laurence.warden.ktor.Warden.Feature.NOT_ENFORCED_MESSAGE
+import code.laurence.warden.ktor.Warden.Feature.WARDEN_IGNORED
 import codes.laurence.warden.Access
 import codes.laurence.warden.AccessRequest
 import codes.laurence.warden.AccessResponse
-import codes.laurence.warden.decision.DecisionPointInMemory
 import codes.laurence.warden.enforce.NotAuthorizedException
 import io.ktor.application.Application
 import io.ktor.application.call
@@ -26,20 +25,19 @@ import kotlin.test.assertEquals
 
 fun Application.testableAppDependencies() {
 
-    val enforcementPointKtor = EnforcementPointKtor(DecisionPointInMemory(
-        listOf(
-            mockk {
-                every { checkAuthorized(AccessRequest(subject = mapOf("access" to "granted"))) } returns AccessResponse(
-                    Access.Granted,
-                    AccessRequest(subject = mapOf("returned" to "from policy"))
-                )
-                every { checkAuthorized(AccessRequest(subject = mapOf("access" to "denied"))) } returns AccessResponse(
-                    Access.Denied(mapOf("message" to "Auth Denied")),
-                    AccessRequest(subject = mapOf("returned" to "from policy"))
-                )
-            }
-        )
-    ))
+    val enforcementPointKtor = EnforcementPointKtor(listOf(
+        mockk {
+            every { checkAuthorized(AccessRequest(subject = mapOf("access" to "granted"))) } returns AccessResponse(
+                Access.Granted,
+                AccessRequest(subject = mapOf("returned" to "from policy"))
+            )
+            every { checkAuthorized(AccessRequest(subject = mapOf("access" to "denied"))) } returns AccessResponse(
+                Access.Denied(mapOf("message" to "Auth Denied")),
+                AccessRequest(subject = mapOf("returned" to "from policy"))
+            )
+        }
+    )
+    )
     install(Warden)
     install(StatusPages) {
         exception<NotAuthorizedException> { cause ->
@@ -51,21 +49,21 @@ fun Application.testableAppDependencies() {
     }
 
     routing {
-        route("/authorizationNotEnforced"){
+        route("/authorizationNotEnforced") {
             get("") {
-                call.respondText("You should not be able to get me")
+                call.respondText("You should not be able to get me. Not Enforced")
             }
-            get("/Ignored"){
+            get("/Ignored") {
                 call.attributes.put(WARDEN_IGNORED, true)
-                call.respondText("You should see me")
+                call.respondText("You should see me, enforcement ignored")
             }
         }
-        route("/authorizationEnforced"){
-            get("/Granted"){
+        route("/authorizationEnforced") {
+            get("/Granted") {
                 enforcementPointKtor.enforceAuthorization(AccessRequest(subject = mapOf("access" to "granted")), call)
                 call.respondText("You should see me")
             }
-            get("/Denied"){
+            get("/Denied") {
                 enforcementPointKtor.enforceAuthorization(AccessRequest(subject = mapOf("access" to "denied")), call)
                 call.respondText("You should not be able to get me")
             }
