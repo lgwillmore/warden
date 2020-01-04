@@ -24,7 +24,7 @@ orchid {
     val isProd = envOrProperty("env") == "prod"
     environment = if (isProd) "production" else "debug"
     // Theme is required
-    theme = "Editorial"
+    theme = "BsDoc"
 
     // The following properties are optional
     version = "${project.version}"

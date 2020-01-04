@@ -1,4 +1,7 @@
+siteName: 'Warden'
 theme:
+  primaryColor: '#0a0a0a'
+  secondaryColor: '#fa3771'
   social:
     github: 'lgwillmore/warden'
   menu:
@@ -9,6 +12,8 @@ theme:
       itemId: 'ABAC Overview'
     - type: 'page'
       itemId: 'Quick Intro'
+    - type: 'page'
+      itemId: 'Policies'
     - type: 'page'
       itemId: 'FAQ'
   legacySearch: false

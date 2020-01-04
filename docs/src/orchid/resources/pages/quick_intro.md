@@ -1,5 +1,8 @@
 ---
 title: 'Quick Intro'
+menu:
+  - type: 'pageIds'
+    structure: 'nested'
 ---
 
 Let us say we have a blog site and we have the following entities: `User` and `Article`.
@@ -60,5 +63,59 @@ val articlePolicy = allOf {
 ```
 Here, we have a single `Article` policy, and we use a nested `AnyOf` policy to define our 3 access cases for an `Article`. There is quite a lot to digest there, but more detail can be found in the Policy documentation.
 
-Now that we have our policies, we can 
- 
+Now that we have our policies, we can enforce them.
+
+## Enforcement
+
+An `EnforcementPoint` allows us to protect any given execution path with an Exception. If a request is not authorized, an Exception is thrown. Let us say we have the following business domain objects and helper functions
+```kotlin
+interface HasAttributes {
+    fun attributes(): Map<String, Any?>
+}
+
+class HasAttributesComponent : HasAttributes {
+    override fun attributes(): Map<String, Any?> {
+        TODO("Implement some way of transforming to a Map")
+    }
+}
+
+data class User(
+    val id: String
+) : HasAttributes by HasAttributesComponent()
+
+class Article(
+    val id: String?,
+    val authorID: String
+) : HasAttributes by HasAttributesComponent()
+```
+
+We have our `User` and `Article` and we have defined a simple interface for getting the attribute map from each of our entities. Now let us look at a Service layer function for reading an Article.
+
+```kotlin
+val enforcementPoint = EnforcementPointDefault(policies)
+
+suspend fun readArticle(user: User, articleID: String): Article {
+    val article = getArticleByID(articleID)
+    enforcementPoint.enforceAuthorization(
+        AccessRequest(
+            subject = user.attributes(),
+            action = mapOf("type" to "READ"),
+            resource = article.attributes()
+        )
+    )
+    return article
+}
+```
+
+Here we have an instance of an `EnforcementPoint` constructed from our policies.
+
+We also have our service layer function with an already resolved `User` instance (possibly from a preceding authentication layer), and the user is requesting an `Article` by ID. The following occurs:
+
+- We retrieve the `Article`.
+- We build our `AccessRequest` from the attributes of the `User` and `Article`, and we manually construct the Action attributes based on the purpose of the function.
+- We use the `EnforcementPoint` to check the request, and then return the result.
+
+At the point of enforcement, if no access had been granted, a `NotAuthorizedException` would have been thrown and the article would not be returned. If access is granted, execution continues without a hitch.
+
+> ### NOTE
+> We have not looked at a `DecisionPoint` in this quick intro, as it is not strictly needed in the shortest path from policies to enforcement. It is the layer that lets us host our policies and decisioning independently of enforcement.

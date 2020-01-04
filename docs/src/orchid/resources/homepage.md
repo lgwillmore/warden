@@ -1,5 +1,8 @@
 ---
 title: 'Warden'
+menu:
+  - type: 'pageIds'
+    structure: 'nested'
 ---
 **Light weight Attribute Based Access Control for Kotlin**
 
@@ -10,16 +13,9 @@ Attribute Based Access Control (ABAC) is an approach to defining and enforcing a
 You can find a brief introduction to the concepts involved in ABAC [here]({{ link('ABAC Overview') }}).
 
 ## The Case for ABAC
- - Defining the rules for authorization separately from your routing provides all the benefits of low coupling.
- - Your authorization rules are business rules and are formulated against business domain objects, not URLs.
- - Role based authorization is a subset of the rules that can be defined with ABAC. You will likely find your needs extending beyond Role Based Authorization quickly.
- - With ABAC, your authorization rules can be leveraged across systems, languages, frontend, backend.
-
-## Aims of this project
- - Be lightweight and developer friendly
- - Be extendable
- - Be cross platform
- - Be framework agnostic, but provide framework specific plugins.
+ - **Decouple Authorization logic from Routing:** Defining the rules for authorization separately from your routing provides all the benefits of low coupling. In your routing, all you have to ensure is that Authorization is checked, not how or what the Authorization rules are. Your authorization rules are business rules and are formulated against business domain objects, not URLs.
+ - **Powerful and expressive Authorization logic:** Role based authorization is a subset of the rules that can be defined with ABAC. You will likely find your needs extending beyond Role Based Authorization quickly and ABAC has you covered.
+ - **Architectural components provide flexibility:** With ABAC, and the separation between decision and enforcement, your authorization rules can be leveraged across systems, languages, frontend, backend. It also exposes Policies as business data for CRUD.
  
 ## Feature Overview
  - Simple but powerful DSL for defining access Policies.
@@ -31,4 +27,4 @@ You can find a brief introduction to the concepts involved in ABAC [here]({{ lin
 ## Planned Features
  - Enforcement Point for Spring
  - Information Point - currently it is up to the developer to populate the full set of attributes before submitting for authorization. More on this later.
- - Tools for working with persistent policies (DB backed)
+ - Tools for CRUDing persistent policies
