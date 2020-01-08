@@ -88,7 +88,7 @@ class WardenTest {
         withTestApplication({ testableAppDependencies() }) {
             with(handleRequest(HttpMethod.Get, "/authorizationNotEnforced/Ignored")) {
                 assertEquals(HttpStatusCode.OK, response.status())
-                assertEquals("You should see me", response.content)
+                assertEquals("You should see me, enforcement ignored", response.content)
             }
             // Check that ignoring once does not effect other calls
             with(handleRequest(HttpMethod.Get, "/authorizationNotEnforced")) {
