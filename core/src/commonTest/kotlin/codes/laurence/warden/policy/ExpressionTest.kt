@@ -57,6 +57,23 @@ class ComparisonOperatorsTest {
     }
 
     @Test
+    fun `equal to null`() {
+        val equalToNull: Policy = ExpressionPolicy(
+            AttributeReference(AttributeType.ENVIRONMENT, "canBeNull"),
+            OperatorType.EQUAL,
+            PassThroughReference(null)
+        )
+        val isNullRequest = AccessRequest().copy(
+            environment = mapOf(Pair("canBeNull", null))
+        )
+        val isNotNullRequest = AccessRequest().copy(
+            environment = mapOf(Pair("canBeNull", "I am not"))
+        )
+        assertDenied(equalToNull.checkAuthorized(isNotNullRequest))
+        assertGranted(equalToNull.checkAuthorized(isNullRequest))
+    }
+
+    @Test
     fun lessThan() {
         val lessThan18: Policy = ExpressionPolicy(
             AttributeReference(AttributeType.SUBJECT, "age"),
