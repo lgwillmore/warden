@@ -15,8 +15,11 @@ theme:
       itemId: 'Quick Intro'
     - type: 'page'
       itemId: 'Installation'
+    - type: 'pages'
+      group: 'core'
+      asSubmenu: true
     - type: 'page'
-      itemId: 'Policies'
+      itemId: 'Ktor'
     - type: 'page'
       itemId: 'ABAC Overview'
     - type: 'page'
@@ -29,6 +32,11 @@ theme:
   legacySearch: false
   metaComponents:
     - type: orchidSearch
+    - type: 'prism'
+      languages:
+        - 'kotlin'
+        - 'groovy'
+        - 'xml'
 
 allPages:
   template: 'page'
@@ -37,12 +45,6 @@ allPages:
       structure: nested
       order: 1
 
-  metaComponents:
-    - type: 'prism'
-      languages:
-        - 'kotlin'
-        - 'groovy'
-        - 'xml'
 
 kotlindoc:
   sourceDirs:

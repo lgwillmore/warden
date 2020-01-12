@@ -15,4 +15,3 @@ A policy encapsulates the logic for a evaluating if a particular condition or se
 ### Operators
 
 ## Policy DSL
-
