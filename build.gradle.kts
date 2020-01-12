@@ -1,6 +1,7 @@
-group = "codes.laurence.warden"
-version = "1.0-SNAPSHOT"
+val projectVersion: String by project
 
+group = "codes.laurence.warden"
+version = projectVersion
 
 allprojects {
     repositories {

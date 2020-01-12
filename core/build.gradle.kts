@@ -1,12 +1,24 @@
 plugins {
     kotlin("multiplatform") version "1.3.61"
+    id("com.jfrog.bintray") version "1.8.4"
+    id("maven-publish")
 }
+
+//buildscript {
+//    repositories{
+//        jcenter()
+//    }
+//}
 
 repositories {
     mavenCentral()
 }
 
+val projectVersion: String by project
 val mockkVersion: String by project
+
+version = projectVersion
+
 
 kotlin {
     jvm()
@@ -41,6 +53,53 @@ kotlin {
             }
         }
 
+    }
+}
+
+//val coreJVMJarFile = file("build/libs/core-jvm.jar")
+//
+//artifacts {
+//    add("coreJVMJar", coreJVMJarFile)
+//}
+
+publishing {
+    publications {
+        register("coreJVM", MavenPublication::class) {
+            groupId = "codes.laurence.warden"
+            artifactId = "warden-core-jvm"
+            version = projectVersion
+            artifact("build/libs/core-jvm-${project.version}.jar")
+        }
+    }
+}
+
+bintray {
+    user = System.getenv("BINTRAY_USER")
+    key = System.getenv("BINTRAY_KEY")
+    pkg.apply {
+        repo = "codes.laurence.warden"
+        name = "warden-core-jvm"
+        websiteUrl = "https://warden-kotlin.netlify.com/"
+        vcsUrl = "https://github.com/lgwillmore/warden"
+        issueTrackerUrl = "https://github.com/lgwillmore/warden/issues"
+        setLabels("Kotlin", "ABAC", "Authorization")
+        setLicenses("MIT")
+        setPublications("coreJVM")
+        version.apply {
+            name = project.version.toString()
+//            desc = "SNAPSHOT release"
+//            val timeZone = org.gradle.internal.impldep.org.joda.time.DateTimeZone.UTC
+//            released  = org.gradle.internal.impldep.org.joda.time.DateTime(timeZone).toString()
+        }
+    }
+
+}
+
+tasks {
+    val build by existing
+
+    bintrayUpload {
+        dependsOn(build)
     }
 }
 
