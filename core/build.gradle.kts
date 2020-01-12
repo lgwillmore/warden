@@ -1,21 +1,19 @@
+val projectVersion: String by project
+val mockkVersion: String by project
+
 plugins {
     kotlin("multiplatform") version "1.3.61"
     id("com.jfrog.bintray") version "1.8.4"
     id("maven-publish")
+    id("org.jetbrains.dokka") version "0.10.0"
 }
-
-//buildscript {
-//    repositories{
-//        jcenter()
-//    }
-//}
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
-val projectVersion: String by project
-val mockkVersion: String by project
+
 
 version = projectVersion
 
@@ -56,12 +54,6 @@ kotlin {
     }
 }
 
-//val coreJVMJarFile = file("build/libs/core-jvm.jar")
-//
-//artifacts {
-//    add("coreJVMJar", coreJVMJarFile)
-//}
-
 publishing {
     publications {
         register("coreJVM", MavenPublication::class) {
@@ -87,7 +79,7 @@ bintray {
         setPublications("coreJVM")
         version.apply {
             name = project.version.toString()
-//            desc = "SNAPSHOT release"
+            desc = "SNAPSHOT release"
 //            val timeZone = org.gradle.internal.impldep.org.joda.time.DateTimeZone.UTC
 //            released  = org.gradle.internal.impldep.org.joda.time.DateTime(timeZone).toString()
         }
@@ -100,6 +92,11 @@ tasks {
 
     bintrayUpload {
         dependsOn(build)
+    }
+
+    dokka{
+        outputFormat = "html"
+        outputDirectory = "../build/dokka-core"
     }
 }
 

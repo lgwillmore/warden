@@ -1,8 +1,10 @@
-siteName: 'Warden'
+site:
+  about:
+    siteName: "Warden"
+    subtitle: "Attribute Based Access Control for Kotlin"
 
 theme:
-  primaryColor: '#0a0a0a'
-  secondaryColor: '#fa3771'
+  primaryColor: '#138539'
   social:
     github: 'lgwillmore/warden'
   menu:
@@ -10,15 +12,20 @@ theme:
       title: 'Home'
       url: '/'
     - type: 'page'
-      itemId: 'Installation'
-    - type: 'page'
-      itemId: 'ABAC Overview'
-    - type: 'page'
       itemId: 'Quick Intro'
+    - type: 'page'
+      itemId: 'Installation'
     - type: 'page'
       itemId: 'Policies'
     - type: 'page'
+      itemId: 'ABAC Overview'
+    - type: 'page'
       itemId: 'FAQ'
+    - type: 'sourcedocPages'
+      moduleType: 'kotlindoc'
+      node: 'packages'
+      asSubmenu: true
+      submenuTitle: 'Source Docs'
   legacySearch: false
   metaComponents:
     - type: orchidSearch
@@ -36,6 +43,16 @@ allPages:
         - 'kotlin'
         - 'groovy'
         - 'xml'
+
+kotlindoc:
+  sourceDirs:
+    - './../../../../core/src/commonMain/kotlin'
+  pages:
+    menu:
+      - type: 'sourcedocPageLinks'
+        moduleType: 'kotlindoc'
+        itemTitleType: 'SIGNATURE'
+        includeItems: true
 
 services:
   generators:

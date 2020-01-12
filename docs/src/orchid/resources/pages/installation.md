@@ -11,6 +11,7 @@ repositories {
 ```groovy
 compile 'codes.laurence.warden:warden-core-jvm:0.0.1'
 ```
+---
 ## Maven
 **Add the repo**
 ```xml

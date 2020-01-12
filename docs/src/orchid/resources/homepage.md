@@ -1,16 +1,13 @@
 ---
-title: 'Warden'
-menu:
-  - type: 'pageIds'
-    structure: 'nested'
+title: 'Home'
 ---
-**Light weight Attribute Based Access Control for Kotlin**
+>**Light weight Attribute Based Access Control for Kotlin**
 
 ![Build Status](https://travis-ci.org/lgwillmore/warden.svg?branch=master)
 
 Attribute Based Access Control (ABAC) is an approach to defining and enforcing authorization rules.
 
-You can find a brief introduction to the concepts involved in ABAC [here]({{ link('ABAC Overview') }}).
+You can find out more about the concepts involved here: [ABAC Overview]({{ link('ABAC Overview') }}).
 
 ## The Case for ABAC
  - **Decouple Authorization logic from Routing:** Defining the rules for authorization separately from your routing provides all the benefits of low coupling. In your routing, all you have to ensure is that Authorization is checked, not how or what the Authorization rules are. Your authorization rules are business rules and are formulated against business domain objects, not URLs.

@@ -14,9 +14,19 @@ val orchidVersion: String by project
 dependencies {
     orchidImplementation("io.github.javaeden.orchid:OrchidCore:$orchidVersion")
     orchidImplementation("io.github.javaeden.orchid:OrchidPages:$orchidVersion")
+    orchidRuntime("io.github.javaeden.orchid:OrchidSearch:$orchidVersion")
+
+    // Themes
     orchidImplementation("io.github.javaeden.orchid:OrchidBsDoc:$orchidVersion")
+    orchidRuntime("io.github.javaeden.orchid:OrchidEditorial:$orchidVersion")
+
     orchidImplementation("io.github.javaeden.orchid:OrchidSyntaxHighlighter:$orchidVersion")
-    orchidRuntimeOnly("io.github.javaeden.orchid:OrchidGithub:$orchidVersion")
+    orchidRuntime("io.github.javaeden.orchid:OrchidGithub:$orchidVersion")
+
+    // Source Docs
+    orchidRuntime("io.github.javaeden.orchid:OrchidDocs:$orchidVersion")
+    orchidRuntime("io.github.javaeden.orchid:OrchidKotlindoc:$orchidVersion")
+    orchidRuntime("io.github.javaeden.orchid:OrchidPluginDocs:$orchidVersion")
 }
 
 fun envOrProperty(name: String, required: Boolean = false): String? {
@@ -29,10 +39,11 @@ orchid {
     val isProd = envOrProperty("env") == "prod"
     environment = if (isProd) "production" else "debug"
     // Theme is required
-    theme = "BsDoc"
+    theme = "Editorial"
 
     // The following properties are optional
-    version = "${project.version}"
+    version = projectVersion
+    args = listOf("--experimentalSourceDoc")
     baseUrl = when {
         isProd && envOrProperty("PULL_REQUEST") == "true" -> envOrProperty("DEPLOY_URL", required = true)
         isProd -> envOrProperty("URL", required = true)
