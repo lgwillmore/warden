@@ -1,4 +1,5 @@
 siteName: 'Warden'
+
 theme:
   primaryColor: '#0a0a0a'
   secondaryColor: '#fa3771'
@@ -8,6 +9,8 @@ theme:
     - type: 'link'
       title: 'Home'
       url: '/'
+    - type: 'page'
+      itemId: 'Installation'
     - type: 'page'
       itemId: 'ABAC Overview'
     - type: 'page'
@@ -19,6 +22,20 @@ theme:
   legacySearch: false
   metaComponents:
     - type: orchidSearch
+
+allPages:
+  template: 'page'
+  menu:
+    - type: pageIds
+      structure: nested
+      order: 1
+
+  metaComponents:
+    - type: 'prism'
+      languages:
+        - 'kotlin'
+        - 'groovy'
+        - 'xml'
 
 services:
   generators:

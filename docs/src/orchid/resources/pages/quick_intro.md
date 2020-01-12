@@ -1,8 +1,5 @@
 ---
 title: 'Quick Intro'
-menu:
-  - type: 'pageIds'
-    structure: 'nested'
 ---
 
 Let us say we have a blog site and we have the following entities: `User` and `Article`.
@@ -42,6 +39,7 @@ val policies = listOf(
 Here we have a single `AllOf` policy for each one of our logical desired policies. These each define all of the conditions that must be met to satisfy what we want logically.
 
 Having each one as its own separate policy might be preferred by some, but we could also build this in a way which kept all of the authorization logic for `Article` more clearly grouped. We can leverage nested `AllOf` and `AnyOf` Policies to achieve this.
+
 ```kotlin
 val articlePolicy = allOf {
     resource("type") equalTo "Article"
@@ -117,5 +115,4 @@ We also have our service layer function with an already resolved `User` instance
 
 At the point of enforcement, if no access had been granted, a `NotAuthorizedException` would have been thrown and the article would not be returned. If access is granted, execution continues without a hitch.
 
-> ### NOTE
-> We have not looked at a `DecisionPoint` in this quick intro, as it is not strictly needed in the shortest path from policies to enforcement. It is the layer that lets us host our policies and decisioning independently of enforcement.
+> **NOTE:** We have not looked at a `DecisionPoint` in this quick intro, as it is not strictly needed in the shortest path from policies to enforcement. It is the layer that lets us host our policies and decisioning independently of enforcement.

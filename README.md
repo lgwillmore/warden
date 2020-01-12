@@ -4,7 +4,7 @@
 
 >A kotlin implementation of light weight Attribute Based Access Control (ABAC).
 
-**You can find full documentation [here](https://warden-kotlin.netlify.com/)**
+**[FULL DOCUMENTATION](https://warden-kotlin.netlify.com/)**
 
 ## A Quick Intro
 

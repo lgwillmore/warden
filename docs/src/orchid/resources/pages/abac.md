@@ -1,8 +1,5 @@
 ---
 title: 'ABAC Overview'
-menu:
-  - type: 'pageIds'
-    structure: 'nested'
 ---
 
 Attribute Based Access Control (ABAC) is an authorization paradigm that uses policies built around the attributes of a access request.

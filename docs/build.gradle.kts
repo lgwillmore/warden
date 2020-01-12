@@ -8,10 +8,15 @@ repositories {
     maven(url = "https://jitpack.io")
 }
 
+val projectVersion: String by project
 val orchidVersion: String by project
 
 dependencies {
-    orchidRuntime("io.github.javaeden.orchid:OrchidAll:$orchidVersion")
+    orchidImplementation("io.github.javaeden.orchid:OrchidCore:$orchidVersion")
+    orchidImplementation("io.github.javaeden.orchid:OrchidPages:$orchidVersion")
+    orchidImplementation("io.github.javaeden.orchid:OrchidBsDoc:$orchidVersion")
+    orchidImplementation("io.github.javaeden.orchid:OrchidSyntaxHighlighter:$orchidVersion")
+    orchidRuntimeOnly("io.github.javaeden.orchid:OrchidGithub:$orchidVersion")
 }
 
 fun envOrProperty(name: String, required: Boolean = false): String? {
