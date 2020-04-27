@@ -25,6 +25,8 @@ class AllOf(policies: List<Policy>) : Policy, CollectionBasedPolicy(policies.toM
                     is Access.Denied -> {
                         return response
                     }
+                    else -> {
+                    }
                 }
             }
             return AccessResponse(Access.Granted, accessRequest)
@@ -50,6 +52,8 @@ class AnyOf(policies: MutableList<Policy>) : Policy, CollectionBasedPolicy(polic
             when (response.access) {
                 is Access.Granted -> {
                     return response
+                }
+                else -> {
                 }
             }
         }

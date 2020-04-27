@@ -16,7 +16,7 @@ import io.ktor.application.ApplicationCall
  */
 class EnforcementPointKtor(decisionPoint: DecisionPoint) {
 
-    constructor(policies: List<Policy>):this(DecisionPointInMemory(policies))
+    constructor(policies: List<Policy>) : this(DecisionPointInMemory(policies))
 
     private val enforcementPoint: EnforcementPoint = EnforcementPointDefault(decisionPoint)
 

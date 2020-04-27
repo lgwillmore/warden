@@ -8,7 +8,7 @@ import codes.laurence.warden.policy.Policy
 
 class EnforcementPointDefault(val decisionPoint: DecisionPoint) : EnforcementPoint {
 
-    constructor(policies: List<Policy>):this(DecisionPointInMemory(policies))
+    constructor(policies: List<Policy>) : this(DecisionPointInMemory(policies))
 
     override suspend fun enforceAuthorization(request: AccessRequest) {
         val response = decisionPoint.checkAuthorized(request)

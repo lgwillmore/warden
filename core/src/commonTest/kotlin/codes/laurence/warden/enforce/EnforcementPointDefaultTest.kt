@@ -17,7 +17,7 @@ import kotlin.test.assertFailsWith
 class EnforcementPointDefaultTest {
 
     @Test
-    fun `constructor - list of policies`(){
+    fun `constructor - list of policies`() {
         val policies = listOf(Exp.action("foo") equalTo "bar")
         val testObj = EnforcementPointDefault(policies)
 

@@ -31,22 +31,22 @@ import io.ktor.util.AttributeKey
  *
  * Example Routing:
  *
-        routing {
-            route("/authorizationNotEnforced"){
-                get("") {
-                    call.respondText("You should not be able to get me, you did not enforce authorization")
-                }
-                get("/Ignored"){
-                    call.attributes.put(WARDEN_IGNORED, true)
-                    call.respondText("You should see me")
-                }
-            }
-            get("/authorizationEnforced"){
-                val accessRequest: AccessRequest = <build an access>
-                enforcementPointKtor.enforceAuthorization(accessRequest, call)
-                call.respondText("You should see me if you are authorized")
-            }
-        }
+routing {
+route("/authorizationNotEnforced"){
+get("") {
+call.respondText("You should not be able to get me, you did not enforce authorization")
+}
+get("/Ignored"){
+call.attributes.put(WARDEN_IGNORED, true)
+call.respondText("You should see me")
+}
+}
+get("/authorizationEnforced"){
+val accessRequest: AccessRequest = <build an access>
+enforcementPointKtor.enforceAuthorization(accessRequest, call)
+call.respondText("You should see me if you are authorized")
+}
+}
  */
 class Warden(config: Configuration) {
 
@@ -66,7 +66,7 @@ class Warden(config: Configuration) {
 
             pipeline.sendPipeline.intercept(ApplicationSendPipeline.After) {
                 val ignored = call.attributes.getOrNull(WARDEN_IGNORED) ?: false
-                if(ignored) return@intercept
+                if (ignored) return@intercept
                 val enforced = call.attributes.getOrNull(WARDEN_ENFORCED) ?: false
                 if (!enforced) {
                     val content = TextContent(
