@@ -1,9 +1,15 @@
 val projectVersion: String by project
 val mockkVersion: String by project
 
+buildscript {
+    dependencies {
+        classpath("com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.0")
+    }
+}
+
 plugins {
     kotlin("multiplatform") version "1.3.61"
-    id("com.jfrog.bintray") version "1.8.4"
+    id("com.jfrog.bintray") version "1.8.0"
     id("maven-publish")
     id("org.jetbrains.dokka") version "0.10.0"
 }
@@ -60,7 +66,7 @@ publishing {
             groupId = "codes.laurence.warden"
             artifactId = "warden-core-jvm"
             version = projectVersion
-            artifact("build/libs/core-jvm-${project.version}.jar")
+            artifact("$buildDir/libs/core-jvm-${project.version}.jar")
         }
     }
 }
