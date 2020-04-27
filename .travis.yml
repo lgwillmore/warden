@@ -10,5 +10,5 @@ before_install:
   - chmod +x gradle/wrapper/gradle-wrapper.jar
 
 script:
-  - ./gradlew core:allTests
-  - ./gradlew ktor:test
+  - ./gradlew warden-core-jvm:allTests
+  - ./gradlew warden-ktor:test
