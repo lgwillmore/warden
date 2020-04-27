@@ -8,3 +8,13 @@ allprojects {
         mavenCentral()
     }
 }
+
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath("com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.5")
+    }
+}

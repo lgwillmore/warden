@@ -1,15 +1,9 @@
 val projectVersion: String by project
 val mockkVersion: String by project
 
-buildscript {
-    dependencies {
-        classpath("com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.0")
-    }
-}
-
 plugins {
     kotlin("multiplatform") version "1.3.61"
-    id("com.jfrog.bintray") version "1.8.0"
+    id("com.jfrog.bintray")
     id("maven-publish")
     id("org.jetbrains.dokka") version "0.10.0"
 }
@@ -20,8 +14,10 @@ repositories {
 }
 
 
-
+group = "codes.laurence.warden"
 version = projectVersion
+
+
 
 
 kotlin {
@@ -56,13 +52,12 @@ kotlin {
                 implementation("com.willowtreeapps.assertk:assertk-jvm:0.20")
             }
         }
-
     }
 }
 
 publishing {
     publications {
-        register("coreJVM", MavenPublication::class) {
+        create<MavenPublication>("coreJVM") {
             groupId = "codes.laurence.warden"
             artifactId = "warden-core-jvm"
             version = projectVersion
@@ -74,6 +69,7 @@ publishing {
 bintray {
     user = System.getenv("BINTRAY_USER")
     key = System.getenv("BINTRAY_KEY")
+    setPublications("coreJVM")
     pkg.apply {
         repo = "codes.laurence.warden"
         name = "warden-core-jvm"
@@ -82,12 +78,9 @@ bintray {
         issueTrackerUrl = "https://github.com/lgwillmore/warden/issues"
         setLabels("Kotlin", "ABAC", "Authorization")
         setLicenses("MIT")
-        setPublications("coreJVM")
         version.apply {
             name = project.version.toString()
             desc = "SNAPSHOT release"
-//            val timeZone = org.gradle.internal.impldep.org.joda.time.DateTimeZone.UTC
-//            released  = org.gradle.internal.impldep.org.joda.time.DateTime(timeZone).toString()
         }
     }
 
@@ -100,7 +93,7 @@ tasks {
         dependsOn(build)
     }
 
-    dokka{
+    dokka {
         outputFormat = "html"
         outputDirectory = "../build/dokka-core"
     }

@@ -1,24 +1,17 @@
 plugins {
     kotlin("jvm") version "1.3.61"
-    id("com.jfrog.bintray") version "1.8.0"
+    id("com.jfrog.bintray")
     id("maven-publish")
-}
-
-buildscript {
-    dependencies {
-        classpath("com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.0")
-    }
 }
 
 val ktorVersion: String by project
 val mockkVersion: String by project
 val projectVersion: String by project
+group = "codes.laurence.warden"
 version = projectVersion
 
 dependencies {
-
-    implementation(project(":core"))
-
+    api(project(":warden-core-jvm"))
     api("io.ktor:ktor-server-core:$ktorVersion")
 
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
@@ -26,13 +19,52 @@ dependencies {
     testImplementation(kotlin("test"))
 }
 
+val artifactName = "warden-ktor"
+val artifactGroup = "codes.laurence.warden"
+val artifactVersion = projectVersion
+
+val pomUrl = "https://warden-kotlin.netlify.com/"
+val pomScmUrl = "https://github.com/lgwillmore/warden"
+val pomIssueUrl = "https://github.com/lgwillmore/warden/issues"
+val pomDesc = "https://github.com/lgwillmore/warden"
+
+val githubRepo = "lgwillmore/warden"
+val githubReadme = "README.md"
+
+val pomLicenseName = "MIT"
+val pomLicenseUrl = "https://opensource.org/licenses/mit-license.php"
+val pomLicenseDist = "repo"
+
+val pomDeveloperId = "lgwillmore"
+val pomDeveloperName = "Laurence Willmore"
+
 publishing {
     publications {
-        register("ktorJar", MavenPublication::class) {
-            groupId = "codes.laurence.warden"
-            artifactId = "warden-ktor"
-            version = projectVersion
-            artifact("$buildDir/libs/ktor-${project.version}.jar")
+        create<MavenPublication>("ktorJar") {
+            groupId = artifactGroup
+            artifactId = artifactName
+            version = artifactVersion
+            from(components["java"])
+
+            pom.withXml {
+                asNode().apply {
+                    appendNode("description", pomDesc)
+                    appendNode("name", rootProject.name)
+                    appendNode("url", pomUrl)
+                    appendNode("licenses").appendNode("license").apply {
+                        appendNode("name", pomLicenseName)
+                        appendNode("url", pomLicenseUrl)
+                        appendNode("distribution", pomLicenseDist)
+                    }
+                    appendNode("developers").appendNode("developer").apply {
+                        appendNode("id", pomDeveloperId)
+                        appendNode("name", pomDeveloperName)
+                    }
+                    appendNode("scm").apply {
+                        appendNode("url", pomScmUrl)
+                    }
+                }
+            }
         }
     }
 }
@@ -40,23 +72,20 @@ publishing {
 bintray {
     user = System.getenv("BINTRAY_USER")
     key = System.getenv("BINTRAY_KEY")
+    setPublications("ktorJar")
     pkg.apply {
-        repo = "codes.laurence.warden"
-        name = "warden-ktor"
-        websiteUrl = "https://warden-kotlin.netlify.com/"
-        vcsUrl = "https://github.com/lgwillmore/warden"
-        issueTrackerUrl = "https://github.com/lgwillmore/warden/issues"
+        repo = artifactGroup
+        name = artifactName
+        websiteUrl = pomUrl
+        vcsUrl = pomScmUrl
+        issueTrackerUrl = pomIssueUrl
         setLabels("Kotlin", "ABAC", "Authorization")
         setLicenses("MIT")
-        setPublications("ktorJar")
         version.apply {
             name = project.version.toString()
             desc = "SNAPSHOT release"
-//            val timeZone = org.gradle.internal.impldep.org.joda.time.DateTimeZone.UTC
-//            released  = org.gradle.internal.impldep.org.joda.time.DateTime(timeZone).toString()
         }
     }
-
 }
 
 configure<JavaPluginConvention> {
