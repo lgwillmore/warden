@@ -51,21 +51,36 @@ fun Application.testableAppDependencies() {
     routing {
         route("/authorizationNotEnforced") {
             get("") {
-                call.respondText("You should not be able to get me. Not Enforced")
+                wardenCall{
+                    call.respondText("You should not be able to get me. Not Enforced")
+                }
             }
             get("/Ignored") {
-                call.attributes.put(WARDEN_IGNORED, true)
+                wardenIgnore()
                 call.respondText("You should see me, enforcement ignored")
             }
         }
         route("/authorizationEnforced") {
             get("/Granted") {
-                enforcementPointKtor.enforceAuthorization(AccessRequest(subject = mapOf("access" to "granted")), call)
-                call.respondText("You should see me")
+                wardenCall {
+                    enforcementPointKtor.enforceAuthorization(AccessRequest(subject = mapOf("access" to "granted")))
+                    call.respondText("You should see me")
+                }
             }
             get("/Denied") {
-                enforcementPointKtor.enforceAuthorization(AccessRequest(subject = mapOf("access" to "denied")), call)
-                call.respondText("You should not be able to get me")
+                wardenCall{
+                    enforcementPointKtor.enforceAuthorization(AccessRequest(subject = mapOf("access" to "denied")))
+                    call.respondText("You should not be able to get me")
+                }
+            }
+            get("/wardenCallNotCalled"){
+                try {
+                    enforcementPointKtor.enforceAuthorization(AccessRequest(subject = mapOf("access" to "granted")))
+                    call.respondText("You should not see me due to an error")
+                }catch (e: KtorEnforcementPointException){
+                    wardenIgnore()
+                    call.respondText("Got a KtorEnforcementError")
+                }
             }
         }
     }
@@ -113,6 +128,16 @@ class WardenTest {
             with(handleRequest(HttpMethod.Get, "/authorizationEnforced/Denied")) {
                 assertEquals(HttpStatusCode.Unauthorized, response.status())
                 assertEquals("Auth Denied", response.content)
+            }
+        }
+    }
+
+    @Test
+    fun `get - enforcement point called - wardenCall not called`() {
+        withTestApplication({ testableAppDependencies() }) {
+            with(handleRequest(HttpMethod.Get, "/authorizationEnforced/wardenCallNotCalled")) {
+                assertEquals(HttpStatusCode.OK, response.status())
+                assertEquals("Got a KtorEnforcementError", response.content)
             }
         }
     }

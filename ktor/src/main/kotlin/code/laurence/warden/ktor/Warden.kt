@@ -1,5 +1,6 @@
 package code.laurence.warden.ktor
 
+import io.ktor.application.ApplicationCall
 import io.ktor.application.ApplicationCallPipeline
 import io.ktor.application.ApplicationFeature
 import io.ktor.application.call
@@ -8,6 +9,11 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.TextContent
 import io.ktor.response.ApplicationSendPipeline
 import io.ktor.util.AttributeKey
+import io.ktor.util.pipeline.PipelineContext
+import kotlinx.coroutines.withContext
+import kotlin.coroutines.AbstractCoroutineContextElement
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.coroutineContext
 
 /**
  * A ktor Feature that ensures that all your routes are protected by Warden, or explicitly exempt from Authorization.
@@ -80,4 +86,41 @@ class Warden(config: Configuration) {
             return warden
         }
     }
+}
+
+suspend fun PipelineContext<Unit, ApplicationCall>.wardenIgnore(){
+    call.attributes.put(Warden.WARDEN_IGNORED, true)
+}
+
+suspend fun PipelineContext<Unit, ApplicationCall>.wardenCall(
+    bodyOfCall: suspend PipelineContext<Unit, ApplicationCall>.() -> Unit
+) {
+    val pipeline = this
+    val wardenContext = enter(this.call)
+    withContext(wardenContext){
+        pipeline.bodyOfCall()
+    }
+    exit(wardenContext)
+}
+
+internal suspend fun enter(call: ApplicationCall): CoroutineContext {
+    var context = coroutineContext
+    val wardenCall = WardenKtorCall(call)
+    context = context.plus(wardenCall)
+    return context
+}
+
+internal fun exit(context: CoroutineContext) {
+    val wardenCall = context[WardenKtorCall.Key]
+        ?: throw Exception("This should never be called before ensuring wardenCall present")
+    wardenCall.call = null
+}
+
+internal class WardenKtorCall(var call: ApplicationCall?) : AbstractCoroutineContextElement(WardenKtorCall) {
+    /**
+     * Key for [CoroutineActorStateStack] instance in the coroutine context.
+     */
+    companion object Key :
+        CoroutineContext.Key<WardenKtorCall>
+
 }
