@@ -61,7 +61,7 @@ publishing {
             groupId = "codes.laurence.warden"
             artifactId = "warden-core-jvm"
             version = projectVersion
-            artifact("$buildDir/libs/core-jvm-${project.version}.jar")
+            artifact("$buildDir/libs/warden-core-jvm-jvm-${project.version}.jar")
         }
     }
 }
