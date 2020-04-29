@@ -5,8 +5,11 @@ import io.ktor.application.ApplicationCallPipeline
 import io.ktor.application.ApplicationFeature
 import io.ktor.application.call
 import io.ktor.http.ContentType
+import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.TextContent
+import io.ktor.request.httpMethod
+import io.ktor.request.uri
 import io.ktor.response.ApplicationSendPipeline
 import io.ktor.util.AttributeKey
 import io.ktor.util.pipeline.PipelineContext
@@ -54,11 +57,14 @@ call.respondText("You should see me if you are authorized")
 }
 }
  */
-class Warden(config: Configuration) {
+class Warden(config: WardenConfiguration) {
+    val routeStack: List<WardenRoute> = config.routePriorityStack.toList()
 
-    class Configuration
+    class WardenConfiguration {
+        var routePriorityStack: List<WardenRoute> = emptyList()
+    }
 
-    companion object Feature : ApplicationFeature<ApplicationCallPipeline, Configuration, Warden> {
+    companion object Feature : ApplicationFeature<ApplicationCallPipeline, WardenConfiguration, Warden> {
 
         internal val WARDEN_ENFORCED = AttributeKey<Boolean>("warden.enforced")
         val WARDEN_IGNORED = AttributeKey<Boolean>("warden.ignored")
@@ -66,13 +72,17 @@ class Warden(config: Configuration) {
 
         override val key = AttributeKey<Warden>("Warden")
 
-        override fun install(pipeline: ApplicationCallPipeline, configure: Configuration.() -> Unit): Warden {
-            val config = Configuration().apply(configure)
+        override fun install(pipeline: ApplicationCallPipeline, configure: WardenConfiguration.() -> Unit): Warden {
+            val config = WardenConfiguration().apply(configure)
             val warden = Warden(config)
 
             pipeline.sendPipeline.intercept(ApplicationSendPipeline.After) {
-                val ignored = call.attributes.getOrNull(WARDEN_IGNORED) ?: false
-                if (ignored) return@intercept
+                val configIgnored = when (evaluateRoute(warden.routeStack, call.request.uri, call.request.httpMethod)) {
+                    WardenRouteBehaviour.ENFORCE -> false
+                    WardenRouteBehaviour.IGNORE -> true
+                }
+                val inlineIgnored = call.attributes.getOrNull(WARDEN_IGNORED) ?: false
+                if (inlineIgnored || configIgnored) return@intercept
                 val enforced = call.attributes.getOrNull(WARDEN_ENFORCED) ?: false
                 if (!enforced) {
                     val content = TextContent(
@@ -88,7 +98,29 @@ class Warden(config: Configuration) {
     }
 }
 
-suspend fun PipelineContext<Unit, ApplicationCall>.wardenIgnore(){
+enum class WardenRouteBehaviour {
+    IGNORE,
+    ENFORCE
+}
+
+data class WardenRoute(
+    val route: String,
+    val behaviour: WardenRouteBehaviour,
+    val methods: Set<HttpMethod> = HttpMethod.DefaultMethods.toSet()
+){
+    internal val reg = route.toRegex()
+}
+
+internal fun evaluateRoute(stack: List<WardenRoute>, route: String, method: HttpMethod): WardenRouteBehaviour {
+    for (wardenRoute in stack) {
+        if (wardenRoute.reg.matches(route) && wardenRoute.methods.contains(method)) {
+            return wardenRoute.behaviour
+        }
+    }
+    return WardenRouteBehaviour.ENFORCE
+}
+
+suspend fun PipelineContext<Unit, ApplicationCall>.wardenIgnore() {
     call.attributes.put(Warden.WARDEN_IGNORED, true)
 }
 
@@ -97,7 +129,7 @@ suspend fun PipelineContext<Unit, ApplicationCall>.wardenCall(
 ) {
     val pipeline = this
     val wardenContext = enter(this.call)
-    withContext(wardenContext){
+    withContext(wardenContext) {
         pipeline.bodyOfCall()
     }
     exit(wardenContext)

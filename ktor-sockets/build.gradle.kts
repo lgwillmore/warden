@@ -13,8 +13,12 @@ version = projectVersion
 
 dependencies {
     api(project(":warden-core-jvm"))
-    api("io.ktor:ktor-server-core:$ktorVersion")
+    api(project(":warden-ktor"))
 
+    api("io.ktor:ktor-server-core:$ktorVersion")
+    api("io.ktor:ktor-websockets:$ktorVersion")
+
+    testImplementation(project(":warden-ktor"))
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
     testImplementation("io.mockk:mockk:$mockkVersion")
     testImplementation("com.willowtreeapps.assertk:assertk-jvm:$assertKVersion")
