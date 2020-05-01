@@ -8,12 +8,14 @@ val ktorVersion: String by project
 val mockkVersion: String by project
 val projectVersion: String by project
 val assertKVersion: String by project
+val slf4jVersion: String by project
 group = "codes.laurence.warden"
 version = projectVersion
 
 dependencies {
     api(project(":warden-core-jvm"))
     api("io.ktor:ktor-server-core:$ktorVersion")
+    api("org.slf4j", "slf4j-api", slf4jVersion)
 
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
     testImplementation("io.mockk:mockk:$mockkVersion")

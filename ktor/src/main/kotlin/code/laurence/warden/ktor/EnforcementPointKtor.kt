@@ -7,6 +7,7 @@ import codes.laurence.warden.decision.DecisionPointInMemory
 import codes.laurence.warden.enforce.EnforcementPoint
 import codes.laurence.warden.enforce.EnforcementPointDefault
 import codes.laurence.warden.policy.Policy
+import org.slf4j.LoggerFactory
 import kotlin.coroutines.coroutineContext
 
 /**
@@ -14,7 +15,11 @@ import kotlin.coroutines.coroutineContext
  *
  * This means that all routes must have an [enforceAuthorization] call or be explicitly ignored.
  */
-class EnforcementPointKtor(decisionPoint: DecisionPoint): EnforcementPoint {
+class EnforcementPointKtor(decisionPoint: DecisionPoint) : EnforcementPoint {
+
+    companion object {
+        private val logger = LoggerFactory.getLogger(EnforcementPointKtor::class.java)
+    }
 
     constructor(policies: List<Policy>) : this(DecisionPointInMemory(policies))
 
@@ -22,8 +27,11 @@ class EnforcementPointKtor(decisionPoint: DecisionPoint): EnforcementPoint {
 
     override suspend fun enforceAuthorization(request: AccessRequest) {
         val call = coroutineContext[WardenKtorCall.Key]?.call
-            ?: throw KtorEnforcementPointException("A Ktor call has not been set. Remember to enforce authorization in a `wardenCall` block")
-        call.attributes.put(WARDEN_ENFORCED, true)
+        if (call == null) {
+            logger.info("Being enforced outside of a `wardenCall` block. Cannot communicate with Warden ktor plugin")
+        } else {
+            call.attributes.put(WARDEN_ENFORCED, true)
+        }
         enforcementPoint.enforceAuthorization(request)
     }
 }

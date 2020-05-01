@@ -83,13 +83,8 @@ fun Application.testableAppDependencies() {
                 }
             }
             get("/wardenCallNotCalled") {
-                try {
-                    enforcementPointKtor.enforceAuthorization(AccessRequest(subject = mapOf("access" to "granted")))
-                    call.respondText("You should not see me due to an error")
-                } catch (e: KtorEnforcementPointException) {
-                    wardenIgnore()
-                    call.respondText("Got a KtorEnforcementError")
-                }
+                enforcementPointKtor.enforceAuthorization(AccessRequest(subject = mapOf("access" to "granted")))
+                call.respondText("You should not see me due to an not being authorized")
             }
         }
     }
@@ -159,8 +154,7 @@ class WardenTest {
     fun `get - enforcement point called - wardenCall not called`() {
         withTestApplication({ testableAppDependencies() }) {
             with(handleRequest(HttpMethod.Get, "/authorizationEnforced/wardenCallNotCalled")) {
-                assertEquals(HttpStatusCode.OK, response.status())
-                assertEquals("Got a KtorEnforcementError", response.content)
+                assertEquals(HttpStatusCode.Unauthorized, response.status())
             }
         }
     }
