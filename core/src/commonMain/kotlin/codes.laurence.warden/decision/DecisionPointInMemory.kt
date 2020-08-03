@@ -3,6 +3,7 @@ package codes.laurence.warden.decision
 import codes.laurence.warden.AccessRequest
 import codes.laurence.warden.AccessResponse
 import codes.laurence.warden.policy.AllOf
+import codes.laurence.warden.policy.AnyOf
 import codes.laurence.warden.policy.Policy
 
 /**
@@ -12,10 +13,10 @@ import codes.laurence.warden.policy.Policy
  */
 class DecisionPointInMemory(policies: List<Policy>) : DecisionPoint {
 
-    private val allOfContainer = AllOf(policies)
+    private val anyOfContainer = AnyOf(policies)
 
     override suspend fun checkAuthorized(request: AccessRequest): AccessResponse {
-        return allOfContainer.checkAuthorized(request)
+        return anyOfContainer.checkAuthorized(request)
     }
 
 }

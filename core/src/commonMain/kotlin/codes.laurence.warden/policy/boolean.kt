@@ -32,13 +32,12 @@ class AllOf(policies: List<Policy>) : Policy, CollectionBasedPolicy(policies.toM
             return AccessResponse(Access.Granted, accessRequest)
         }
     }
-
 }
 
 /**
  * At least 1 policy must grant access.
  */
-class AnyOf(policies: MutableList<Policy>) : Policy, CollectionBasedPolicy(policies) {
+class AnyOf(policies: List<Policy>) : Policy, CollectionBasedPolicy(policies.toMutableList()) {
 
     constructor(builder: CollectionBasedPolicy.() -> Unit) : this(mutableListOf()) {
         this.builder()

@@ -16,7 +16,7 @@ val accessRequest = AccessRequest().copy(
 val willAuthorizePolicy = mockk<Policy> {
     every { checkAuthorized(accessRequest) } returns AccessResponse(Access.Granted, accessRequest)
 }
-val denial = AccessResponse(Access.Denied(mapOf("arbitrary" to "denial")), accessRequest)
+val denial = AccessResponse(Access.Denied(), accessRequest)
 val granted = AccessResponse(Access.Granted, accessRequest)
 val willNotAuthorizePolicy = mockk<Policy> {
     every { checkAuthorized(accessRequest) } returns denial
@@ -37,15 +37,15 @@ class InMemoryDecisionPointTest {
 
 
     @Test
-    fun checkAuthorized_onlySomeAuthorized() = runBlockingTest {
+    fun checkAuthorized_atLeastOneAuthorized() = runBlockingTest {
         assertEquals(
-            denial,
+            granted,
             DecisionPointInMemory(
                 listOf(
-                    willAuthorizePolicy,
-                    willAuthorizePolicy,
                     willNotAuthorizePolicy,
-                    willAuthorizePolicy
+                    willNotAuthorizePolicy,
+                    willAuthorizePolicy,
+                    willNotAuthorizePolicy
                 )
             ).checkAuthorized(accessRequest)
         )

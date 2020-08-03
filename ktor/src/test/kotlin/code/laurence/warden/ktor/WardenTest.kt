@@ -145,7 +145,7 @@ class WardenTest {
         withTestApplication({ testableAppDependencies() }) {
             with(handleRequest(HttpMethod.Get, "/authorizationEnforced/Denied")) {
                 assertEquals(HttpStatusCode.Unauthorized, response.status())
-                assertEquals("Auth Denied", response.content)
+                assertEquals("No Denied message", response.content)
             }
         }
     }
