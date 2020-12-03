@@ -18,7 +18,7 @@ import kotlin.coroutines.coroutineContext
 class EnforcementPointKtor(decisionPoint: DecisionPoint) : EnforcementPoint {
 
     companion object {
-        private val logger = LoggerFactory.getLogger(EnforcementPointKtor::class.java)
+        private val logger = LoggerFactory.getLogger(EnforcementPointKtor::class.qualifiedName)
     }
 
     constructor(policies: List<Policy>) : this(DecisionPointInMemory(policies))
@@ -28,7 +28,7 @@ class EnforcementPointKtor(decisionPoint: DecisionPoint) : EnforcementPoint {
     override suspend fun enforceAuthorization(request: AccessRequest) {
         val call = coroutineContext[WardenKtorCall.Key]?.call
         if (call == null) {
-            logger.info("Being enforced outside of a `wardenCall` block. Cannot communicate with Warden ktor plugin")
+            logger.debug("Being enforced outside of a `wardenCall` block. Cannot communicate with Warden ktor plugin")
         } else {
             call.attributes.put(WARDEN_ENFORCED, true)
         }

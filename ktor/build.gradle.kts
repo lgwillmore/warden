@@ -14,8 +14,8 @@ version = projectVersion
 
 dependencies {
     api(project(":warden-core-jvm"))
-    api("io.ktor:ktor-server-core:$ktorVersion")
-    api("org.slf4j", "slf4j-api", slf4jVersion)
+    implementation("io.ktor:ktor-server-core:$ktorVersion")
+    implementation("org.slf4j", "slf4j-api", slf4jVersion)
 
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
     testImplementation("io.mockk:mockk:$mockkVersion")
