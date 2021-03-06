@@ -11,6 +11,7 @@ import io.ktor.http.content.TextContent
 import io.ktor.request.httpMethod
 import io.ktor.request.uri
 import io.ktor.response.ApplicationSendPipeline
+import io.ktor.routing.*
 import io.ktor.util.AttributeKey
 import io.ktor.util.pipeline.PipelineContext
 import kotlinx.coroutines.withContext
@@ -107,7 +108,7 @@ data class WardenRoute(
     val route: String,
     val behaviour: WardenRouteBehaviour,
     val methods: Set<HttpMethod> = HttpMethod.DefaultMethods.toSet()
-){
+) {
     internal val reg = route.toRegex()
 }
 
@@ -120,11 +121,7 @@ internal fun evaluateRoute(stack: List<WardenRoute>, route: String, method: Http
     return WardenRouteBehaviour.ENFORCE
 }
 
-suspend fun PipelineContext<Unit, ApplicationCall>.wardenIgnore() {
-    call.attributes.put(Warden.WARDEN_IGNORED, true)
-}
-
-suspend fun PipelineContext<Unit, ApplicationCall>.wardenCall(
+suspend fun PipelineContext<Unit, ApplicationCall>.warded(
     bodyOfCall: suspend PipelineContext<Unit, ApplicationCall>.() -> Unit
 ) {
     val pipeline = this
@@ -134,6 +131,59 @@ suspend fun PipelineContext<Unit, ApplicationCall>.wardenCall(
     }
     exit(wardenContext)
 }
+
+suspend fun PipelineContext<Unit, ApplicationCall>.unwarded(
+    bodyOfCall: suspend PipelineContext<Unit, ApplicationCall>.() -> Unit
+) {
+    call.attributes.put(Warden.WARDEN_IGNORED, true)
+    this.bodyOfCall()
+}
+
+fun Route.warded(
+    callback: Route.() -> Unit
+): Route {
+    // With createChild, we create a child node for this received Route
+    val wardedRoute = this.createChild(object : RouteSelector(1.0) {
+        override fun evaluate(context: RoutingResolveContext, segmentIndex: Int): RouteSelectorEvaluation =
+            RouteSelectorEvaluation.Constant
+    })
+
+    // Intercepts calls from this route at the features step
+    wardedRoute.intercept(ApplicationCallPipeline.Features) {
+        val wardenContext = enter(this.call)
+        withContext(wardenContext) {
+            proceed()
+        }
+        exit(wardenContext)
+    }
+
+    // Configure this route with the block provided by the user
+    callback(wardedRoute)
+
+    return wardedRoute
+}
+
+fun Route.unwarded(
+    callback: Route.() -> Unit
+): Route {
+    // With createChild, we create a child node for this received Route
+    val unWardedRoute = this.createChild(object : RouteSelector(1.0) {
+        override fun evaluate(context: RoutingResolveContext, segmentIndex: Int): RouteSelectorEvaluation =
+            RouteSelectorEvaluation.Constant
+    })
+
+    // Intercepts calls from this route at the features step
+    unWardedRoute.intercept(ApplicationCallPipeline.Features) {
+        this.call.attributes.put(Warden.WARDEN_IGNORED, true)
+        proceed()
+    }
+
+    // Configure this route with the block provided by the user
+    callback(unWardedRoute)
+
+    return unWardedRoute
+}
+
 
 internal suspend fun enter(call: ApplicationCall): CoroutineContext {
     var context = coroutineContext

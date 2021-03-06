@@ -7,18 +7,12 @@ import codes.laurence.warden.Access
 import codes.laurence.warden.AccessRequest
 import codes.laurence.warden.AccessResponse
 import codes.laurence.warden.enforce.NotAuthorizedException
-import io.ktor.application.Application
-import io.ktor.application.call
-import io.ktor.application.install
-import io.ktor.features.StatusPages
-import io.ktor.http.HttpMethod
-import io.ktor.http.HttpStatusCode
-import io.ktor.response.respondText
-import io.ktor.routing.get
-import io.ktor.routing.route
-import io.ktor.routing.routing
-import io.ktor.server.testing.handleRequest
-import io.ktor.server.testing.withTestApplication
+import io.ktor.application.*
+import io.ktor.features.*
+import io.ktor.http.*
+import io.ktor.response.*
+import io.ktor.routing.*
+import io.ktor.server.testing.*
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.Test
@@ -41,7 +35,7 @@ fun Application.testableAppDependencies() {
     )
     install(Warden) {
         routePriorityStack = listOf(
-            WardenRoute("/authorizationNotEnforced/IgnoredInConfig", WardenRouteBehaviour.ENFORCE)
+            WardenRoute("/authorizationNotEnforced/IgnoredInConfig", WardenRouteBehaviour.IGNORE)
         )
     }
     install(StatusPages) {
@@ -56,28 +50,28 @@ fun Application.testableAppDependencies() {
     routing {
         route("/authorizationNotEnforced") {
             get("") {
-                wardenCall {
+                warded {
                     call.respondText("You should not be able to get me. Not Enforced")
                 }
             }
             get("/IgnoredInline") {
-                wardenIgnore()
-                call.respondText("You should see me, enforcement ignored")
+                unwarded {
+                    call.respondText("You should see me, enforcement ignored")
+                }
             }
             get("/IgnoredInConfig") {
-                wardenIgnore()
                 call.respondText("You should see me, enforcement ignored")
             }
         }
         route("/authorizationEnforced") {
             get("/Granted") {
-                wardenCall {
+                warded {
                     enforcementPointKtor.enforceAuthorization(AccessRequest(subject = mapOf("access" to "granted")))
                     call.respondText("You should see me")
                 }
             }
             get("/Denied") {
-                wardenCall {
+                warded {
                     enforcementPointKtor.enforceAuthorization(AccessRequest(subject = mapOf("access" to "denied")))
                     call.respondText("You should not be able to get me")
                 }
@@ -85,6 +79,21 @@ fun Application.testableAppDependencies() {
             get("/wardenCallNotCalled") {
                 enforcementPointKtor.enforceAuthorization(AccessRequest(subject = mapOf("access" to "granted")))
                 call.respondText("You should not see me due to an not being authorized")
+            }
+        }
+        route("/routeParentWarded") {
+            warded {
+                get("/Granted") {
+                    enforcementPointKtor.enforceAuthorization(AccessRequest(subject = mapOf("access" to "granted")))
+                    call.respondText("You should see me")
+                }
+            }
+        }
+        route("/routeParentUnwarded") {
+            unwarded {
+                get("/NotEnforcedOrGranted") {
+                    call.respondText("You should see me, enforcement ignored")
+                }
             }
         }
     }
@@ -151,10 +160,30 @@ class WardenTest {
     }
 
     @Test
-    fun `get - enforcement point called - wardenCall not called`() {
+    fun `get - enforcement point called - warden not wrapped`() {
         withTestApplication({ testableAppDependencies() }) {
             with(handleRequest(HttpMethod.Get, "/authorizationEnforced/wardenCallNotCalled")) {
                 assertEquals(HttpStatusCode.Unauthorized, response.status())
+            }
+        }
+    }
+
+    @Test
+    fun `get - parent route warded - enforcement point called - granted`() {
+        withTestApplication({ testableAppDependencies() }) {
+            with(handleRequest(HttpMethod.Get, "/routeParentWarded/Granted")) {
+                assertEquals(HttpStatusCode.OK, response.status())
+                assertEquals("You should see me", response.content)
+            }
+        }
+    }
+
+    @Test
+    fun `get - parent route unwarded - endpoint not enforced`() {
+        withTestApplication({ testableAppDependencies() }) {
+            with(handleRequest(HttpMethod.Get, "/routeParentUnwarded/NotEnforcedOrGranted")) {
+                assertEquals(HttpStatusCode.OK, response.status())
+                assertEquals("You should see me, enforcement ignored", response.content)
             }
         }
     }

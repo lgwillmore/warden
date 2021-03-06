@@ -1,4 +1,7 @@
 val projectVersion: String by project
+plugins {
+    kotlin("jvm") version "1.4.20"
+}
 
 group = "codes.laurence.warden"
 version = projectVersion

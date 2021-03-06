@@ -2,7 +2,7 @@ val projectVersion: String by project
 val mockkVersion: String by project
 
 plugins {
-    kotlin("multiplatform") version "1.3.61"
+    kotlin("multiplatform")
     id("com.jfrog.bintray")
     id("maven-publish")
     id("org.jetbrains.dokka") version "0.10.0"
