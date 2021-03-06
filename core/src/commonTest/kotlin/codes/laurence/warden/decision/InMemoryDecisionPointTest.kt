@@ -13,11 +13,13 @@ import kotlin.test.assertEquals
 val accessRequest = AccessRequest().copy(
     action = mapOf("foo" to "bar")
 )
+
+val denial = AccessResponse(Access.Denied(), accessRequest)
+val granted = AccessResponse(Access.Granted, accessRequest)
+
 val willAuthorizePolicy = mockk<Policy> {
     every { checkAuthorized(accessRequest) } returns AccessResponse(Access.Granted, accessRequest)
 }
-val denial = AccessResponse(Access.Denied(), accessRequest)
-val granted = AccessResponse(Access.Granted, accessRequest)
 val willNotAuthorizePolicy = mockk<Policy> {
     every { checkAuthorized(accessRequest) } returns denial
 }
@@ -31,7 +33,9 @@ class InMemoryDecisionPointTest {
                 access = Access.Denied(),
                 request = accessRequest
             ),
-            DecisionPointInMemory(emptyList()).checkAuthorized(accessRequest)
+            DecisionPointInMemory(
+                accessPolicies = emptyList()
+            ).checkAuthorized(accessRequest)
         )
     }
 
@@ -41,7 +45,7 @@ class InMemoryDecisionPointTest {
         assertEquals(
             granted,
             DecisionPointInMemory(
-                listOf(
+                accessPolicies = listOf(
                     willNotAuthorizePolicy,
                     willNotAuthorizePolicy,
                     willAuthorizePolicy,
@@ -56,7 +60,7 @@ class InMemoryDecisionPointTest {
         assertEquals(
             granted,
             DecisionPointInMemory(
-                listOf(
+                accessPolicies = listOf(
                     willAuthorizePolicy,
                     willAuthorizePolicy,
                     willAuthorizePolicy
@@ -70,9 +74,45 @@ class InMemoryDecisionPointTest {
         assertEquals(
             denial,
             DecisionPointInMemory(
-                listOf(
+                accessPolicies = listOf(
                     willNotAuthorizePolicy,
                     willNotAuthorizePolicy,
+                    willNotAuthorizePolicy
+                )
+            ).checkAuthorized(accessRequest)
+        )
+    }
+
+    @Test
+    fun checkAuthorized_atLeastOneAuthorized_alsoDenied() = runBlockingTest {
+        assertEquals(
+            denial,
+            DecisionPointInMemory(
+                accessPolicies = listOf(
+                    willNotAuthorizePolicy,
+                    willNotAuthorizePolicy,
+                    willAuthorizePolicy,
+                    willNotAuthorizePolicy
+                ),
+                denyPolicies = listOf(
+                    willAuthorizePolicy
+                )
+            ).checkAuthorized(accessRequest)
+        )
+    }
+
+    @Test
+    fun checkAuthorized_atLeastOneAuthorized_notDenied() = runBlockingTest {
+        assertEquals(
+            granted,
+            DecisionPointInMemory(
+                accessPolicies = listOf(
+                    willNotAuthorizePolicy,
+                    willNotAuthorizePolicy,
+                    willAuthorizePolicy,
+                    willNotAuthorizePolicy
+                ),
+                denyPolicies = listOf(
                     willNotAuthorizePolicy
                 )
             ).checkAuthorized(accessRequest)
