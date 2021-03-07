@@ -92,3 +92,25 @@ internal class WardenKtorCall(var call: ApplicationCall?) : AbstractCoroutineCon
         CoroutineContext.Key<WardenKtorCall>
 
 }
+
+fun Route.beforeSocketConnect(
+    beforeSocketConnect: suspend PipelineContext<Unit, ApplicationCall>.() -> Unit,
+    callback: Route.() -> Unit
+): Route {
+    // With createChild, we create a child node for this received Route
+    val beforeEndpointRoute = this.createChild(object : RouteSelector(1.0) {
+        override fun evaluate(context: RoutingResolveContext, segmentIndex: Int): RouteSelectorEvaluation =
+            RouteSelectorEvaluation.Constant
+    })
+
+    // Intercepts calls from this route at the features step
+    beforeEndpointRoute.intercept(ApplicationCallPipeline.Features) {
+        this.beforeSocketConnect()
+        proceed()
+    }
+
+    // Configure this route with the block provided by the user
+    callback(beforeEndpointRoute)
+
+    return beforeEndpointRoute
+}

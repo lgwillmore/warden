@@ -17,7 +17,6 @@ import io.mockk.every
 import io.mockk.mockk
 import org.junit.Ignore
 import org.junit.Test
-import kotlin.coroutines.coroutineContext
 import kotlin.test.assertEquals
 
 fun Application.testableAppDependencies() {
@@ -122,17 +121,23 @@ fun Application.testableAppDependencies() {
             }
             route("/warded") {
                 warded {
-                    webSocket("/granted") {
+                    beforeSocketConnect({
                         enforcementPointKtor.enforceAuthorization(AccessRequest(subject = mapOf("access" to "granted")))
-                        outgoing.send(Frame.Text("You should see me"))
-                    }
-                    route("/denied") {
-                        webSocket {
-                            enforcementPointKtor.enforceAuthorization(AccessRequest(subject = mapOf("access" to "denied")))
-                            outgoing.send(Frame.Text("You should not see me"))
+                    }) {
+                        webSocket("/granted") {
+                            outgoing.send(Frame.Text("You should see me"))
                         }
                     }
 
+                    route("/denied") {
+                        beforeSocketConnect({
+                            enforcementPointKtor.enforceAuthorization(AccessRequest(subject = mapOf("access" to "denied")))
+                        }) {
+                            webSocket {
+                                outgoing.send(Frame.Text("You should not see me"))
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -267,13 +272,22 @@ class WardenTest {
         }
     }
 
-    @Ignore("No clean way to actually call warden from a websocket route")
     @Test
     fun `ws - warded - denied`() {
         withTestApplication({ testableAppDependencies() }) {
             val call = handleWebSocket("/ws/warded/denied") {}
             assertEquals(HttpStatusCode.Unauthorized, call.response.status())
             assertEquals("No Denied message", call.response.content)
+        }
+    }
+
+    @Test
+    fun `ws - warded - granted`() {
+        withTestApplication({ testableAppDependencies() }) {
+            handleWebSocketConversation("/ws/warded/granted") { incoming, _ ->
+                val frameText = (incoming.receive() as Frame.Text).readText()
+                assertEquals("You should see me", frameText)
+            }
         }
     }
 
