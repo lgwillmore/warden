@@ -1,7 +1,5 @@
 package code.laurence.warden.ktor
 
-import assertk.assertThat
-import assertk.assertions.isEqualTo
 import code.laurence.warden.ktor.Warden.Feature.NOT_ENFORCED_MESSAGE
 import codes.laurence.warden.Access
 import codes.laurence.warden.AccessRequest
@@ -10,12 +8,16 @@ import codes.laurence.warden.enforce.NotAuthorizedException
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.http.*
+import io.ktor.http.cio.websocket.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.server.testing.*
+import io.ktor.websocket.*
 import io.mockk.every
 import io.mockk.mockk
+import org.junit.Ignore
 import org.junit.Test
+import kotlin.coroutines.coroutineContext
 import kotlin.test.assertEquals
 
 fun Application.testableAppDependencies() {
@@ -31,11 +33,12 @@ fun Application.testableAppDependencies() {
                 AccessRequest(subject = mapOf("returned" to "from policy"))
             )
         }
-    )
-    )
+    ))
+    install(WebSockets)
     install(Warden) {
         routePriorityStack = listOf(
-            WardenRoute("/authorizationNotEnforced/IgnoredInConfig", WardenRouteBehaviour.IGNORE)
+            WardenRoute("/authorizationNotEnforced/IgnoredInConfig", WardenRouteBehaviour.IGNORE),
+            WardenRoute("/ws/unwardedRouteConfig", WardenRouteBehaviour.IGNORE),
         )
     }
     install(StatusPages) {
@@ -87,12 +90,49 @@ fun Application.testableAppDependencies() {
                     enforcementPointKtor.enforceAuthorization(AccessRequest(subject = mapOf("access" to "granted")))
                     call.respondText("You should see me")
                 }
+                route("/Unwarded") {
+                    unwarded {
+                        get {
+                            call.respondText("You should see me, enforcement ignored")
+                        }
+                    }
+                }
             }
         }
         route("/routeParentUnwarded") {
             unwarded {
                 get("/NotEnforcedOrGranted") {
                     call.respondText("You should see me, enforcement ignored")
+                }
+            }
+        }
+        route("/ws") {
+            webSocket("/notWarded") {
+                outgoing.send(Frame.Text("You should not be able to get me. Unwarded websocket"))
+            }
+            route("unwarded") {
+                unwarded {
+                    webSocket {
+                        outgoing.send(Frame.Text("You should see me, enforcement ignored"))
+                    }
+                }
+            }
+            webSocket("/unwardedRouteConfig") {
+                outgoing.send(Frame.Text("You should see me, enforcement ignored"))
+            }
+            route("/warded") {
+                warded {
+                    webSocket("/granted") {
+                        enforcementPointKtor.enforceAuthorization(AccessRequest(subject = mapOf("access" to "granted")))
+                        outgoing.send(Frame.Text("You should see me"))
+                    }
+                    route("/denied") {
+                        webSocket {
+                            enforcementPointKtor.enforceAuthorization(AccessRequest(subject = mapOf("access" to "denied")))
+                            outgoing.send(Frame.Text("You should not see me"))
+                        }
+                    }
+
                 }
             }
         }
@@ -179,6 +219,16 @@ class WardenTest {
     }
 
     @Test
+    fun `get - parent route warded - nested route unwarded - enforcement point called - granted`() {
+        withTestApplication({ testableAppDependencies() }) {
+            with(handleRequest(HttpMethod.Get, "/routeParentWarded/Unwarded")) {
+                assertEquals(HttpStatusCode.OK, response.status())
+                assertEquals("You should see me, enforcement ignored", response.content)
+            }
+        }
+    }
+
+    @Test
     fun `get - parent route unwarded - endpoint not enforced`() {
         withTestApplication({ testableAppDependencies() }) {
             with(handleRequest(HttpMethod.Get, "/routeParentUnwarded/NotEnforcedOrGranted")) {
@@ -189,57 +239,42 @@ class WardenTest {
     }
 
     @Test
-    fun `routeStack - route not in stack - enforced`() {
-        val stack: List<WardenRoute> = listOf()
-        val actual = evaluateRoute(stack, "/something", HttpMethod.DefaultMethods.random())
-        assertThat(actual).isEqualTo(WardenRouteBehaviour.ENFORCE)
+    fun `ws - not warded`() {
+        withTestApplication({ testableAppDependencies() }) {
+            val call = handleWebSocket("/ws/notWarded") {}
+            assertEquals(HttpStatusCode.Unauthorized, call.response.status())
+            assertEquals(NOT_ENFORCED_MESSAGE, call.response.content)
+        }
     }
 
     @Test
-    fun `routeStack - route matches - method does not`() {
-        val stack: List<WardenRoute> = listOf(
-            WardenRoute("/something", WardenRouteBehaviour.IGNORE, methods = setOf(HttpMethod.Get))
-        )
-        val actual = evaluateRoute(stack, "/something", HttpMethod.Put)
-        assertThat(actual).isEqualTo(WardenRouteBehaviour.ENFORCE)
+    fun `ws - unwarded block`() {
+        withTestApplication({ testableAppDependencies() }) {
+            handleWebSocketConversation("/ws/unwarded") { incoming, _ ->
+                val frameText = (incoming.receive() as Frame.Text).readText()
+                assertEquals("You should see me, enforcement ignored", frameText)
+            }
+        }
     }
 
     @Test
-    fun `routeStack - route matches - method matches`() {
-        val stack: List<WardenRoute> = listOf(
-            WardenRoute("/something", WardenRouteBehaviour.IGNORE, methods = setOf(HttpMethod.Get))
-        )
-        val actual = evaluateRoute(stack, "/something", HttpMethod.Get)
-        assertThat(actual).isEqualTo(WardenRouteBehaviour.IGNORE)
+    fun `ws - unwarded route config`() {
+        withTestApplication({ testableAppDependencies() }) {
+            handleWebSocketConversation("/ws/unwardedRouteConfig") { incoming, _ ->
+                val frameText = (incoming.receive() as Frame.Text).readText()
+                assertEquals("You should see me, enforcement ignored", frameText)
+            }
+        }
     }
 
+    @Ignore("No clean way to actually call warden from a websocket route")
     @Test
-    fun `routeStack - route regex prefix matches - method matches`() {
-        val stack: List<WardenRoute> = listOf(
-            WardenRoute("/some.*", WardenRouteBehaviour.IGNORE, methods = setOf(HttpMethod.Get))
-        )
-        val actual = evaluateRoute(stack, "/something", HttpMethod.Get)
-        assertThat(actual).isEqualTo(WardenRouteBehaviour.IGNORE)
+    fun `ws - warded - denied`() {
+        withTestApplication({ testableAppDependencies() }) {
+            val call = handleWebSocket("/ws/warded/denied") {}
+            assertEquals(HttpStatusCode.Unauthorized, call.response.status())
+            assertEquals("No Denied message", call.response.content)
+        }
     }
-
-    @Test
-    fun `routeStack - route non regex prefix does not match - method matches`() {
-        val stack: List<WardenRoute> = listOf(
-            WardenRoute("/some", WardenRouteBehaviour.IGNORE, methods = setOf(HttpMethod.Get))
-        )
-        val actual = evaluateRoute(stack, "/something", HttpMethod.Get)
-        assertThat(actual).isEqualTo(WardenRouteBehaviour.ENFORCE)
-    }
-
-    @Test
-    fun `routeStack - higher priority overrides lower match`() {
-        val stack: List<WardenRoute> = listOf(
-            WardenRoute("/some/thing", WardenRouteBehaviour.ENFORCE, methods = setOf(HttpMethod.Get)),
-            WardenRoute("/some", WardenRouteBehaviour.IGNORE, methods = setOf(HttpMethod.Get))
-        )
-        val actual = evaluateRoute(stack, "/some/thing", HttpMethod.Get)
-        assertThat(actual).isEqualTo(WardenRouteBehaviour.ENFORCE)
-    }
-
 
 }
