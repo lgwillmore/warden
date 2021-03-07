@@ -8,6 +8,9 @@ import kotlin.coroutines.AbstractCoroutineContextElement
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.coroutineContext
 
+/**
+ * Provides context for any nested calls to a [EnforcementPointKtor] to be registered and allow the call to return successfully if access is granted.
+ */
 suspend fun PipelineContext<Unit, ApplicationCall>.warded(
     bodyOfCall: suspend PipelineContext<Unit, ApplicationCall>.() -> Unit
 ) {
@@ -19,6 +22,9 @@ suspend fun PipelineContext<Unit, ApplicationCall>.warded(
     exit(wardenContext)
 }
 
+/**
+ * Allow this call to respond without enforcing authorization.
+ */
 suspend fun PipelineContext<Unit, ApplicationCall>.unwarded(
     bodyOfCall: suspend PipelineContext<Unit, ApplicationCall>.() -> Unit
 ) {
@@ -26,6 +32,9 @@ suspend fun PipelineContext<Unit, ApplicationCall>.unwarded(
     this.bodyOfCall()
 }
 
+/**
+ * Provides context for any nested calls to a [EnforcementPointKtor] to be registered and allow the call to return successfully if access is granted.
+ */
 fun Route.warded(
     callback: Route.() -> Unit
 ): Route {
@@ -50,6 +59,9 @@ fun Route.warded(
     return wardedRoute
 }
 
+/**
+ * Allow any calls nested within this block to respond without enforcing authorization.
+ */
 fun Route.unwarded(
     callback: Route.() -> Unit
 ): Route {
@@ -69,6 +81,33 @@ fun Route.unwarded(
     callback(unWardedRoute)
 
     return unWardedRoute
+}
+
+/**
+ * Allows logic to be executed before any nested route endpoint handlers.
+ *
+ * This is intended for use with the WebSocket feature where websockets do not allow an opportunity to call an [codes.laurence.warden.enforce.EnforcementPoint] before the websocket connects.
+ */
+fun Route.beforeEach(
+    beforeSocketConnect: suspend PipelineContext<Unit, ApplicationCall>.() -> Unit,
+    callback: Route.() -> Unit
+): Route {
+    // With createChild, we create a child node for this received Route
+    val beforeEndpointRoute = this.createChild(object : RouteSelector(1.0) {
+        override fun evaluate(context: RoutingResolveContext, segmentIndex: Int): RouteSelectorEvaluation =
+            RouteSelectorEvaluation.Constant
+    })
+
+    // Intercepts calls from this route at the features step
+    beforeEndpointRoute.intercept(ApplicationCallPipeline.Features) {
+        this.beforeSocketConnect()
+        proceed()
+    }
+
+    // Configure this route with the block provided by the user
+    callback(beforeEndpointRoute)
+
+    return beforeEndpointRoute
 }
 
 internal suspend fun enter(call: ApplicationCall): CoroutineContext {
@@ -91,26 +130,4 @@ internal class WardenKtorCall(var call: ApplicationCall?) : AbstractCoroutineCon
     companion object Key :
         CoroutineContext.Key<WardenKtorCall>
 
-}
-
-fun Route.beforeSocketConnect(
-    beforeSocketConnect: suspend PipelineContext<Unit, ApplicationCall>.() -> Unit,
-    callback: Route.() -> Unit
-): Route {
-    // With createChild, we create a child node for this received Route
-    val beforeEndpointRoute = this.createChild(object : RouteSelector(1.0) {
-        override fun evaluate(context: RoutingResolveContext, segmentIndex: Int): RouteSelectorEvaluation =
-            RouteSelectorEvaluation.Constant
-    })
-
-    // Intercepts calls from this route at the features step
-    beforeEndpointRoute.intercept(ApplicationCallPipeline.Features) {
-        this.beforeSocketConnect()
-        proceed()
-    }
-
-    // Configure this route with the block provided by the user
-    callback(beforeEndpointRoute)
-
-    return beforeEndpointRoute
 }

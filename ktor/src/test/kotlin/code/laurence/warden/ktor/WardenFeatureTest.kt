@@ -120,7 +120,7 @@ fun Application.testableAppDependencies() {
             }
             route("/warded") {
                 warded {
-                    beforeSocketConnect({
+                    beforeEach({
                         enforcementPointKtor.enforceAuthorization(AccessRequest(subject = mapOf("access" to "granted")))
                     }) {
                         webSocket("/granted") {
@@ -129,7 +129,7 @@ fun Application.testableAppDependencies() {
                     }
 
                     route("/denied") {
-                        beforeSocketConnect({
+                        beforeEach({
                             enforcementPointKtor.enforceAuthorization(AccessRequest(subject = mapOf("access" to "denied")))
                         }) {
                             webSocket {
