@@ -89,7 +89,7 @@ fun Route.unwarded(
  * This is intended for use with the WebSocket feature where websockets do not allow an opportunity to call an [codes.laurence.warden.enforce.EnforcementPoint] before the websocket connects.
  */
 fun Route.beforeEach(
-    beforeSocketConnect: suspend PipelineContext<Unit, ApplicationCall>.() -> Unit,
+    before: suspend PipelineContext<Unit, ApplicationCall>.() -> Unit,
     callback: Route.() -> Unit
 ): Route {
     // With createChild, we create a child node for this received Route
@@ -100,7 +100,7 @@ fun Route.beforeEach(
 
     // Intercepts calls from this route at the features step
     beforeEndpointRoute.intercept(ApplicationCallPipeline.Features) {
-        this.beforeSocketConnect()
+        this.before()
         proceed()
     }
 
