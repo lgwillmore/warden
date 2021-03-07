@@ -15,7 +15,6 @@ import io.ktor.server.testing.*
 import io.ktor.websocket.*
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.Ignore
 import org.junit.Test
 import kotlin.test.assertEquals
 
