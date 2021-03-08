@@ -18,10 +18,8 @@ group = "codes.laurence.warden"
 version = projectVersion
 
 
-
-
 kotlin {
-    jvm()
+    jvm{}
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -62,7 +60,9 @@ publishing {
             artifactId = "warden-core-jvm"
             version = projectVersion
 
-            artifact("sourcesJar")
+            artifact("$buildDir/libs/warden-core-jvm-metadata-${project.version}-sources.jar") {
+                classifier = "sources"
+            }
             artifact("$buildDir/libs/warden-core-jvm-jvm-${project.version}.jar")
         }
     }
@@ -90,11 +90,6 @@ bintray {
 
 tasks {
     val build by existing
-
-    val sourcesjar by creating(Jar::class) {
-        archiveClassifier.set("sources")
-        from(sourceSets.getByName("main").allSource)
-    }
 
     bintrayUpload {
         dependsOn(build)

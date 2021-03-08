@@ -13,12 +13,12 @@ group = "codes.laurence.warden"
 version = projectVersion
 
 dependencies {
-    api(project(":warden-core-jvm"))
+    api(project(":warden-core"))
 
     implementation("io.ktor:ktor-server-core:$ktorVersion")
-    implementation("io.ktor", "ktor-websockets", ktorVersion)
     implementation("org.slf4j", "slf4j-api", slf4jVersion)
 
+    testImplementation("io.ktor", "ktor-websockets", ktorVersion)
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
     testImplementation("io.mockk:mockk:$mockkVersion")
     testImplementation("com.willowtreeapps.assertk:assertk-jvm:$assertKVersion")
@@ -51,7 +51,9 @@ publishing {
             artifactId = artifactName
             version = artifactVersion
             from(components["java"])
-            artifact("sourcesJar")
+            artifact("$buildDir/libs/warden-ktor-${project.version}-sources.jar") {
+                classifier = "sources"
+            }
 
             pom.withXml {
                 asNode().apply {
@@ -107,11 +109,8 @@ tasks {
         kotlinOptions.jvmTarget = "1.8"
     }
 
-    val build by existing
-
-    val sourcesjar by creating(Jar::class){
-        archiveClassifier.set("sources")
-        from(sourceSets.getByName("main").allSource)
+    val build by existing{
+        dependsOn("kotlinSourcesJar")
     }
 
     bintrayUpload {
