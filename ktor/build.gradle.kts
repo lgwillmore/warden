@@ -51,6 +51,7 @@ publishing {
             artifactId = artifactName
             version = artifactVersion
             from(components["java"])
+            artifact("sourcesJar")
 
             pom.withXml {
                 asNode().apply {
@@ -107,6 +108,11 @@ tasks {
     }
 
     val build by existing
+
+    val sourcesjar by creating(Jar::class){
+        archiveClassifier.set("sources")
+        from(sourceSets.getByName("main").allSource)
+    }
 
     bintrayUpload {
         dependsOn(build)

@@ -61,6 +61,8 @@ publishing {
             groupId = "codes.laurence.warden"
             artifactId = "warden-core-jvm"
             version = projectVersion
+
+            artifact("sourcesJar")
             artifact("$buildDir/libs/warden-core-jvm-jvm-${project.version}.jar")
         }
     }
@@ -88,6 +90,11 @@ bintray {
 
 tasks {
     val build by existing
+
+    val sourcesjar by creating(Jar::class) {
+        archiveClassifier.set("sources")
+        from(sourceSets.getByName("main").allSource)
+    }
 
     bintrayUpload {
         dependsOn(build)
