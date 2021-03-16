@@ -45,7 +45,7 @@ fun Route.warded(
     })
 
     // Intercepts calls from this route at the features step
-    wardedRoute.intercept(ApplicationCallPipeline.Features) {
+    wardedRoute.intercept(ApplicationCallPipeline.Call) {
         val wardenContext = enter(this.call)
         withContext(wardenContext) {
             proceed()
@@ -72,7 +72,7 @@ fun Route.unwarded(
     })
 
     // Intercepts calls from this route at the features step
-    unWardedRoute.intercept(ApplicationCallPipeline.Features) {
+    unWardedRoute.intercept(ApplicationCallPipeline.Call) {
         this.call.attributes.put(Warden.WARDEN_IGNORED, true)
         proceed()
     }
@@ -99,7 +99,7 @@ fun Route.beforeEach(
     })
 
     // Intercepts calls from this route at the features step
-    beforeEndpointRoute.intercept(ApplicationCallPipeline.Features) {
+    beforeEndpointRoute.intercept(ApplicationCallPipeline.Call) {
         this.before()
         proceed()
     }
