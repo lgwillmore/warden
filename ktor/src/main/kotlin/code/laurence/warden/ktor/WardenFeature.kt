@@ -85,7 +85,7 @@ class Warden(config: WardenConfiguration) {
                     val content = TextContent(
                         NOT_ENFORCED_MESSAGE,
                         contentType = ContentType.Text.Plain,
-                        status = HttpStatusCode.Unauthorized
+                        status = HttpStatusCode.Forbidden
                     )
                     proceedWith(content)
                 }

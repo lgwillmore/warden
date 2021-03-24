@@ -149,7 +149,7 @@ class WardenTest {
     fun `get - enforcement point not called - 401`() {
         withTestApplication({ testableAppDependencies() }) {
             with(handleRequest(HttpMethod.Get, "/authorizationNotEnforced")) {
-                assertEquals(HttpStatusCode.Unauthorized, response.status())
+                assertEquals(HttpStatusCode.Forbidden, response.status())
                 assertEquals(NOT_ENFORCED_MESSAGE, response.content)
             }
         }
@@ -164,7 +164,7 @@ class WardenTest {
             }
             // Check that ignoring once does not effect other calls
             with(handleRequest(HttpMethod.Get, "/authorizationNotEnforced")) {
-                assertEquals(HttpStatusCode.Unauthorized, response.status())
+                assertEquals(HttpStatusCode.Forbidden, response.status())
             }
         }
     }
@@ -178,7 +178,7 @@ class WardenTest {
             }
             // Check that ignoring once does not effect other calls
             with(handleRequest(HttpMethod.Get, "/authorizationNotEnforced")) {
-                assertEquals(HttpStatusCode.Unauthorized, response.status())
+                assertEquals(HttpStatusCode.Forbidden, response.status())
             }
         }
     }
@@ -207,7 +207,7 @@ class WardenTest {
     fun `get - enforcement point called - warden not wrapped`() {
         withTestApplication({ testableAppDependencies() }) {
             with(handleRequest(HttpMethod.Get, "/authorizationEnforced/wardenCallNotCalled")) {
-                assertEquals(HttpStatusCode.Unauthorized, response.status())
+                assertEquals(HttpStatusCode.Forbidden, response.status())
             }
         }
     }
@@ -246,7 +246,7 @@ class WardenTest {
     fun `ws - not warded`() {
         withTestApplication({ testableAppDependencies() }) {
             val call = handleWebSocket("/ws/notWarded") {}
-            assertEquals(HttpStatusCode.Unauthorized, call.response.status())
+            assertEquals(HttpStatusCode.Forbidden, call.response.status())
             assertEquals(NOT_ENFORCED_MESSAGE, call.response.content)
         }
     }
