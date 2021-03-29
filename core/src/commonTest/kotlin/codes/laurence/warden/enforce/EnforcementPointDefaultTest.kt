@@ -8,7 +8,7 @@ import codes.laurence.warden.AccessResponse
 import codes.laurence.warden.coroutines.runBlockingTest
 import codes.laurence.warden.decision.DecisionPoint
 import codes.laurence.warden.decision.DecisionPointInMemory
-import codes.laurence.warden.policy.Exp
+import codes.laurence.warden.policy.expression.Exp
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlin.test.Test

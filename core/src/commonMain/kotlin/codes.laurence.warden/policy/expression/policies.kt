@@ -1,8 +1,9 @@
-package codes.laurence.warden.policy
+package codes.laurence.warden.policy.expression
 
 import codes.laurence.warden.Access
 import codes.laurence.warden.AccessRequest
 import codes.laurence.warden.AccessResponse
+import codes.laurence.warden.policy.Policy
 
 /**
  * A policy for building basic 2 operand expressions.

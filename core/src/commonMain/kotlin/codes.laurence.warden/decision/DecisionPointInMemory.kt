@@ -3,7 +3,7 @@ package codes.laurence.warden.decision
 import codes.laurence.warden.Access
 import codes.laurence.warden.AccessRequest
 import codes.laurence.warden.AccessResponse
-import codes.laurence.warden.policy.AnyOf
+import codes.laurence.warden.policy.boolean.AnyOf
 import codes.laurence.warden.policy.Policy
 
 /**

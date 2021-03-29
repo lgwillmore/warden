@@ -1,12 +1,16 @@
-package codes.laurence.warden.policy
+package codes.laurence.warden.policy.boolean
 
 import codes.laurence.warden.Access
 import codes.laurence.warden.AccessRequest
 import codes.laurence.warden.AccessResponse
+import codes.laurence.warden.policy.Policy
+import codes.laurence.warden.policy.PolicyDSL
+import codes.laurence.warden.policy.collections.CollectionBasedPolicy
 
 /**
  * All of the policies must grant access, and at least 1 must grant access.
  */
+@PolicyDSL
 class AllOf(policies: List<Policy>) : Policy, CollectionBasedPolicy(policies.toMutableList()) {
 
     constructor(builder: CollectionBasedPolicy.() -> Unit) : this(mutableListOf()) {
@@ -82,8 +86,3 @@ class Not(val policy: Policy) : Policy {
     }
 }
 
-open class CollectionBasedPolicy(val policies: MutableList<Policy>) {
-    fun add(policy: Policy) {
-        policies.add(policy)
-    }
-}

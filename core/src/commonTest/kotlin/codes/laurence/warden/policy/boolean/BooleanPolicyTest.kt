@@ -1,8 +1,9 @@
-package codes.laurence.warden.policy
+package codes.laurence.warden.policy.boolean
 
 import codes.laurence.warden.Access
 import codes.laurence.warden.AccessRequest
 import codes.laurence.warden.AccessResponse
+import codes.laurence.warden.policy.Policy
 import io.mockk.every
 import io.mockk.mockk
 import kotlin.test.Test

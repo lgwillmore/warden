@@ -1,10 +1,11 @@
-package codes.laurence.warden.policy
+package codes.laurence.warden.policy.expression
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
 import assertk.fail
 import codes.laurence.warden.AccessRequest
+import codes.laurence.warden.policy.Policy
 import codes.laurence.warden.test.assertDenied
 import codes.laurence.warden.test.assertGranted
 import kotlin.test.Test
