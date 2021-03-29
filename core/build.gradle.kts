@@ -17,6 +17,8 @@ repositories {
 group = "codes.laurence.warden"
 version = projectVersion
 
+val assertKVersion: String by project
+
 
 kotlin {
     jvm{}
@@ -47,7 +49,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("test-junit"))
                 implementation("io.mockk:mockk:1.9.3")
-                implementation("com.willowtreeapps.assertk:assertk-jvm:0.20")
+                implementation("com.willowtreeapps.assertk:assertk-jvm:$assertKVersion")
             }
         }
     }

@@ -132,19 +132,40 @@ data class PassThroughReference(val value: Any?) : ValueReference {
 
 data class AttributeReference(
     val type: AttributeType,
-    val key: String
+    val path: List<String>
 ) : ValueReference {
+
+    init {
+        require(path.isNotEmpty()) { "path cannot be empty" }
+    }
+
     override fun get(accessRequest: AccessRequest): Any? {
-        val attributeMap = when (type) {
+        val pathQueue = path.toMutableList()
+        var currentAttributeMap: Map<*, *> = when (type) {
             AttributeType.SUBJECT -> accessRequest.subject
             AttributeType.ACTION -> accessRequest.action
             AttributeType.RESOURCE -> accessRequest.resource
             AttributeType.ENVIRONMENT -> accessRequest.environment
         }
-        if (!attributeMap.containsKey(key)) {
-            throw NoSuchAttributeException()
+        var currentLinkValue: Any? = null
+        while (pathQueue.isNotEmpty()) {
+            val pathLink = pathQueue.removeFirst()
+            if (!currentAttributeMap.containsKey(pathLink)) {
+                throw NoSuchAttributeException()
+            }
+            currentLinkValue = currentAttributeMap[pathLink]
+            if (pathQueue.isNotEmpty()) {
+                @Suppress("UNCHECKED_CAST")
+                when (currentLinkValue) {
+                    is Map<*, *> -> {
+                        currentAttributeMap = currentLinkValue
+                    }
+                    else -> throw NoSuchAttributeException()
+                }
+
+            }
         }
-        return attributeMap[key]
+        return currentLinkValue
     }
 }
 

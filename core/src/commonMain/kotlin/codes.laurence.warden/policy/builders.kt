@@ -10,17 +10,17 @@ private fun addToCollectionHandler(collection: CollectionBasedPolicy): PolicyBui
     }
 }
 
-fun CollectionBasedPolicy.subject(key: String) =
-    OperatorBuilder(AttributeReference(AttributeType.SUBJECT, key), addToCollectionHandler(this))
+fun CollectionBasedPolicy.subject(pathRoot: String, vararg pathRest: String) =
+    OperatorBuilder(AttributeReference(AttributeType.SUBJECT, listOf(pathRoot) + pathRest.toList()), addToCollectionHandler(this))
 
-fun CollectionBasedPolicy.action(key: String) =
-    OperatorBuilder(AttributeReference(AttributeType.ACTION, key), addToCollectionHandler(this))
+fun CollectionBasedPolicy.action(pathRoot: String, vararg pathRest: String) =
+    OperatorBuilder(AttributeReference(AttributeType.ACTION, listOf(pathRoot) + pathRest.toList()), addToCollectionHandler(this))
 
-fun CollectionBasedPolicy.resource(key: String) =
-    OperatorBuilder(AttributeReference(AttributeType.RESOURCE, key), addToCollectionHandler(this))
+fun CollectionBasedPolicy.resource(pathRoot: String, vararg pathRest: String) =
+    OperatorBuilder(AttributeReference(AttributeType.RESOURCE, listOf(pathRoot) + pathRest.toList()), addToCollectionHandler(this))
 
-fun CollectionBasedPolicy.environment(key: String) =
-    OperatorBuilder(AttributeReference(AttributeType.ENVIRONMENT, key), addToCollectionHandler(this))
+fun CollectionBasedPolicy.environment(pathRoot: String, vararg pathRest: String) =
+    OperatorBuilder(AttributeReference(AttributeType.ENVIRONMENT, listOf(pathRoot) + pathRest.toList()), addToCollectionHandler(this))
 
 fun CollectionBasedPolicy.anyOf(builder: CollectionBasedPolicy.() -> Unit) {
     val anyOf = AnyOf()
@@ -46,23 +46,24 @@ fun CollectionBasedPolicy.notAnyOf(builder: CollectionBasedPolicy.() -> Unit) {
     this.add(Not(anyOf))
 }
 
-fun subjectVal(key: String) = AttributeReference(AttributeType.SUBJECT, key)
-fun environmentVal(key: String) = AttributeReference(AttributeType.ENVIRONMENT, key)
-fun resourceVal(key: String) = AttributeReference(AttributeType.RESOURCE, key)
-fun actionVal(key: String) = AttributeReference(AttributeType.ACTION, key)
+fun subjectVal(pathRoot: String, vararg pathRest: String) = AttributeReference(AttributeType.SUBJECT, listOf(pathRoot) + pathRest.toList())
+fun environmentVal(pathRoot: String, vararg pathRest: String) = AttributeReference(AttributeType.ENVIRONMENT, listOf(pathRoot) + pathRest.toList())
+fun resourceVal(pathRoot: String, vararg pathRest: String) = AttributeReference(AttributeType.RESOURCE, listOf(pathRoot) + pathRest.toList())
+fun actionVal(pathRoot: String, vararg pathRest: String) = AttributeReference(AttributeType.ACTION, listOf(pathRoot) + pathRest.toList())
 
 /**
  * Initializing token for an ExpressionPolicy builder.
  */
 class Exp {
     companion object {
-        fun subject(key: String) = OperatorBuilder(AttributeReference(AttributeType.SUBJECT, key))
+        fun subject(pathRoot: String, vararg pathRest: String) = OperatorBuilder(AttributeReference(AttributeType.SUBJECT, listOf(pathRoot) + pathRest.toList()))
 
-        fun action(key: String) = OperatorBuilder(AttributeReference(AttributeType.ACTION, key))
+        fun action(pathRoot: String, vararg pathRest: String) = OperatorBuilder(AttributeReference(AttributeType.ACTION, listOf(pathRoot) + pathRest.toList()))
 
-        fun resource(key: String) = OperatorBuilder(AttributeReference(AttributeType.RESOURCE, key))
+        fun resource(pathRoot: String, vararg pathRest: String) = OperatorBuilder(AttributeReference(AttributeType.RESOURCE, listOf(pathRoot) + pathRest.toList()))
 
-        fun environment(key: String) = OperatorBuilder(AttributeReference(AttributeType.ENVIRONMENT, key))
+        fun environment(pathRoot: String, vararg pathRest: String) =
+            OperatorBuilder(AttributeReference(AttributeType.ENVIRONMENT, listOf(pathRoot) + pathRest.toList()))
     }
 }
 

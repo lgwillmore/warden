@@ -1,5 +1,9 @@
 package codes.laurence.warden.policy
 
+import assertk.assertThat
+import assertk.assertions.isEqualTo
+import assertk.assertions.isInstanceOf
+import assertk.fail
 import codes.laurence.warden.AccessRequest
 import codes.laurence.warden.test.assertDenied
 import codes.laurence.warden.test.assertGranted
@@ -23,7 +27,7 @@ class ComparisonOperatorsTest {
     @Test
     fun greaterThan() {
         val greaterThan18: Policy = ExpressionPolicy(
-            AttributeReference(AttributeType.SUBJECT, "age"),
+            AttributeReference(AttributeType.SUBJECT, listOf("age")),
             OperatorType.GREATER_THAN,
             PassThroughReference(18)
         )
@@ -35,7 +39,7 @@ class ComparisonOperatorsTest {
     @Test
     fun greaterThanEqual() {
         val greaterThanEqual18: Policy = ExpressionPolicy(
-            AttributeReference(AttributeType.SUBJECT, "age"),
+            AttributeReference(AttributeType.SUBJECT, listOf("age")),
             OperatorType.GREATER_THAN_EQUAL,
             PassThroughReference(18)
         )
@@ -47,7 +51,7 @@ class ComparisonOperatorsTest {
     @Test
     fun equal() {
         val equal18: Policy = ExpressionPolicy(
-            AttributeReference(AttributeType.SUBJECT, "age"),
+            AttributeReference(AttributeType.SUBJECT, listOf("age")),
             OperatorType.EQUAL,
             PassThroughReference(18)
         )
@@ -59,7 +63,7 @@ class ComparisonOperatorsTest {
     @Test
     fun `equal to null`() {
         val equalToNull: Policy = ExpressionPolicy(
-            AttributeReference(AttributeType.ENVIRONMENT, "canBeNull"),
+            AttributeReference(AttributeType.ENVIRONMENT, listOf("canBeNull")),
             OperatorType.EQUAL,
             PassThroughReference(null)
         )
@@ -76,7 +80,7 @@ class ComparisonOperatorsTest {
     @Test
     fun lessThan() {
         val lessThan18: Policy = ExpressionPolicy(
-            AttributeReference(AttributeType.SUBJECT, "age"),
+            AttributeReference(AttributeType.SUBJECT, listOf("age")),
             OperatorType.LESS_THAN,
             PassThroughReference(18)
         )
@@ -88,7 +92,7 @@ class ComparisonOperatorsTest {
     @Test
     fun lessThanEqual() {
         val lessThanEqual18: Policy = ExpressionPolicy(
-            AttributeReference(AttributeType.SUBJECT, "age"),
+            AttributeReference(AttributeType.SUBJECT, listOf("age")),
             OperatorType.LESS_THAN_EQUAL,
             PassThroughReference(18)
         )
@@ -102,9 +106,9 @@ class ComparisonOperatorsTest {
         val requestWithMissingKeys = AccessRequest()
 
         val somePolicy = ExpressionPolicy(
-            AttributeReference(AttributeType.SUBJECT, "not_here"),
+            AttributeReference(AttributeType.SUBJECT, listOf("not_here")),
             OperatorType.LESS_THAN_EQUAL,
-            AttributeReference(AttributeType.RESOURCE, "not_here")
+            AttributeReference(AttributeType.RESOURCE, listOf("not_here"))
         )
         assertDenied(somePolicy.checkAuthorized(requestWithMissingKeys))
     }
@@ -121,9 +125,9 @@ class ComparisonOperatorsTest {
         )
 
         val mustBeOverResourceLimitPolicy: Policy = ExpressionPolicy(
-            AttributeReference(AttributeType.SUBJECT, "age"),
+            AttributeReference(AttributeType.SUBJECT, listOf("age")),
             OperatorType.GREATER_THAN_EQUAL,
-            AttributeReference(AttributeType.RESOURCE, "limit")
+            AttributeReference(AttributeType.RESOURCE, listOf("limit"))
         )
         assertGranted(mustBeOverResourceLimitPolicy.checkAuthorized(request18))
         assertDenied(mustBeOverResourceLimitPolicy.checkAuthorized(request17))
@@ -141,9 +145,9 @@ class ComparisonOperatorsTest {
         )
 
         val policy: Policy = ExpressionPolicy(
-            AttributeReference(AttributeType.RESOURCE, "expires"),
+            AttributeReference(AttributeType.RESOURCE, listOf("expires")),
             OperatorType.GREATER_THAN_EQUAL,
-            AttributeReference(AttributeType.ENVIRONMENT, "timeOfRequest")
+            AttributeReference(AttributeType.ENVIRONMENT, listOf("timeOfRequest"))
         )
         assertDenied(policy.checkAuthorized(expired))
         assertGranted(policy.checkAuthorized(notExpired))
@@ -161,9 +165,9 @@ class ComparisonOperatorsTest {
         )
 
         val subjectMustBeOnTheirSitePolicy: Policy = ExpressionPolicy(
-            AttributeReference(AttributeType.ENVIRONMENT, "requestSiteID"),
+            AttributeReference(AttributeType.ENVIRONMENT, listOf("requestSiteID")),
             OperatorType.EQUAL,
-            AttributeReference(AttributeType.SUBJECT, "siteID")
+            AttributeReference(AttributeType.SUBJECT, listOf("siteID"))
         )
         assertDenied(subjectMustBeOnTheirSitePolicy.checkAuthorized(notOnSite))
         assertGranted(subjectMustBeOnTheirSitePolicy.checkAuthorized(onSite))
@@ -181,9 +185,9 @@ class ComparisonOperatorsTest {
         )
 
         val userMustHaveActionPermission: Policy = ExpressionPolicy(
-            AttributeReference(AttributeType.ACTION, "type"),
+            AttributeReference(AttributeType.ACTION, listOf("type")),
             OperatorType.EQUAL,
-            AttributeReference(AttributeType.SUBJECT, "permission")
+            AttributeReference(AttributeType.SUBJECT, listOf("permission"))
         )
         assertDenied(userMustHaveActionPermission.checkAuthorized(noReadPermission))
         assertGranted(userMustHaveActionPermission.checkAuthorized(hasReadPermission))
@@ -204,7 +208,7 @@ class CollectionOperatorsTest {
         )
 
         val policy: Policy = ExpressionPolicy(
-            AttributeReference(AttributeType.SUBJECT, "roles"),
+            AttributeReference(AttributeType.SUBJECT, listOf("roles")),
             OperatorType.CONTAINS_ALL,
             PassThroughReference(listOf("ACCOUNT_MANAGER", "SUPERVISOR"))
         )
@@ -226,7 +230,7 @@ class CollectionOperatorsTest {
         )
 
         val policy: Policy = ExpressionPolicy(
-            AttributeReference(AttributeType.SUBJECT, "roles"),
+            AttributeReference(AttributeType.SUBJECT, listOf("roles")),
             OperatorType.CONTAINS_ANY,
             PassThroughReference(listOf("ACCOUNT_MANAGER", "SUPERVISOR"))
         )
@@ -246,7 +250,7 @@ class CollectionOperatorsTest {
         )
 
         val policy: Policy = ExpressionPolicy(
-            AttributeReference(AttributeType.SUBJECT, "roles"),
+            AttributeReference(AttributeType.SUBJECT, listOf("roles")),
             OperatorType.CONTAINS,
             PassThroughReference("ACCOUNT_MANAGER")
         )
@@ -268,12 +272,169 @@ class CollectionOperatorsTest {
         )
 
         val policy: Policy = ExpressionPolicy(
-            AttributeReference(AttributeType.SUBJECT, "role"),
+            AttributeReference(AttributeType.SUBJECT, listOf("role")),
             OperatorType.IS_IN,
             PassThroughReference(listOf("ACCOUNT_MANAGER", "SUPERVISOR"))
         )
         assertGranted(policy.checkAuthorized(managerRequest))
         assertGranted(policy.checkAuthorized(supervisorRequest))
         assertDenied(policy.checkAuthorized(engineerRequest))
+    }
+}
+
+class AttributeReferenceTest {
+
+    @Test
+    fun `cannot instantiate with empty list`() {
+        try {
+            AttributeReference(
+                type = AttributeType.values().random(),
+                path = emptyList()
+            )
+        } catch (e: Exception) {
+            assertThat(e).isInstanceOf(IllegalArgumentException::class)
+        }
+
+    }
+
+    @Test
+    fun `get - 1 link path`() {
+        val path = listOf("foo")
+        val value = "bar"
+
+        val attributes = mapOf(
+            "foo" to "bar"
+        )
+
+        val testObj = AttributeReference(
+            type = AttributeType.values().random(),
+            path = path
+        )
+
+        val accessRequest = when (testObj.type) {
+            AttributeType.SUBJECT -> AccessRequest(
+                subject = attributes
+            )
+            AttributeType.ACTION -> AccessRequest(
+                action = attributes
+            )
+            AttributeType.RESOURCE -> AccessRequest(
+                resource = attributes
+            )
+            AttributeType.ENVIRONMENT -> AccessRequest(
+                environment = attributes
+            )
+        }
+
+        assertThat(testObj.get(accessRequest)).isEqualTo(value)
+    }
+
+    @Test
+    fun `get - nested path`() {
+        val path = listOf("wack", "foo")
+        val value = "bar"
+
+        val attributes = mapOf(
+            "wack" to mapOf(
+                "foo" to value
+            )
+        )
+
+        val testObj = AttributeReference(
+            type = AttributeType.values().random(),
+            path = path
+        )
+
+        val accessRequest = when (testObj.type) {
+            AttributeType.SUBJECT -> AccessRequest(
+                subject = attributes
+            )
+            AttributeType.ACTION -> AccessRequest(
+                action = attributes
+            )
+            AttributeType.RESOURCE -> AccessRequest(
+                resource = attributes
+            )
+            AttributeType.ENVIRONMENT -> AccessRequest(
+                environment = attributes
+            )
+        }
+
+        assertThat(testObj.get(accessRequest)).isEqualTo(value)
+    }
+
+    @Test
+    fun `get - nested path - nested value is not a map`() {
+        val path = listOf("wack", "foo")
+
+        val attributes = mapOf(
+            "wack" to "foo"
+        )
+
+        val testObj = AttributeReference(
+            type = AttributeType.values().random(),
+            path = path
+        )
+
+        val accessRequest = when (testObj.type) {
+            AttributeType.SUBJECT -> AccessRequest(
+                subject = attributes
+            )
+            AttributeType.ACTION -> AccessRequest(
+                action = attributes
+            )
+            AttributeType.RESOURCE -> AccessRequest(
+                resource = attributes
+            )
+            AttributeType.ENVIRONMENT -> AccessRequest(
+                environment = attributes
+            )
+        }
+
+        try {
+            testObj.get(accessRequest)
+            fail("Should be exception")
+        } catch (e: Exception) {
+            assertThat(e).isInstanceOf(NoSuchAttributeException::class)
+        }
+    }
+
+    @Test
+    fun `get - nested path - nested map does not contain key`() {
+        val path = listOf("wack", "foo")
+        val value = "bar"
+
+        val attributes = mapOf(
+            "wack" to mapOf(
+                "notFoo" to value
+            )
+        )
+
+        val testObj = AttributeReference(
+            type = AttributeType.values().random(),
+            path = path
+        )
+
+        val accessRequest = when (testObj.type) {
+            AttributeType.SUBJECT -> AccessRequest(
+                subject = attributes
+            )
+            AttributeType.ACTION -> AccessRequest(
+                action = attributes
+            )
+            AttributeType.RESOURCE -> AccessRequest(
+                resource = attributes
+            )
+            AttributeType.ENVIRONMENT -> AccessRequest(
+                environment = attributes
+            )
+        }
+
+        try {
+            testObj.get(accessRequest)
+            fail("Should be exception")
+        } catch (e: Exception) {
+            assertThat(e).isInstanceOf(NoSuchAttributeException::class)
+        }
     }
 }
