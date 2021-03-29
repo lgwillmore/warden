@@ -38,6 +38,13 @@ class ExpTest {
         assertLeftOperand(policy, AttributeType.ENVIRONMENT, listOf(key))
     }
 
+    @Test
+    fun `leftOperand - nested`() {
+        val expectedPath = listOf("key1", "key2")
+        val policy = Exp.environment("key1", "key2") equalTo 1
+        assertLeftOperand(policy, AttributeType.ENVIRONMENT, expectedPath)
+    }
+
 
     @Test
     fun `rightOperand - Subject`() {
@@ -73,6 +80,13 @@ class ExpTest {
         val policy = Exp.subject("blah") equalTo value
         val rightOperand = policy.rightOperand as PassThroughReference
         assertThat(rightOperand.value).isEqualTo(value)
+    }
+
+    @Test
+    fun `rightOperand - nested`() {
+        val expectedPath = listOf("key1", "key2")
+        val policy = Exp.subject("blah") equalTo environmentVal("key1", "key2")
+        assertRightOperand(policy, AttributeType.ENVIRONMENT, expectedPath)
     }
 
     private fun assertRightOperand(policy: ExpressionPolicy, expectedType: AttributeType, expectedPath: List<String>) {
