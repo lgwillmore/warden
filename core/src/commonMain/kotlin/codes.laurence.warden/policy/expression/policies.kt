@@ -4,6 +4,7 @@ import codes.laurence.warden.Access
 import codes.laurence.warden.AccessRequest
 import codes.laurence.warden.AccessResponse
 import codes.laurence.warden.policy.Policy
+import codes.laurence.warden.policy.PolicyDSL
 
 /**
  * A policy for building basic 2 operand expressions.
@@ -15,6 +16,7 @@ import codes.laurence.warden.policy.Policy
  *      3) Subjects "age" attribute is greater than 18
  *      4) Subjects "roles" attribute contains any of ["admin", "supervisor"]
  */
+@PolicyDSL
 class ExpressionPolicy(
     val leftOperand: ValueReference,
     val operatorType: OperatorType,

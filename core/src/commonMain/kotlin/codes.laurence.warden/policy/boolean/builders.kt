@@ -1,7 +1,6 @@
 package codes.laurence.warden.policy.boolean
 
 import codes.laurence.warden.policy.Policy
-import codes.laurence.warden.policy.PolicyDSL
 import codes.laurence.warden.policy.collections.CollectionBasedPolicy
 
 fun allOf(builder: CollectionBasedPolicy.() -> Unit) = AllOf(builder)

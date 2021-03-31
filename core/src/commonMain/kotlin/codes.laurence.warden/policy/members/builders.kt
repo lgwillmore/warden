@@ -1,12 +1,13 @@
 package codes.laurence.warden.policy.members
 
+import codes.laurence.warden.policy.PolicyDSL
 import codes.laurence.warden.policy.boolean.allOf
-import codes.laurence.warden.policy.collections.resource
-import codes.laurence.warden.policy.expression.OperatorBuilder
+import codes.laurence.warden.policy.expression.OperatorBuilderBase
 import codes.laurence.warden.policy.expression.subjectVal
 
+@PolicyDSL
 class MemberBuilder {
-    fun attribute(pathRoot: String, vararg pathRest: String): OperatorBuilder {
+    fun attribute(pathRoot: String, vararg pathRest: String): OperatorBuilderBase {
         TODO()
     }
 }
@@ -23,9 +24,7 @@ fun main() {
         }
 
         resource("foo") forAny {
-            attribute("bar") forAll {
-                attribute("doe") equalTo subjectVal("wack")
-            }
+            attribute("bar")
         }
     }
 }

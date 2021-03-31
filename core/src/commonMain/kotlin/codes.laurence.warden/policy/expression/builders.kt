@@ -37,7 +37,7 @@ class Exp {
 
 typealias PolicyBuiltHandler = (Policy) -> Unit
 
-class OperatorBuilder(
+open class OperatorBuilderBase(
     private val leftValueReference: ValueReference,
     private val policyBuiltHandler: PolicyBuiltHandler? = null
 ) {
@@ -79,7 +79,13 @@ class OperatorBuilder(
         policyBuiltHandler?.invoke(policy)
         return policy
     }
+}
 
+
+class OperatorBuilder(
+    leftValueReference: ValueReference,
+    policyBuiltHandler: PolicyBuiltHandler? = null
+) : OperatorBuilderBase(leftValueReference, policyBuiltHandler) {
     infix fun forAny(builder: MemberBuilder.() -> Unit): MemberPolicy {
         TODO()
     }

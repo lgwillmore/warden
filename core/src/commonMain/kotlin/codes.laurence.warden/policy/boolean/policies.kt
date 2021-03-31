@@ -41,6 +41,7 @@ class AllOf(policies: List<Policy>) : Policy, CollectionBasedPolicy(policies.toM
 /**
  * At least 1 policy must grant access.
  */
+@PolicyDSL
 class AnyOf(policies: List<Policy>) : Policy, CollectionBasedPolicy(policies.toMutableList()) {
 
     constructor(builder: CollectionBasedPolicy.() -> Unit) : this(mutableListOf()) {
@@ -65,12 +66,12 @@ class AnyOf(policies: List<Policy>) : Policy, CollectionBasedPolicy(policies.toM
             request = accessRequest
         )
     }
-
 }
 
 /**
  * Will grant access if the policy does not grant access.
  */
+@PolicyDSL
 class Not(val policy: Policy) : Policy {
 
     override fun checkAuthorized(accessRequest: AccessRequest): AccessResponse {
