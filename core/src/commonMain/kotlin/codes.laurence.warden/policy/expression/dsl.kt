@@ -86,11 +86,11 @@ class OperatorBuilder(
     leftValueReference: ValueReference,
     policyBuiltHandler: PolicyBuiltHandler? = null
 ) : OperatorBuilderBase(leftValueReference, policyBuiltHandler) {
-    infix fun forAny(builder: MemberBuilder.() -> Unit): MemberPolicy {
+    infix fun forAnyMember(builder: MemberBuilder.() -> Unit): MemberPolicy {
         TODO()
     }
 
-    infix fun forAll(builder: MemberBuilder.() -> Unit): MemberPolicy {
+    infix fun forAllMembers(builder: MemberBuilder.() -> Unit): MemberPolicy {
         TODO()
     }
 }
