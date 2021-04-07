@@ -5,7 +5,7 @@ val mockkVersion: String by project
 
 plugins {
     kotlin("multiplatform")
-    id("com.jfrog.bintray")
+    id("com.jfrog.artifactory")
     id("maven-publish")
     id("org.jetbrains.dokka") version "0.10.0"
 }
@@ -61,7 +61,7 @@ publishing {
     publications {
         create<MavenPublication>("coreJVM") {
             groupId = "codes.laurence.warden"
-            artifactId = "warden-core-jvm"
+            artifactId = "warden-core"
             version = projectVersion
 
             artifact("$buildDir/libs/warden-core-jvm-metadata-${project.version}-sources.jar") {
@@ -72,30 +72,26 @@ publishing {
     }
 }
 
-bintray {
-    user = System.getenv("BINTRAY_USER")
-    key = System.getenv("BINTRAY_KEY")
-    setPublications("coreJVM")
-    pkg.apply {
-        repo = "codes.laurence.warden"
-        name = "warden-core-jvm"
-        websiteUrl = "https://warden-kotlin.netlify.com/"
-        vcsUrl = "https://github.com/lgwillmore/warden"
-        issueTrackerUrl = "https://github.com/lgwillmore/warden/issues"
-        setLabels("Kotlin", "ABAC", "Authorization")
-        setLicenses("MIT")
-        version.apply {
-            name = project.version.toString()
-            desc = "SNAPSHOT release"
-        }
-    }
+artifactory {
+    setContextUrl("https://laurencecodes.jfrog.io/artifactory")
+    publish(delegateClosureOf<org.jfrog.gradle.plugin.artifactory.dsl.PublisherConfig> {
+        repository(delegateClosureOf<org.jfrog.gradle.plugin.artifactory.dsl.DoubleDelegateWrapper> {
+            setProperty("repoKey", "codes.laurence.warden")
+            setProperty("username", System.getenv("JFROG_USER"))
+            setProperty("password", System.getenv("JFROG_PASSWORD"))
+            setProperty("maven", true)
+        })
+        defaults(delegateClosureOf<org.jfrog.gradle.plugin.artifactory.task.ArtifactoryTask> {
+            publications("coreJVM")
+        })
+    })
 
 }
 
 tasks {
     val build by existing
 
-    bintrayUpload {
+    artifactoryPublish {
         dependsOn(build)
     }
 

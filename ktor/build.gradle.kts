@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm")
-    id("com.jfrog.bintray")
+    id("com.jfrog.artifactory")
     id("maven-publish")
 }
 
@@ -78,23 +78,19 @@ publishing {
     }
 }
 
-bintray {
-    user = System.getenv("BINTRAY_USER")
-    key = System.getenv("BINTRAY_KEY")
-    setPublications("ktorJar")
-    pkg.apply {
-        repo = artifactGroup
-        name = artifactName
-        websiteUrl = pomUrl
-        vcsUrl = pomScmUrl
-        issueTrackerUrl = pomIssueUrl
-        setLabels("Kotlin", "ABAC", "Authorization")
-        setLicenses("MIT")
-        version.apply {
-            name = project.version.toString()
-            desc = "SNAPSHOT release"
-        }
-    }
+artifactory {
+    setContextUrl("https://laurencecodes.jfrog.io/artifactory")
+    publish(delegateClosureOf<org.jfrog.gradle.plugin.artifactory.dsl.PublisherConfig> {
+        repository(delegateClosureOf<org.jfrog.gradle.plugin.artifactory.dsl.DoubleDelegateWrapper> {
+            setProperty("repoKey", "codes.laurence.warden")
+            setProperty("username", System.getenv("JFROG_USER"))
+            setProperty("password", System.getenv("JFROG_PASSWORD"))
+            setProperty("maven", true)
+        })
+        defaults(delegateClosureOf<org.jfrog.gradle.plugin.artifactory.task.ArtifactoryTask> {
+            publications("ktorJar")
+        })
+    })
 }
 
 configure<JavaPluginConvention> {
@@ -113,7 +109,7 @@ tasks {
         dependsOn("kotlinSourcesJar")
     }
 
-    bintrayUpload {
-        dependsOn(build)
-    }
+//    bintrayUpload {
+//        dependsOn(build)
+//    }
 }
