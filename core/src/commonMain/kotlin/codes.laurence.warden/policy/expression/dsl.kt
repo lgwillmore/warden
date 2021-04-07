@@ -1,8 +1,9 @@
 package codes.laurence.warden.policy.expression
 
 import codes.laurence.warden.policy.Policy
-import codes.laurence.warden.policy.members.MemberBuilder
+import codes.laurence.warden.policy.members.ForAllMembersPolicy
 import codes.laurence.warden.policy.members.ForAnyMemberPolicy
+import codes.laurence.warden.policy.members.MemberBuilder
 
 fun subjectVal(pathRoot: String, vararg pathRest: String) =
     AttributeReference(AttributeType.SUBJECT, listOf(pathRoot) + pathRest.toList())
@@ -38,8 +39,8 @@ class Exp {
 typealias PolicyBuiltHandler = (Policy) -> Unit
 
 open class OperatorBuilderBase(
-    private val leftValueReference: ValueReference,
-    private val policyBuiltHandler: PolicyBuiltHandler? = null
+    protected val leftValueReference: ValueReference,
+    protected val policyBuiltHandler: PolicyBuiltHandler? = null
 ) {
     infix fun equalTo(value: Any?) = secondOperand(OperatorType.EQUAL, value)
 
@@ -86,11 +87,26 @@ class OperatorBuilder(
     leftValueReference: ValueReference,
     policyBuiltHandler: PolicyBuiltHandler? = null
 ) : OperatorBuilderBase(leftValueReference, policyBuiltHandler) {
-    infix fun forAnyMember(builder: MemberBuilder.() -> Unit): ForAnyMemberPolicy {
-        TODO()
+
+    infix fun forAnyMember(build: MemberBuilder.() -> Unit): ForAnyMemberPolicy {
+        val memberBuilder = MemberBuilder()
+        memberBuilder.build()
+        return ForAnyMemberPolicy(
+            memberSource = leftValueReference,
+            memberPolicies = memberBuilder.memberPolicies
+        ).also { policy ->
+            policyBuiltHandler?.let { it(policy) }
+        }
     }
 
-    infix fun forAllMembers(builder: MemberBuilder.() -> Unit): ForAnyMemberPolicy {
-        TODO()
+    infix fun forAllMembers(build: MemberBuilder.() -> Unit): ForAllMembersPolicy {
+        val memberBuilder = MemberBuilder()
+        memberBuilder.build()
+        return ForAllMembersPolicy(
+            memberSource = leftValueReference,
+            memberPolicies = memberBuilder.memberPolicies
+        ).also { policy ->
+            policyBuiltHandler?.let { it(policy) }
+        }
     }
 }

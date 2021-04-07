@@ -68,7 +68,7 @@ class ForAnyMemberPolicy(
 }
 
 @PolicyDSL
-class ForAllMemberPolicy(
+class ForAllMembersPolicy(
     val memberSource: ValueReference,
     val memberPolicies: List<MemberPolicy>
 ) : Policy {
@@ -115,7 +115,7 @@ class ForAllMemberPolicy(
 
 class InvalidMemberException(message: String) : Exception(message)
 
-class MemberAttributeReference(
+data class MemberAttributeReference(
     val path: List<String>
 ) : ValueReference {
 

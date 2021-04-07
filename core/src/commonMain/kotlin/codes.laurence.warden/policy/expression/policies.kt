@@ -17,7 +17,7 @@ import codes.laurence.warden.policy.PolicyDSL
  *      4) Subjects "roles" attribute contains any of ["admin", "supervisor"]
  */
 @PolicyDSL
-class ExpressionPolicy(
+data class ExpressionPolicy(
     val leftOperand: ValueReference,
     val operatorType: OperatorType,
     val rightOperand: ValueReference
@@ -94,7 +94,6 @@ class ExpressionPolicy(
             else -> throw IncorrectOperator("$operatorType not recognized as a Collection operator")
         }
     }
-
 }
 
 class BadExpressionException(message: String) : Exception(message)

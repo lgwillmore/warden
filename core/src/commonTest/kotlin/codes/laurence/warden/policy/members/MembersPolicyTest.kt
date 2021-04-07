@@ -7,7 +7,6 @@ import codes.laurence.warden.Access
 import codes.laurence.warden.AccessRequest
 import codes.laurence.warden.AccessResponse
 import codes.laurence.warden.policy.expression.*
-import io.mockk.coVerify
 import io.mockk.coVerifyOrder
 import io.mockk.every
 import io.mockk.mockk
@@ -241,7 +240,7 @@ class ForAnyMemberPolicyTest {
 }
 
 
-class ForAllMemberPolicyTest {
+class ForAllMembersPolicyTest {
 
     @Test
     fun `initialise - empty member policies`() {
@@ -249,7 +248,7 @@ class ForAllMemberPolicyTest {
         val memberSource: ValueReference = mockk()
 
         try {
-            ForAllMemberPolicy(
+            ForAllMembersPolicy(
                 memberSource = memberSource,
                 memberPolicies = memberPolicies
             )
@@ -265,7 +264,7 @@ class ForAllMemberPolicyTest {
         val memberSource: ValueReference = mockk()
 
         try {
-            ForAllMemberPolicy(
+            ForAllMembersPolicy(
                 memberSource = memberSource,
                 memberPolicies = memberPolicies
             )
@@ -285,7 +284,7 @@ class ForAllMemberPolicyTest {
             every { get(accessRequest) } returns "MEMBERS"
         }
 
-        val testObj = ForAllMemberPolicy(
+        val testObj = ForAllMembersPolicy(
             memberSource = memberSource,
             memberPolicies = memberPolicies
         )
@@ -312,7 +311,7 @@ class ForAllMemberPolicyTest {
             every { get(accessRequest) } returns listOf("member")
         }
 
-        val testObj = ForAllMemberPolicy(
+        val testObj = ForAllMembersPolicy(
             memberSource = memberSource,
             memberPolicies = memberPolicies
         )
@@ -339,7 +338,7 @@ class ForAllMemberPolicyTest {
             every { get(accessRequest) } returns MEMBERS
         }
 
-        val testObj = ForAllMemberPolicy(
+        val testObj = ForAllMembersPolicy(
             memberSource = memberSource,
             memberPolicies = memberPolicies
         )
@@ -365,7 +364,7 @@ class ForAllMemberPolicyTest {
             every { get(accessRequest) } returns MEMBERS
         }
 
-        val testObj = ForAllMemberPolicy(
+        val testObj = ForAllMembersPolicy(
             memberSource = memberSource,
             memberPolicies = memberPolicies
         )
@@ -391,7 +390,7 @@ class ForAllMemberPolicyTest {
             every { get(accessRequest) } returns MEMBERS
         }
 
-        val testObj = ForAllMemberPolicy(
+        val testObj = ForAllMembersPolicy(
             memberSource = memberSource,
             memberPolicies = memberPolicies
         )
