@@ -23,7 +23,7 @@ fun Application.testableAppDependencies() {
     val enforcementPointKtor = EnforcementPointKtor(listOf(
         mockk {
             every { checkAuthorized(AccessRequest(subject = mapOf("access" to "granted"))) } returns AccessResponse(
-                Access.Granted,
+                Access.Granted(),
                 AccessRequest(subject = mapOf("returned" to "from policy"))
             )
             every { checkAuthorized(AccessRequest(subject = mapOf("access" to "denied"))) } returns AccessResponse(
