@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 val projectVersion: String by project
 val mockkVersion: String by project
 
@@ -21,7 +23,7 @@ val assertKVersion: String by project
 
 
 kotlin {
-    jvm{}
+    jvm {}
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -102,4 +104,3 @@ tasks {
         outputDirectory = "../build/dokka-core"
     }
 }
-

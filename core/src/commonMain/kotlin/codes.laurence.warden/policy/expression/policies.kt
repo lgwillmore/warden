@@ -55,7 +55,7 @@ class ExpressionPolicy(
                 OperatorType.CONTAINS_ALL -> checkCollection(left, right, operatorType)
             }
             return if (granted) {
-                AccessResponse(Access.Granted, accessRequest)
+                AccessResponse(Access.Granted(), accessRequest)
             } else {
                 AccessResponse(Access.Denied(), accessRequest)
             }
@@ -133,6 +133,30 @@ data class PassThroughReference(val value: Any?) : ValueReference {
     }
 }
 
+internal fun getValueFromAttributes(path: List<String>, attributes: Map<*, *>): Any? {
+    val pathQueue = path.toMutableList()
+    var currentAttributeMap: Map<*, *> = attributes
+    var currentLinkValue: Any? = null
+    while (pathQueue.isNotEmpty()) {
+        val pathLink = pathQueue.removeFirst()
+        if (!currentAttributeMap.containsKey(pathLink)) {
+            throw NoSuchAttributeException()
+        }
+        currentLinkValue = currentAttributeMap[pathLink]
+        if (pathQueue.isNotEmpty()) {
+            @Suppress("UNCHECKED_CAST")
+            when (currentLinkValue) {
+                is Map<*, *> -> {
+                    currentAttributeMap = currentLinkValue
+                }
+                else -> throw NoSuchAttributeException()
+            }
+
+        }
+    }
+    return currentLinkValue
+}
+
 data class AttributeReference(
     val type: AttributeType,
     val path: List<String>
@@ -143,32 +167,14 @@ data class AttributeReference(
     }
 
     override fun get(accessRequest: AccessRequest): Any? {
-        val pathQueue = path.toMutableList()
-        var currentAttributeMap: Map<*, *> = when (type) {
-            AttributeType.SUBJECT -> accessRequest.subject
-            AttributeType.ACTION -> accessRequest.action
-            AttributeType.RESOURCE -> accessRequest.resource
-            AttributeType.ENVIRONMENT -> accessRequest.environment
-        }
-        var currentLinkValue: Any? = null
-        while (pathQueue.isNotEmpty()) {
-            val pathLink = pathQueue.removeFirst()
-            if (!currentAttributeMap.containsKey(pathLink)) {
-                throw NoSuchAttributeException()
+        return getValueFromAttributes(
+            path, when (type) {
+                AttributeType.SUBJECT -> accessRequest.subject
+                AttributeType.ACTION -> accessRequest.action
+                AttributeType.RESOURCE -> accessRequest.resource
+                AttributeType.ENVIRONMENT -> accessRequest.environment
             }
-            currentLinkValue = currentAttributeMap[pathLink]
-            if (pathQueue.isNotEmpty()) {
-                @Suppress("UNCHECKED_CAST")
-                when (currentLinkValue) {
-                    is Map<*, *> -> {
-                        currentAttributeMap = currentLinkValue
-                    }
-                    else -> throw NoSuchAttributeException()
-                }
-
-            }
-        }
-        return currentLinkValue
+        )
     }
 }
 

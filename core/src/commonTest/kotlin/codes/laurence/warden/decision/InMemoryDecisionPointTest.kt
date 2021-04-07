@@ -15,10 +15,10 @@ val accessRequest = AccessRequest().copy(
 )
 
 val denial = AccessResponse(Access.Denied(), accessRequest)
-val granted = AccessResponse(Access.Granted, accessRequest)
+val granted = AccessResponse(Access.Granted(), accessRequest)
 
 val willAuthorizePolicy = mockk<Policy> {
-    every { checkAuthorized(accessRequest) } returns AccessResponse(Access.Granted, accessRequest)
+    every { checkAuthorized(accessRequest) } returns AccessResponse(Access.Granted(), accessRequest)
 }
 val willNotAuthorizePolicy = mockk<Policy> {
     every { checkAuthorized(accessRequest) } returns denial

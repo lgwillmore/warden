@@ -33,7 +33,7 @@ class AllOf(policies: List<Policy>) : Policy, CollectionBasedPolicy(policies.toM
                     }
                 }
             }
-            return AccessResponse(Access.Granted, accessRequest)
+            return AccessResponse(Access.Granted(), accessRequest)
         }
     }
 }
@@ -81,7 +81,7 @@ class Not(val policy: Policy) : Policy {
                 internal.copy(access = Access.Denied())
             }
             is Access.Denied -> {
-                internal.copy(access = Access.Granted)
+                internal.copy(access = Access.Granted())
             }
         }
     }

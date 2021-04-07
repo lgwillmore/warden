@@ -60,7 +60,7 @@ class EnforcementPointDefaultTest {
         )
 
         val grantedResponse = AccessResponse(
-            access = Access.Granted,
+            access = Access.Granted(),
             request = AccessRequest(
                 subject = mapOf("foo" to "returned")
             )

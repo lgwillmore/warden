@@ -190,10 +190,4 @@ class ExpTest {
         assertThat(policy.operatorType).isEqualTo(OperatorType.IS_IN)
     }
 
-    @Test
-    fun `operator - forAll`() {
-        val policy = Exp.subject("blah") isIn resourceVal("foo")
-        assertThat(policy.operatorType).isEqualTo(OperatorType.IS_IN)
-    }
-
 }

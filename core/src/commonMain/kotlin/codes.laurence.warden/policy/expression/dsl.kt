@@ -2,7 +2,7 @@ package codes.laurence.warden.policy.expression
 
 import codes.laurence.warden.policy.Policy
 import codes.laurence.warden.policy.members.MemberBuilder
-import codes.laurence.warden.policy.members.MemberPolicy
+import codes.laurence.warden.policy.members.ForAnyMemberPolicy
 
 fun subjectVal(pathRoot: String, vararg pathRest: String) =
     AttributeReference(AttributeType.SUBJECT, listOf(pathRoot) + pathRest.toList())
@@ -86,11 +86,11 @@ class OperatorBuilder(
     leftValueReference: ValueReference,
     policyBuiltHandler: PolicyBuiltHandler? = null
 ) : OperatorBuilderBase(leftValueReference, policyBuiltHandler) {
-    infix fun forAnyMember(builder: MemberBuilder.() -> Unit): MemberPolicy {
+    infix fun forAnyMember(builder: MemberBuilder.() -> Unit): ForAnyMemberPolicy {
         TODO()
     }
 
-    infix fun forAllMembers(builder: MemberBuilder.() -> Unit): MemberPolicy {
+    infix fun forAllMembers(builder: MemberBuilder.() -> Unit): ForAnyMemberPolicy {
         TODO()
     }
 }

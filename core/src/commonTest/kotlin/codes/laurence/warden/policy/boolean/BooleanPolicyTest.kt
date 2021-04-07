@@ -13,10 +13,10 @@ val accessRequest = AccessRequest().copy(
     action = mapOf("foo" to "bar")
 )
 val willAuthorizePolicy = mockk<Policy> {
-    every { checkAuthorized(accessRequest) } returns AccessResponse(Access.Granted, accessRequest)
+    every { checkAuthorized(accessRequest) } returns AccessResponse(Access.Granted(), accessRequest)
 }
 val denial = AccessResponse(Access.Denied(mapOf("arbitrary" to "denial")), accessRequest)
-val granted = AccessResponse(Access.Granted, accessRequest)
+val granted = AccessResponse(Access.Granted(), accessRequest)
 val willNotAuthorizePolicy = mockk<Policy> {
     every { checkAuthorized(accessRequest) } returns denial
 }
@@ -131,7 +131,7 @@ class NotTest {
     @Test
     fun checkAuthorized_isWhenInnerIsNot() {
         assertEquals(
-            denial.copy(access = Access.Granted),
+            denial.copy(access = Access.Granted()),
             Not(willNotAuthorizePolicy).checkAuthorized(accessRequest)
         )
     }
