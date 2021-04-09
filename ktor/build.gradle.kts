@@ -98,18 +98,8 @@ configure<JavaPluginConvention> {
 }
 
 tasks {
-    compileKotlin {
-        kotlinOptions.jvmTarget = "1.8"
-    }
-    compileTestKotlin {
-        kotlinOptions.jvmTarget = "1.8"
-    }
 
-    val build by existing{
+    val build by existing {
         dependsOn("kotlinSourcesJar")
     }
-
-//    bintrayUpload {
-//        dependsOn(build)
-//    }
 }
