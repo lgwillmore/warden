@@ -77,6 +77,14 @@ fun Application.testableAppDependencies() {
                     call.respondText("You should not be able to get me")
                 }
             }
+            warded {
+                get("/NotSuccess") {
+                    call.respondText(
+                        "You should see me because something else went wrong",
+                        status = HttpStatusCode.Conflict
+                    )
+                }
+            }
             get("/wardenCallNotCalled") {
                 enforcementPointKtor.enforceAuthorization(AccessRequest(subject = mapOf("access" to "granted")))
                 call.respondText("You should not see me due to an not being authorized")
@@ -165,6 +173,16 @@ class WardenTest {
             // Check that ignoring once does not effect other calls
             with(handleRequest(HttpMethod.Get, "/authorizationNotEnforced")) {
                 assertEquals(HttpStatusCode.Forbidden, response.status())
+            }
+        }
+    }
+
+    @Test
+    fun `get - enforcement point not called - not successful status code`() {
+        withTestApplication({ testableAppDependencies() }) {
+            with(handleRequest(HttpMethod.Get, "/authorizationEnforced/NotSuccess")) {
+                assertEquals(HttpStatusCode.Conflict, response.status())
+                assertEquals("You should see me because something else went wrong", response.content)
             }
         }
     }

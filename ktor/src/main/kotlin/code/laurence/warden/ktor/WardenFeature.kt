@@ -81,7 +81,7 @@ class Warden(config: WardenConfiguration) {
                 val inlineIgnored = call.attributes.getOrNull(WARDEN_IGNORED) ?: false
                 if (inlineIgnored || configIgnored) return@intercept
                 val enforced = call.attributes.getOrNull(WARDEN_ENFORCED) ?: false
-                if (!enforced) {
+                if (!enforced && call.response.status() in 200..299) {
                     val content = TextContent(
                         NOT_ENFORCED_MESSAGE,
                         contentType = ContentType.Text.Plain,
