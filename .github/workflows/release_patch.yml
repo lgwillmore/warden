@@ -18,6 +18,10 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
+      - name: Where are we
+        run: pwd
+      - name: What is here
+        run: ls -la
       - name: Publish Core
         run: JFROG_USER='${{ secrets.JFROG_USER }}' JFROG_PASSWORD='${{ secrets.JFROG_PASSWORD }}' ./gradlew warden-core::artifactoryPublish
       - name: Publish Ktor
