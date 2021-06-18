@@ -1,7 +1,5 @@
 
 
-val projectVersion: String by project
-val mockkVersion: String by project
 
 plugins {
     kotlin("multiplatform")
@@ -15,10 +13,8 @@ repositories {
     jcenter()
 }
 
-group = "codes.laurence.warden"
-version = projectVersion
-
 val assertKVersion: String by project
+val mockkVersion: String by project
 
 kotlin {
     jvm {}
@@ -60,7 +56,7 @@ publishing {
         create<MavenPublication>("coreJVM") {
             groupId = "codes.laurence.warden"
             artifactId = "warden-core"
-            version = projectVersion
+            version = version
 
             artifact("$buildDir/libs/warden-core-jvm-metadata-${project.version}-sources.jar") {
                 classifier = "sources"

@@ -8,7 +8,6 @@ repositories {
     maven(url = "https://jitpack.io")
 }
 
-val projectVersion: String by project
 val orchidVersion: String by project
 
 dependencies {
@@ -42,7 +41,7 @@ orchid {
     theme = "Editorial"
 
     // The following properties are optional
-    version = projectVersion
+    version = version
     args = listOf("--experimentalSourceDoc")
     baseUrl = when {
         isProd && envOrProperty("PULL_REQUEST") == "true" -> envOrProperty("DEPLOY_URL", required = true)
