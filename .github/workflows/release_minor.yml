@@ -1,0 +1,16 @@
+name: Release Minor
+
+on:
+  workflow_dispatch:
+    branches: [ main ]
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: zwaldowski/semver-release-action@v2
+        with:
+          bump: minor
+          prefix: ""
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
