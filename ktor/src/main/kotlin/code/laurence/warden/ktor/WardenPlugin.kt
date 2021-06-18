@@ -5,7 +5,7 @@ import io.ktor.application.ApplicationFeature
 import io.ktor.application.call
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
-import io.ktor.http.content.TextContent
+import io.ktor.http.content.*
 import io.ktor.request.httpMethod
 import io.ktor.request.uri
 import io.ktor.response.ApplicationSendPipeline
@@ -81,7 +81,19 @@ class Warden(config: WardenConfiguration) {
                 val inlineIgnored = call.attributes.getOrNull(WARDEN_IGNORED) ?: false
                 if (inlineIgnored || configIgnored) return@intercept
                 val enforced = call.attributes.getOrNull(WARDEN_ENFORCED) ?: false
-                if (!enforced && call.response.status() in 200..299) {
+                val status: Int = when (val s = subject) {
+                    is OutgoingContent -> {
+                        val subjectStatus = s.status?.value
+                        if (subjectStatus == null) {
+                            val responseStatus: Int? = call.response.status()?.value
+                            responseStatus ?: 200
+                        } else {
+                            subjectStatus
+                        }
+                    }
+                    else -> 200
+                }
+                if (!enforced && (status in 200..299 || status == 101)) {
                     val content = TextContent(
                         NOT_ENFORCED_MESSAGE,
                         contentType = ContentType.Text.Plain,
