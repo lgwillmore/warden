@@ -3,7 +3,7 @@ title: 'Home'
 ---
 >**Light weight Attribute Based Access Control for Kotlin**
 
-![Build Status](https://github.com/lgwillmore/warden/actions/workflows/test.yml/badge.svg?branch=main)
+![Build Status](https://github.com/lgwillmore/warden/actions/workflows/test.yml/badge.svg?branch=main) ![version](https://img.shields.io/github/v/tag/lgwillmore/warden?include_prereleases&label=release)
 
 Attribute Based Access Control (ABAC) is an approach to defining and enforcing authorization rules.
 
