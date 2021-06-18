@@ -80,17 +80,23 @@ publishing {
 
 artifactory {
     setContextUrl("https://laurencecodes.jfrog.io/artifactory")
-    publish(delegateClosureOf<org.jfrog.gradle.plugin.artifactory.dsl.PublisherConfig> {
-        repository(delegateClosureOf<org.jfrog.gradle.plugin.artifactory.dsl.DoubleDelegateWrapper> {
-            setProperty("repoKey", "codes.laurence.warden")
-            setProperty("username", System.getenv("JFROG_USER"))
-            setProperty("password", System.getenv("JFROG_PASSWORD"))
-            setProperty("maven", true)
-        })
-        defaults(delegateClosureOf<org.jfrog.gradle.plugin.artifactory.task.ArtifactoryTask> {
-            publications("ktorJar")
-        })
-    })
+    publish(
+        delegateClosureOf<org.jfrog.gradle.plugin.artifactory.dsl.PublisherConfig> {
+            repository(
+                delegateClosureOf<org.jfrog.gradle.plugin.artifactory.dsl.DoubleDelegateWrapper> {
+                    setProperty("repoKey", "codes.laurence.warden")
+                    setProperty("username", System.getenv("JFROG_USER"))
+                    setProperty("password", System.getenv("JFROG_PASSWORD"))
+                    setProperty("maven", true)
+                }
+            )
+            defaults(
+                delegateClosureOf<org.jfrog.gradle.plugin.artifactory.task.ArtifactoryTask> {
+                    publications("ktorJar")
+                }
+            )
+        }
+    )
 }
 
 configure<JavaPluginConvention> {

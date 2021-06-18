@@ -18,18 +18,20 @@ import kotlin.test.assertEquals
 
 private fun Application.testableAppHttp() {
 
-    val enforcementPointKtor = EnforcementPointKtor(listOf(
-        mockk {
-            every { checkAuthorized(AccessRequest(subject = mapOf("access" to "granted"))) } returns AccessResponse(
-                Access.Granted(),
-                AccessRequest(subject = mapOf("returned" to "from policy"))
-            )
-            every { checkAuthorized(AccessRequest(subject = mapOf("access" to "denied"))) } returns AccessResponse(
-                Access.Denied(mapOf("message" to "Auth Denied")),
-                AccessRequest(subject = mapOf("returned" to "from policy"))
-            )
-        }
-    ))
+    val enforcementPointKtor = EnforcementPointKtor(
+        listOf(
+            mockk {
+                every { checkAuthorized(AccessRequest(subject = mapOf("access" to "granted"))) } returns AccessResponse(
+                    Access.Granted(),
+                    AccessRequest(subject = mapOf("returned" to "from policy"))
+                )
+                every { checkAuthorized(AccessRequest(subject = mapOf("access" to "denied"))) } returns AccessResponse(
+                    Access.Denied(mapOf("message" to "Auth Denied")),
+                    AccessRequest(subject = mapOf("returned" to "from policy"))
+                )
+            }
+        )
+    )
     install(Warden) {
         routePriorityStack = listOf(
             WardenRoute("/authorizationNotEnforced/IgnoredInConfig", WardenRouteBehaviour.IGNORE),
@@ -219,5 +221,4 @@ class WardenPluginHttpRoutingTest {
             }
         }
     }
-
 }

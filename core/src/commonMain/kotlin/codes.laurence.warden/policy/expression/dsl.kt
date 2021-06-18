@@ -82,7 +82,6 @@ open class OperatorBuilderBase(
     }
 }
 
-
 class OperatorBuilder(
     leftValueReference: ValueReference,
     policyBuiltHandler: PolicyBuiltHandler? = null

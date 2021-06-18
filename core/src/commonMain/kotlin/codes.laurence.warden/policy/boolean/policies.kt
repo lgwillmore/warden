@@ -86,4 +86,3 @@ class Not(val policy: Policy) : Policy {
         }
     }
 }
-

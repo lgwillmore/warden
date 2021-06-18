@@ -24,5 +24,4 @@ class MemberBuilder {
             throw IllegalStateException("Unhandled Policy Type ${policy::class.simpleName}")
         }
     }
-
 }

@@ -20,18 +20,20 @@ import kotlin.test.assertEquals
 
 private fun Application.testableAppWebsockets() {
 
-    val enforcementPointKtor = EnforcementPointKtor(listOf(
-        mockk {
-            every { checkAuthorized(AccessRequest(subject = mapOf("access" to "granted"))) } returns AccessResponse(
-                Access.Granted(),
-                AccessRequest(subject = mapOf("returned" to "from policy"))
-            )
-            every { checkAuthorized(AccessRequest(subject = mapOf("access" to "denied"))) } returns AccessResponse(
-                Access.Denied(mapOf("message" to "Auth Denied")),
-                AccessRequest(subject = mapOf("returned" to "from policy"))
-            )
-        }
-    ))
+    val enforcementPointKtor = EnforcementPointKtor(
+        listOf(
+            mockk {
+                every { checkAuthorized(AccessRequest(subject = mapOf("access" to "granted"))) } returns AccessResponse(
+                    Access.Granted(),
+                    AccessRequest(subject = mapOf("returned" to "from policy"))
+                )
+                every { checkAuthorized(AccessRequest(subject = mapOf("access" to "denied"))) } returns AccessResponse(
+                    Access.Denied(mapOf("message" to "Auth Denied")),
+                    AccessRequest(subject = mapOf("returned" to "from policy"))
+                )
+            }
+        )
+    )
     install(WebSockets)
     install(Warden) {
         routePriorityStack = listOf(
@@ -80,7 +82,7 @@ private fun Application.testableAppWebsockets() {
 
                     beforeEach({
                         throw SomeOtherException()
-                    }){
+                    }) {
                         webSocket("/errorBefore") {
                             outgoing.send(Frame.Text("You should not see me"))
                         }
@@ -160,4 +162,4 @@ class WardenPluginWebsocketRoutingTest {
     }
 }
 
-private class SomeOtherException: Exception()
+private class SomeOtherException : Exception()

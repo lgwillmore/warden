@@ -6,7 +6,6 @@ import assertk.assertions.isInstanceOf
 import codes.laurence.warden.Access
 import codes.laurence.warden.AccessRequest
 import codes.laurence.warden.AccessResponse
-import codes.laurence.warden.policy.expression.ExpressionPolicy
 
 fun assertDenied(response: AccessResponse, expectedRequest: AccessRequest? = null) {
     assertThat(response.access).isInstanceOf(Access.Denied::class)
@@ -21,4 +20,3 @@ fun assertGranted(response: AccessResponse, expectedRequest: AccessRequest? = nu
         assertThat(response.request).isEqualTo(expectedRequest)
     }
 }
-

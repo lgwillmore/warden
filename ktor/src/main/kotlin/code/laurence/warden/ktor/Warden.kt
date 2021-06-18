@@ -106,5 +106,3 @@ class Warden(config: WardenConfiguration) {
         }
     }
 }
-
-

@@ -10,7 +10,6 @@ import codes.laurence.warden.test.assertDenied
 import codes.laurence.warden.test.assertGranted
 import kotlin.test.Test
 
-
 class ComparisonOperatorsTest {
     val request17 = AccessRequest().copy(
         subject = mapOf(Pair("age", 17)),
@@ -240,7 +239,6 @@ class CollectionOperatorsTest {
         assertDenied(policy.checkAuthorized(neitherRequest))
     }
 
-
     @Test
     fun checkAttributeContains() {
         val managerRequest = AccessRequest().copy(
@@ -295,7 +293,6 @@ class AttributeReferenceTest {
         } catch (e: Exception) {
             assertThat(e).isInstanceOf(IllegalArgumentException::class)
         }
-
     }
 
     @Test

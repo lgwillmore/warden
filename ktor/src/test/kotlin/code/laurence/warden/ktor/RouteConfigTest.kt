@@ -59,5 +59,4 @@ class RouteConfigTest {
         val actual = evaluateRoute(stack, "/some/thing", HttpMethod.Get)
         assertThat(actual).isEqualTo(WardenRouteBehaviour.ENFORCE)
     }
-
 }

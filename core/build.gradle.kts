@@ -1,4 +1,4 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 
 val projectVersion: String by project
 val mockkVersion: String by project
@@ -15,12 +15,10 @@ repositories {
     jcenter()
 }
 
-
 group = "codes.laurence.warden"
 version = projectVersion
 
 val assertKVersion: String by project
-
 
 kotlin {
     jvm {}
@@ -74,18 +72,23 @@ publishing {
 
 artifactory {
     setContextUrl("https://laurencecodes.jfrog.io/artifactory")
-    publish(delegateClosureOf<org.jfrog.gradle.plugin.artifactory.dsl.PublisherConfig> {
-        repository(delegateClosureOf<org.jfrog.gradle.plugin.artifactory.dsl.DoubleDelegateWrapper> {
-            setProperty("repoKey", "codes.laurence.warden")
-            setProperty("username", System.getenv("JFROG_USER"))
-            setProperty("password", System.getenv("JFROG_PASSWORD"))
-            setProperty("maven", true)
-        })
-        defaults(delegateClosureOf<org.jfrog.gradle.plugin.artifactory.task.ArtifactoryTask> {
-            publications("coreJVM")
-        })
-    })
-
+    publish(
+        delegateClosureOf<org.jfrog.gradle.plugin.artifactory.dsl.PublisherConfig> {
+            repository(
+                delegateClosureOf<org.jfrog.gradle.plugin.artifactory.dsl.DoubleDelegateWrapper> {
+                    setProperty("repoKey", "codes.laurence.warden")
+                    setProperty("username", System.getenv("JFROG_USER"))
+                    setProperty("password", System.getenv("JFROG_PASSWORD"))
+                    setProperty("maven", true)
+                }
+            )
+            defaults(
+                delegateClosureOf<org.jfrog.gradle.plugin.artifactory.task.ArtifactoryTask> {
+                    publications("coreJVM")
+                }
+            )
+        }
+    )
 }
 
 tasks {

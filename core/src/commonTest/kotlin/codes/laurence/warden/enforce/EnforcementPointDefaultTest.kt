@@ -49,7 +49,6 @@ class EnforcementPointDefaultTest {
                 testObj.enforceAuthorization(request)
             }
         }
-
     }
 
     @Test
@@ -75,6 +74,5 @@ class EnforcementPointDefaultTest {
         runBlockingTest {
             testObj.enforceAuthorization(request)
         }
-
     }
 }

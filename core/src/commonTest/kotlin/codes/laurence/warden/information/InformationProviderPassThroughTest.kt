@@ -21,7 +21,5 @@ class InformationProviderPassThroughTest {
         val actual = testObj.enrich(request)
 
         assertThat(actual).isSameAs(request)
-
     }
-
 }

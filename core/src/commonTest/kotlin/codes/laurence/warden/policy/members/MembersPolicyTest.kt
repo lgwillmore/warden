@@ -128,7 +128,6 @@ class ForAnyMemberPolicyTest {
                 request = accessRequest
             )
         )
-
     }
 
     @Test
@@ -155,7 +154,6 @@ class ForAnyMemberPolicyTest {
                 request = accessRequest
             )
         )
-
     }
 
     @Test
@@ -234,11 +232,8 @@ class ForAnyMemberPolicyTest {
                 request = accessRequest
             )
         )
-
     }
-
 }
-
 
 class ForAllMembersPolicyTest {
 
@@ -297,7 +292,6 @@ class ForAllMembersPolicyTest {
                 request = accessRequest
             )
         )
-
     }
 
     @Test
@@ -324,7 +318,6 @@ class ForAllMembersPolicyTest {
                 request = accessRequest
             )
         )
-
     }
 
     @Test
@@ -404,11 +397,9 @@ class ForAllMembersPolicyTest {
             )
         )
     }
-
 }
 
 class MemberAttributeReferenceTest {
-
 
     @Test
     fun `cannot instantiate with empty list`() {
@@ -538,7 +529,6 @@ class MemberExpressionPolicyTest {
         assertThat(testObj.internalExpressionPolicy.rightOperand).isEqualTo(rightOperand)
     }
 
-
     @Test
     fun checkAuthorized() {
         val leftOperand = mockk<MemberAttributeReference>(relaxed = true)
@@ -560,7 +550,6 @@ class MemberExpressionPolicyTest {
         testObj.internalExpressionPolicy = mockk {
             every { checkAuthorized(request) } returns result
         }
-
 
         val actual = testObj.checkAuthorized(member, request)
 

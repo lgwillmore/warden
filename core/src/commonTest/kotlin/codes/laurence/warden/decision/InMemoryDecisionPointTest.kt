@@ -35,7 +35,6 @@ val willNotAuthorizePolicy = mockk<Policy> {
     every { checkAuthorized(enrichedRequest) } returns AccessResponse(Access.Granted(), enrichedRequest)
 }
 
-
 class InMemoryDecisionPointTest {
 
     @Test
@@ -70,7 +69,6 @@ class InMemoryDecisionPointTest {
             ).checkAuthorized(accessRequest)
         )
     }
-
 
     @Test
     fun checkAuthorized_atLeastOneAuthorized() = runBlockingTest {
@@ -150,5 +148,4 @@ class InMemoryDecisionPointTest {
             ).checkAuthorized(accessRequest)
         )
     }
-
 }

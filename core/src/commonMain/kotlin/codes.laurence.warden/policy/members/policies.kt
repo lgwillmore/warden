@@ -64,7 +64,6 @@ class ForAnyMemberPolicy(
         }
         throw InvalidMemberException("Target attribute must be a collection")
     }
-
 }
 
 @PolicyDSL
@@ -110,7 +109,6 @@ class ForAllMembersPolicy(
         }
         throw InvalidMemberException("Target attribute must be a collection")
     }
-
 }
 
 class InvalidMemberException(message: String) : Exception(message)
@@ -150,4 +148,3 @@ class MemberExpressionPolicy(
         return internalExpressionPolicy.checkAuthorized(accessRequest)
     }
 }
-

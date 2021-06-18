@@ -21,14 +21,12 @@ class ExpTest {
         assertLeftOperand(policy, AttributeType.ACTION, listOf(key))
     }
 
-
     @Test
     fun `leftOperand - Resource`() {
         val key = "key2"
         val policy = Exp.resource(key) equalTo 1
         assertLeftOperand(policy, AttributeType.RESOURCE, listOf(key))
     }
-
 
     @Test
     fun `leftOperand - Environment`() {
@@ -43,7 +41,6 @@ class ExpTest {
         val policy = Exp.environment("key1", "key2") equalTo 1
         assertLeftOperand(policy, AttributeType.ENVIRONMENT, expectedPath)
     }
-
 
     @Test
     fun `rightOperand - Subject`() {
@@ -189,5 +186,4 @@ class ExpTest {
         val policy = Exp.subject("blah") isIn resourceVal("foo")
         assertThat(policy.operatorType).isEqualTo(OperatorType.IS_IN)
     }
-
 }

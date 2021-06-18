@@ -70,5 +70,4 @@ class CollectionBasedBuildersTest {
         }
         assertThat((policy.policies[0] as Not).policy).isInstanceOf(AllOf::class)
     }
-
 }

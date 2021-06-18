@@ -99,7 +99,6 @@ data class ExpressionPolicy(
 class BadExpressionException(message: String) : Exception(message)
 class IncorrectOperator(message: String) : Exception(message)
 
-
 enum class AttributeType {
     SUBJECT,
     ACTION,
@@ -150,7 +149,6 @@ internal fun getValueFromAttributes(path: List<String>, attributes: Map<*, *>): 
                 }
                 else -> throw NoSuchAttributeException()
             }
-
         }
     }
     return currentLinkValue
@@ -167,7 +165,8 @@ data class AttributeReference(
 
     override fun get(accessRequest: AccessRequest): Any? {
         return getValueFromAttributes(
-            path, when (type) {
+            path,
+            when (type) {
                 AttributeType.SUBJECT -> accessRequest.subject
                 AttributeType.ACTION -> accessRequest.action
                 AttributeType.RESOURCE -> accessRequest.resource
@@ -176,6 +175,5 @@ data class AttributeReference(
         )
     }
 }
-
 
 class NoSuchAttributeException : Exception()

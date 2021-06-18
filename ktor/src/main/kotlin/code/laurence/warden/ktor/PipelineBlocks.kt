@@ -129,5 +129,4 @@ internal class WardenKtorCall(var call: ApplicationCall?) : AbstractCoroutineCon
      */
     companion object Key :
         CoroutineContext.Key<WardenKtorCall>
-
 }
