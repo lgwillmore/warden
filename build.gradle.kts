@@ -2,12 +2,14 @@ val projectVersion: String by project
 plugins {
     kotlin("jvm") version "1.4.20"
     id("org.jlleitschuh.gradle.ktlint") version "10.1.0"
+    id("com.palantir.git-version") version "0.12.3"
 }
 
-group = "codes.laurence.warden"
-version = projectVersion
+val gitVersion: groovy.lang.Closure<String> by extra
 
 allprojects {
+    group = "codes.laurence.warden"
+    version = gitVersion().replace(".dirty", "")
     repositories {
         mavenCentral()
     }
