@@ -2,4 +2,4 @@ config:
   backend:
     name: github
     repo: 'lgwillmore/warden'
-    branch: master
+    branch: main
