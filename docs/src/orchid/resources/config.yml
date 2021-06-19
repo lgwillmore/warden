@@ -24,11 +24,6 @@ theme:
       itemId: 'ABAC Overview'
     - type: 'page'
       itemId: 'FAQ'
-    - type: 'sourcedocPages'
-      moduleType: 'kotlindoc'
-      node: 'packages'
-      asSubmenu: true
-      submenuTitle: 'Source Docs'
   legacySearch: false
   metaComponents:
     - type: orchidSearch
@@ -44,19 +39,3 @@ allPages:
     - type: pageIds
       structure: nested
       order: 1
-
-
-kotlindoc:
-  sourceDirs:
-    - './../../../../core/src/commonMain/kotlin'
-  pages:
-    menu:
-      - type: 'sourcedocPageLinks'
-        moduleType: 'kotlindoc'
-        itemTitleType: 'SIGNATURE'
-        includeItems: true
-
-services:
-  generators:
-    externalIndices:
-      - 'https://orchid.netlify.com/meta/all.index.json'

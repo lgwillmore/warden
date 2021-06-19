@@ -5,7 +5,6 @@ plugins {
     kotlin("multiplatform")
     id("com.jfrog.artifactory")
     id("maven-publish")
-    id("org.jetbrains.dokka") version "0.10.0"
 }
 
 repositories {
@@ -92,10 +91,5 @@ tasks {
 
     artifactoryPublish {
         dependsOn(build)
-    }
-
-    dokka {
-        outputFormat = "html"
-        outputDirectory = "../build/dokka-core"
     }
 }

@@ -1,5 +1,5 @@
 plugins {
-    id("com.eden.orchidPlugin") version "0.18.0"
+    id("com.eden.orchidPlugin") version "0.21.1"
 }
 
 repositories {
