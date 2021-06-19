@@ -33,6 +33,8 @@ class Exp {
 
         fun environment(pathRoot: String, vararg pathRest: String) =
             OperatorBuilder(AttributeReference(AttributeType.ENVIRONMENT, listOf(pathRoot) + pathRest.toList()))
+
+        fun value(value: Any?) = OperatorBuilder(PassThroughReference(value))
     }
 }
 

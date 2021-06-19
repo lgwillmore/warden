@@ -6,7 +6,6 @@ import codes.laurence.warden.policy.expression.ExpressionPolicy
 import codes.laurence.warden.policy.expression.PassThroughReference
 import codes.laurence.warden.policy.expression.ValueReference
 
-
 fun expressionPolicyFixture(): ExpressionPolicy {
     return ExpressionPolicy(
         leftOperand = valueReferenceFixture(),

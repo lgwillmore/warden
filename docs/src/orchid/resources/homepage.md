@@ -1,10 +1,10 @@
 ---
 title: 'Home'
 ---
->**Attribute Based Access Control for Kotlin**
-> 
-> - Decouple the business rules of Authorization from web frameworks
-> - Provide simple and expressive Policy definitions
+> **Attribute Based Access Control for Kotlin**
+>
+> - Simple and expressive Policy based Authorization
+> - Decoupled from web frameworks
 
 ![Build Status](https://github.com/lgwillmore/warden/actions/workflows/test.yml/badge.svg?branch=main) ![version](https://img.shields.io/github/v/tag/lgwillmore/warden?include_prereleases&label=release)
 
@@ -47,13 +47,17 @@ With ABAC, and the separation between decision and enforcement, your authorizati
 systems, languages, frontend, backend. It also exposes Policies as business data for CRUD.
 
 ## Feature Overview
- - Simple but powerful DSL for defining access Policies.
- - An In Memory Decision Point for evaluating access requests given a set of Policies.
- - A General Enforcement Point for guarding execution paths.
- - An InformationPoint hook for silently enriching request attributes.
- - Framework specific Enforcement Points:
-   - Ktor
-   
+
+- Simple but powerful DSL for defining access Policies.
+- A local Decision Point for evaluating access requests given a source of Policies.
+- An InformationPoint hook for silently enriching request attributes.
+- A General Enforcement Point for guarding execution paths.
+- Framework specific Enforcement Points:
+    - Ktor
+
 ## Planned Features
- - Enforcement Point for Spring
- - Tools for CRUDing persistent policies
+
+- Enforcement Point for Spring
+- Tools for CRUDing persistent policies
+- Policy naming
+- More informative responses to allow insight into how a request was approved/denied

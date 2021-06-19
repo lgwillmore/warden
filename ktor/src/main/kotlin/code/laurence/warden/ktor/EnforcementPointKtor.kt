@@ -3,7 +3,7 @@ package code.laurence.warden.ktor
 import code.laurence.warden.ktor.Warden.Feature.WARDEN_ENFORCED
 import codes.laurence.warden.AccessRequest
 import codes.laurence.warden.decision.DecisionPoint
-import codes.laurence.warden.decision.DecisionPoint
+import codes.laurence.warden.decision.DecisionPointLocal
 import codes.laurence.warden.enforce.EnforcementPoint
 import codes.laurence.warden.enforce.EnforcementPointDefault
 import codes.laurence.warden.policy.Policy
@@ -21,7 +21,7 @@ class EnforcementPointKtor(decisionPoint: DecisionPoint) : EnforcementPoint {
         private val logger = LoggerFactory.getLogger(EnforcementPointKtor::class.qualifiedName)
     }
 
-    constructor(policies: List<Policy>) : this(DecisionPoint(policies))
+    constructor(policies: List<Policy>) : this(DecisionPointLocal(policies))
 
     private val enforcementPoint: EnforcementPoint = EnforcementPointDefault(decisionPoint)
 

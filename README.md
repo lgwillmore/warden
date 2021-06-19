@@ -4,8 +4,8 @@
 
 > **Attribute Based Access Control for Kotlin**
 >
-> - Decouple the business rules of Authorization from web frameworks
-> - Provide simple and expressive Policy definitions
+> - Simple and expressive Policy based Authorization
+> - Decoupled from web frameworks
 
 **[FULL DOCUMENTATION](https://warden-kotlin.netlify.com/)**
 

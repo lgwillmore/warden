@@ -42,7 +42,7 @@ class InMemoryDecisionPointTest {
         val accessPolicyMock = willAuthorizePolicy
         val denyPolicyMock = willNotAuthorizePolicy
 
-        val testObj = DecisionPoint(
+        val testObj = DecisionPointLocal(
             allow = listOf(accessPolicyMock),
             deny = listOf(denyPolicyMock),
             informationProvider = informationProviderMock
@@ -64,7 +64,7 @@ class InMemoryDecisionPointTest {
                 access = Access.Denied(),
                 request = accessRequest
             ),
-            DecisionPoint(
+            DecisionPointLocal(
                 allow = emptyList()
             ).checkAuthorized(accessRequest)
         )
@@ -74,7 +74,7 @@ class InMemoryDecisionPointTest {
     fun checkAuthorized_atLeastOneAuthorized() = runBlockingTest {
         assertEquals(
             granted,
-            DecisionPoint(
+            DecisionPointLocal(
                 allow = listOf(
                     willNotAuthorizePolicy,
                     willNotAuthorizePolicy,
@@ -89,7 +89,7 @@ class InMemoryDecisionPointTest {
     fun checkAuthorized_allAuthorized() = runBlockingTest {
         assertEquals(
             granted,
-            DecisionPoint(
+            DecisionPointLocal(
                 allow = listOf(
                     willAuthorizePolicy,
                     willAuthorizePolicy,
@@ -103,7 +103,7 @@ class InMemoryDecisionPointTest {
     fun checkAuthorized_NoneAuthorized() = runBlockingTest {
         assertEquals(
             denial,
-            DecisionPoint(
+            DecisionPointLocal(
                 allow = listOf(
                     willNotAuthorizePolicy,
                     willNotAuthorizePolicy,
@@ -117,7 +117,7 @@ class InMemoryDecisionPointTest {
     fun checkAuthorized_atLeastOneAuthorized_alsoDenied() = runBlockingTest {
         assertEquals(
             denial,
-            DecisionPoint(
+            DecisionPointLocal(
                 allow = listOf(
                     willNotAuthorizePolicy,
                     willNotAuthorizePolicy,
@@ -135,7 +135,7 @@ class InMemoryDecisionPointTest {
     fun checkAuthorized_atLeastOneAuthorized_notDenied() = runBlockingTest {
         assertEquals(
             granted,
-            DecisionPoint(
+            DecisionPointLocal(
                 allow = listOf(
                     willNotAuthorizePolicy,
                     willNotAuthorizePolicy,

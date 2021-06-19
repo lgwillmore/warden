@@ -29,7 +29,6 @@ fun randRange(min: Long, max: Long): Long {
     return (min + (max - min) * random.nextDouble()).toLong()
 }
 
-
 fun randString(): String {
     return "GENERATED${random.nextInt().absoluteValue}"
 }
@@ -45,7 +44,6 @@ fun randDouble(): Double {
 fun randInt(): Int {
     return randRange(0, 100)
 }
-
 
 fun randBool(): Boolean {
     return listOf(true, false).random()
