@@ -1,4 +1,10 @@
-A policy encapsulates the logic for a evaluating if a particular condition or set of conditions has been satisfied by the access Request.
+A policy encapsulates the logic for evaluating if a particular condition or set of conditions has been satisfied by the access Request.
+
+## Expression Policies
+
+### Operands
+
+### Operators
 
 ## Boolean Policies
 
@@ -7,11 +13,3 @@ A policy encapsulates the logic for a evaluating if a particular condition or se
 ### AnyOf
 
 ### Not
-
-## Expression Policies
-
-### Operands
-
-### Operators
-
-## Policy DSL

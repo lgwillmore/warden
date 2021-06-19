@@ -3,9 +3,11 @@ package codes.laurence.warden.decision
 import codes.laurence.warden.Access
 import codes.laurence.warden.AccessRequest
 import codes.laurence.warden.AccessResponse
-import codes.laurence.warden.information.InformationProvider
-import codes.laurence.warden.information.InformationProviderPassThrough
+import codes.laurence.warden.information.InformationPoint
+import codes.laurence.warden.information.InformationPointPassThrough
 import codes.laurence.warden.policy.Policy
+import codes.laurence.warden.policy.PolicySource
+import codes.laurence.warden.policy.PolicySourceInMemory
 import codes.laurence.warden.policy.boolean.AnyOf
 
 /**
@@ -16,17 +18,28 @@ import codes.laurence.warden.policy.boolean.AnyOf
  *  - if there is a policy that grants access, but the is also a policy that denies access, there is no access.
  *  - if there is a policy that grants access and no policy that denies, there is access.
  */
-class DecisionPointInMemory(
-    accessPolicies: List<Policy>,
-    denyPolicies: List<Policy> = emptyList(),
-    private val informationProvider: InformationProvider = InformationProviderPassThrough()
+class DecisionPointLocal(
+    private val policySource: PolicySource,
+    private val informationPoint: InformationPoint = InformationPointPassThrough()
 ) : DecisionPoint {
 
-    private val anyOfAccessContainer = AnyOf(accessPolicies)
-    private val anyOfDenyContainer = AnyOf(denyPolicies)
+    constructor(
+        allow: List<Policy>,
+        deny: List<Policy> = emptyList(),
+        informationProvider: InformationPoint = InformationPointPassThrough()
+    ) : this(
+        policySource = PolicySourceInMemory(
+            allow,
+            deny
+        ),
+        informationPoint = informationProvider
+    )
 
     override suspend fun checkAuthorized(request: AccessRequest): AccessResponse {
-        val enriched = informationProvider.enrich(request)
+        val enriched = informationPoint.enrich(request)
+        val policies = policySource.policies(request)
+        val anyOfAccessContainer = AnyOf(policies.allow)
+        val anyOfDenyContainer = AnyOf(policies.deny)
         val accessResult = anyOfAccessContainer.checkAuthorized(enriched)
         return when (accessResult.access) {
             is Access.Granted -> {

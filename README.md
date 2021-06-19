@@ -2,7 +2,10 @@
 
 ![Build Status](https://github.com/lgwillmore/warden/actions/workflows/test.yml/badge.svg?branch=main) ![version](https://img.shields.io/github/v/tag/lgwillmore/warden?include_prereleases&label=release) [![Netlify Status](https://api.netlify.com/api/v1/badges/0d20e576-551e-42be-9e8c-66355d420603/deploy-status)](https://app.netlify.com/sites/warden-kotlin/deploys)
 
->A kotlin implementation of light weight Attribute Based Access Control (ABAC).
+> **Attribute Based Access Control for Kotlin**
+>
+> - Decouple the business rules of Authorization from web frameworks
+> - Provide simple and expressive Policy definitions
 
 **[FULL DOCUMENTATION](https://warden-kotlin.netlify.com/)**
 
@@ -25,23 +28,23 @@ ABAC allows us to define access/deny policies based around any conceivable attri
 
 With policies defined using rules with access to this information we can then enforce our Policies in any part of a distrubuted system.
 
+You can find out more about the concepts involved here: [ABAC Overview]({{ link('ABAC Overview') }}).
 
-## Advantages of an ABAC
+## Advantages of ABAC
 ABAC has the following advantages of your more traditional role based access control implemented with your flavour of web framework:
 
-### Decouple Authorization logic from Routing
-> Defining the rules for authorization separately from your routing provides all the benefits of low coupling.
-> 
->In your routing, all you have to ensure is that Authorization is checked, not how or what the Authorization rules are.
-> 
-> Your authorization rules are business rules and are formulated against business domain objects, not URLs. You can have multiple URLs that need the same rules to be enforced, and this is better done in a lower layer.
+### Decouple Authorization from Routing
+Defining the rules for authorization separately from your routing provides all the benefits of low coupling.
 
-### Powerful and expressive Authorization logic
+In your routing, all you have to ensure is that Authorization is checked, not how or what the Authorization rules are.
+ 
+Your authorization rules are business rules and are formulated against business domain objects, not URLs. You can have multiple URLs that need the same rules to be enforced, and this is better done in a lower layer.
 
->Role based authorization is a subset of the rules that can be defined with ABAC. You will likely find your needs extending beyond Role Based Authorization quickly and ABAC has you covered.
+### Expressive Authorization logic
+Role based authorization is a subset of the rules that can be defined with ABAC. You will likely find your needs extending beyond Role Based Authorization quickly and ABAC has you covered.
 
-### Architectural components provide flexibility
-> With ABAC, and the separation between decision and enforcement, your authorization rules can be leveraged across systems, languages, frontend, backend. It also exposes Policies as business data for CRUD.
+### Architectural flexibility
+With ABAC, and the separation between decision and enforcement, your authorization rules can be leveraged across systems, languages, frontend, backend. It also exposes Policies as business data for CRUD.
 
 ## A Quick Intro
 

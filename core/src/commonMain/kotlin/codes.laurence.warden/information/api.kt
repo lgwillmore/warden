@@ -2,6 +2,6 @@ package codes.laurence.warden.information
 
 import codes.laurence.warden.AccessRequest
 
-interface InformationProvider {
+interface InformationPoint {
     suspend fun enrich(request: AccessRequest): AccessRequest
 }

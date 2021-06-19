@@ -6,29 +6,31 @@ Let us say we have a blog site and we have the following entities: `User` and `A
 
 We would like the following authorization rules:
 
- - Any `User` can read any `Article`
- - The author of an `Article` can modify and delete their `Article`
- - A `User` must be be an Author to be able to create an article.
- 
- ## Policies
- 
-We can use the **Warden** policy DSL to build these rules in a way that is not tightly coupled to our routes, and could in theory be used anywhere that we would like to check user permissions.
- 
+- Any `User` can read any `Article`
+- The author of an `Article` can modify and delete their `Article`
+- A `User` must be be an Author to be able to create an article.
+
+## Policies
+
+We can use the **Warden** policy DSL to build these rules in a way that is not tightly coupled to our routes, and could
+in theory be used anywhere that we would like to check user permissions.
+
 Here is a list of our `Article` Policies.
+
 ```kotlin
 val policies = listOf(
-    // Any `User` can read any `Article`
-    allOf{
+    // Any User can read any Article
+    allOf {
         resource("type") equalTo "Article"
         action("type") equalTo "READ"
     },
-    // The author of an `Article` can read, modify and delete their `Article`
+    // The author of an Article can read, modify and delete their Article
     allOf {
         resource("type") equalTo "Article"
         action("type") isIn listOf("MODIFY", "DELETE")
         subject("id") equalTo resource("authorID")
     },
-    // A `User` must be be an Author to be able to create an article.
+    // A User must be be an Author to be able to create an article.
     allOf {
         resource("type") equalTo "Article"
         action("type") equalTo "CREATE"
@@ -36,44 +38,35 @@ val policies = listOf(
     }
 )
  ```
-Here we have a single `AllOf` policy for each one of our logical desired policies. These each define all of the conditions that must be met to satisfy what we want logically.
 
-Having each one as its own separate policy might be preferred by some, but we could also build this in a way which kept all of the authorization logic for `Article` more clearly grouped. We can leverage nested `AllOf` and `AnyOf` Policies to achieve this.
-
-```kotlin
-val articlePolicy = allOf {
-    resource("type") equalTo "Article"
-    anyOf{
-        // Any `User` can read any `Article`
-        action("type") equalTo "READ"
-        // The author of an `Article` can read, modify and delete their `Article`
-        allOf {
-            action("type") isIn listOf("MODIFY", "DELETE")
-            subject("id") equalTo resource("authorID")
-        }
-        // A `User` must be be an Author to be able to create an article.
-        allOf {
-            action("type") equalTo "CREATE"
-            subject("roles") contains "Author"
-        }
-    }
-}
-```
-Here, we have a single `Article` policy, and we use a nested `AnyOf` policy to define our 3 access cases for an `Article`. There is quite a lot to digest there, but more detail can be found in the Policy documentation.
+Here we have a single `AllOf` policy for each one of our logical desired policies. These each define all of the
+conditions that must be met to satisfy what we want logically.
 
 Now that we have our policies, we can enforce them.
 
 ## Enforcement
 
-An `EnforcementPoint` allows us to protect any given execution path with an Exception. If a request is not authorized, an Exception is thrown. Let us say we have the following business domain objects and helper functions
+An `EnforcementPoint` allows us to protect any given execution path with an Exception. If a request is not authorized, an Exception is thrown.
+
+`EnforcementPoint`s and `DecisionPoint`s both work on maps of attributes for subject, action, resource, environment. Maps allow for subsets of attributes as well as the merging of attributes.  
+
+Let us say we have the following business domain objects and helper functions for transforming them into Maps of attributes.
+
 ```kotlin
+
+/**
+ * An interface that allows for something to be transformed into a map of attributes
+ */
 interface HasAttributes {
     fun attributes(): Map<String, Any?>
 }
 
+/**
+ * An implementation of our HasAttributes interface that could leverage some reflection 
+ */
 class HasAttributesComponent : HasAttributes {
     override fun attributes(): Map<String, Any?> {
-        TODO("Implement some way of transforming to a Map")
+        TODO("Implement some way of transforming to a Map - reflecion can help here")
     }
 }
 
@@ -93,7 +86,9 @@ We have our `User` and `Article` and we have defined a simple interface for gett
 val enforcementPoint = EnforcementPointDefault(policies)
 
 suspend fun readArticle(user: User, articleID: String): Article {
+    // Fetch the article
     val article = getArticleByID(articleID)
+    // Check authorization with our EnforcementPoint
     enforcementPoint.enforceAuthorization(
         AccessRequest(
             subject = user.attributes(),
@@ -101,6 +96,7 @@ suspend fun readArticle(user: User, articleID: String): Article {
             resource = article.attributes()
         )
     )
+    // return the article if execution was allowed to proceed.
     return article
 }
 ```
@@ -114,5 +110,3 @@ We also have our service layer function with an already resolved `User` instance
 - We use the `EnforcementPoint` to check the request, and then return the result.
 
 At the point of enforcement, if no access had been granted, a `NotAuthorizedException` would have been thrown and the article would not be returned. If access is granted, execution continues without a hitch.
-
-> **NOTE:** We have not looked at a `DecisionPoint` in this quick intro, as it is not strictly needed in the shortest path from policies to enforcement. It is the layer that lets us host our policies and decisioning independently of enforcement.

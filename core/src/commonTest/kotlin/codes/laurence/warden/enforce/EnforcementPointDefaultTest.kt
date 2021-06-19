@@ -7,7 +7,7 @@ import codes.laurence.warden.AccessRequest
 import codes.laurence.warden.AccessResponse
 import codes.laurence.warden.coroutines.runBlockingTest
 import codes.laurence.warden.decision.DecisionPoint
-import codes.laurence.warden.decision.DecisionPointInMemory
+import codes.laurence.warden.decision.DecisionPoint
 import codes.laurence.warden.policy.expression.Exp
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -21,7 +21,7 @@ class EnforcementPointDefaultTest {
         val policies = listOf(Exp.action("foo") equalTo "bar")
         val testObj = EnforcementPointDefault(policies)
 
-        assertThat(testObj.decisionPoint).isInstanceOf(DecisionPointInMemory::class)
+        assertThat(testObj.decisionPoint).isInstanceOf(DecisionPoint::class)
     }
 
     @Test

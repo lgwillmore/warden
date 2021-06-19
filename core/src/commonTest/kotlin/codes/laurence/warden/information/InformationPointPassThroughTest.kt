@@ -6,7 +6,7 @@ import codes.laurence.warden.AccessRequest
 import codes.laurence.warden.coroutines.runBlockingTest
 import kotlin.test.Test
 
-class InformationProviderPassThroughTest {
+class InformationPointPassThroughTest {
 
     @Test
     fun enrich() = runBlockingTest {
@@ -16,7 +16,7 @@ class InformationProviderPassThroughTest {
             resource = mapOf("1" to 3),
             environment = mapOf("1" to 4),
         )
-        val testObj = InformationProviderPassThrough()
+        val testObj = InformationPointPassThrough()
 
         val actual = testObj.enrich(request)
 
