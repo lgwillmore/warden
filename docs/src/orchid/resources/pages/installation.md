@@ -1,4 +1,7 @@
 ## Gradle
+
+![version](https://img.shields.io/github/v/tag/lgwillmore/warden?include_prereleases&label=release)
+
 **Add the repo and core dependency**
 ```kotlin
 repositories {

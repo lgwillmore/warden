@@ -1,5 +1,5 @@
 ---
-title: 1) Policies
+title: Policies
 ---
 A policy encapsulates the logic for evaluating if a particular condition or set of conditions has been satisfied by the
 access Request.

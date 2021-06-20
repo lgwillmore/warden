@@ -15,9 +15,10 @@ theme:
       itemId: 'Quick Intro'
     - type: 'page'
       itemId: 'Installation'
-    - type: 'pages'
-      group: 'core'
-      asSubmenu: true
+    - type: 'page'
+      itemId: 'Policies'
+    - type: 'page'
+      itemId: 'Components'
     - type: 'page'
       itemId: 'Ktor'
     - type: 'page'
