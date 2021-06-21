@@ -14,7 +14,7 @@ ABAC allows us to define access/deny policies based around any conceivable attri
 
 - **The subject**: The entity performing the request/action, typically a user.
 - **The action**: The action being performed eg. A Forced update.
-- **The resource**: The entity the action is related to our being performed on.
+- **The resource**: The entity the action is related to or being performed on.
 - **The environment**: Any environmental attributes eg. Time, IP address, location.
 
 With policies defined using rules with access to this information we can then enforce our Policies in any part of a
