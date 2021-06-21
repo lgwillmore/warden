@@ -44,7 +44,7 @@ private fun Application.testableAppWebsockets() {
         exception<NotAuthorizedException> { cause ->
             call.respondText(
                 cause.deniedProperties.getOrDefault("message", "No Denied message") as String,
-                status = HttpStatusCode.Unauthorized
+                status = HttpStatusCode.Forbidden
             )
         }
         exception<SomeOtherException> {
@@ -138,7 +138,7 @@ class WardenPluginWebsocketRoutingTest {
     fun `ws - warded - denied`() {
         withTestApplication({ testableAppWebsockets() }) {
             val call = handleWebSocket("/ws/warded/denied") {}
-            assertEquals(HttpStatusCode.Unauthorized, call.response.status())
+            assertEquals(HttpStatusCode.Forbidden, call.response.status())
             assertEquals("No Denied message", call.response.content)
         }
     }

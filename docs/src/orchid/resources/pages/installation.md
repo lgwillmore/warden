@@ -14,10 +14,4 @@ dependencies {
 }
 ```
 **And to include the Ktor plugin**
-```kotlin
-
-dependencies {
-    //ABAC
-    implementation("codes.laurence.warden:warden-ktor:0.0.1")
-}
-```
+  

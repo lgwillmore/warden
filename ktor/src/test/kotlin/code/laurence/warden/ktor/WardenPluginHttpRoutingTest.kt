@@ -41,7 +41,7 @@ private fun Application.testableAppHttp() {
         exception<NotAuthorizedException> { cause ->
             call.respondText(
                 cause.deniedProperties.getOrDefault("message", "No Denied message") as String,
-                status = HttpStatusCode.Unauthorized
+                status = HttpStatusCode.Forbidden
             )
         }
     }
@@ -177,7 +177,7 @@ class WardenPluginHttpRoutingTest {
     fun `get - enforcement point called - denied`() {
         withTestApplication({ testableAppHttp() }) {
             with(handleRequest(HttpMethod.Get, "/authorizationEnforced/Denied")) {
-                assertEquals(HttpStatusCode.Unauthorized, response.status())
+                assertEquals(HttpStatusCode.Forbidden, response.status())
                 assertEquals("No Denied message", response.content)
             }
         }
