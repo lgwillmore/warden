@@ -31,7 +31,8 @@ With policies defined using rules with access to this information we can then en
 You can find out more about the concepts involved here: [ABAC Overview]({{ link('ABAC Overview') }}).
 
 ## Advantages of ABAC
-ABAC has the following advantages of your more traditional role based access control implemented with your flavour of web framework:
+
+ABAC has the following advantages over role based access control implemented with your flavour of web framework:
 
 ### Decouple Authorization from Routing
 Defining the rules for authorization separately from your routing provides all the benefits of low coupling.

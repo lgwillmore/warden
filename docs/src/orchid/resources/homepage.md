@@ -24,7 +24,7 @@ You can find out more about the concepts involved here: [ABAC Overview]({{ link(
 
 ## Advantages of ABAC
 
-ABAC has the following advantages of your more traditional role based access control implemented with your flavour of
+ABAC has the following advantages over role based access control implemented with your flavour of
 web framework:
 
 ### Decouple Authorization from Routing
