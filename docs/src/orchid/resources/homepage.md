@@ -18,7 +18,7 @@ ABAC allows us to define access/deny policies based around any conceivable attri
 - **The environment**: Any environmental attributes eg. Time, IP address, location.
 
 With policies defined using rules with access to this information we can then enforce our Policies in any part of a
-distrubuted system.
+distributed system.
 
 You can find out more about the concepts involved here: [ABAC Overview]({{ link('ABAC Overview') }}).
 

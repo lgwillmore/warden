@@ -19,7 +19,7 @@ val accessRequest = AccessRequest().copy(
 val enrichedRequest = AccessRequest().copy(
     action = mapOf("foo" to "enriched")
 )
-val informationProviderMock = mockk<InformationPoint> {
+val informationPointMock = mockk<InformationPoint> {
     coEvery { enrich(accessRequest) } returns enrichedRequest
 }
 
@@ -45,13 +45,13 @@ class InMemoryDecisionPointTest {
         val testObj = DecisionPointLocal(
             allow = listOf(accessPolicyMock),
             deny = listOf(denyPolicyMock),
-            informationProvider = informationProviderMock
+            informationPoint = informationPointMock
         )
 
         testObj.checkAuthorized(accessRequest)
 
         coVerifySequence {
-            informationProviderMock.enrich(accessRequest)
+            informationPointMock.enrich(accessRequest)
             accessPolicyMock.checkAuthorized(enrichedRequest)
             denyPolicyMock.checkAuthorized(enrichedRequest)
         }
