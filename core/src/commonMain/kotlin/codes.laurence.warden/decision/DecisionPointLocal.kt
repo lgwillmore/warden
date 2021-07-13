@@ -27,13 +27,13 @@ class DecisionPointLocal(
     constructor(
         allow: List<Policy>,
         deny: List<Policy> = emptyList(),
-        informationProvider: InformationPoint = InformationPointPassThrough()
+        informationPoint: InformationPoint = InformationPointPassThrough()
     ) : this(
         policySource = PolicySourceInMemory(
             allow,
             deny
         ),
-        informationPoint = informationProvider
+        informationPoint = informationPoint
     )
 
     override suspend fun checkAuthorized(request: AccessRequest): AccessResponse {
