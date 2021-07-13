@@ -43,14 +43,15 @@ val pomDeveloperName = "Laurence Willmore"
 
 publishing {
     publications {
-        create<MavenPublication>("ktorJar") {
+        create<MavenPublication>("ktor") {
             groupId = artifactGroup
             artifactId = artifactName
             version = version
-            from(components["java"])
             artifact("$buildDir/libs/warden-ktor-${project.version}-sources.jar") {
                 classifier = "sources"
             }
+
+            artifact("$buildDir/libs/warden-ktor-${project.version}.jar")
 
             pom.withXml {
                 asNode().apply {
@@ -89,7 +90,7 @@ artifactory {
             )
             defaults(
                 delegateClosureOf<org.jfrog.gradle.plugin.artifactory.task.ArtifactoryTask> {
-                    publications("ktorJar")
+                    publications("ktor")
                 }
             )
         }

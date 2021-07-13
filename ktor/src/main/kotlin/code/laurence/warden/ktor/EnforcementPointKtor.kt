@@ -2,6 +2,7 @@ package code.laurence.warden.ktor
 
 import code.laurence.warden.ktor.Warden.Feature.WARDEN_ENFORCED
 import codes.laurence.warden.AccessRequest
+import codes.laurence.warden.FilterAccessRequest
 import codes.laurence.warden.decision.DecisionPoint
 import codes.laurence.warden.enforce.EnforcementPoint
 import codes.laurence.warden.enforce.EnforcementPointDefault
@@ -26,13 +27,22 @@ class EnforcementPointKtor(internalEnforcementPoint: EnforcementPoint) : Enforce
     private val enforcementPoint: EnforcementPoint = internalEnforcementPoint
 
     override suspend fun enforceAuthorization(request: AccessRequest) {
+        interactWithPlugin()
+        enforcementPoint.enforceAuthorization(request)
+    }
+
+    override suspend fun <RESOURCE> filterAuthorization(request: FilterAccessRequest<RESOURCE>): List<RESOURCE> {
+        interactWithPlugin()
+        return enforcementPoint.filterAuthorization(request)
+    }
+
+    private suspend fun interactWithPlugin() {
         val call = coroutineContext[WardenKtorCall.Key]?.call
         if (call == null) {
             logger.debug("Being enforced outside of a `wardenCall` block. Cannot communicate with Warden ktor plugin")
         } else {
             call.attributes.put(WARDEN_ENFORCED, true)
         }
-        enforcementPoint.enforceAuthorization(request)
     }
 }
 

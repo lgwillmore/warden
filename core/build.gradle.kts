@@ -57,7 +57,7 @@ publishing {
             artifactId = "warden-core"
             version = version
 
-            artifact("$buildDir/libs/warden-core-jvm-metadata-${project.version}-sources.jar") {
+            artifact("$buildDir/libs/warden-core-jvm-${project.version}-sources.jar") {
                 classifier = "sources"
             }
             artifact("$buildDir/libs/warden-core-jvm-${project.version}.jar")
