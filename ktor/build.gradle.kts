@@ -107,7 +107,7 @@ tasks {
         dependsOn("kotlinSourcesJar")
     }
 
-    named("artifactoryPublish"){
+    named("artifactoryPublish") {
         dependsOn("build")
     }
 }
