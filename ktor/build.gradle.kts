@@ -106,4 +106,8 @@ tasks {
     val build by existing {
         dependsOn("kotlinSourcesJar")
     }
+
+    named("artifactoryPublish"){
+        dependsOn("build")
+    }
 }
