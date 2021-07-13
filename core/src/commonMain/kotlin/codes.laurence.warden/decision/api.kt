@@ -1,6 +1,7 @@
 package codes.laurence.warden.decision
 
 import codes.laurence.warden.AccessRequest
+import codes.laurence.warden.AccessRequestBatch
 import codes.laurence.warden.AccessResponse
 
 /**
@@ -8,4 +9,11 @@ import codes.laurence.warden.AccessResponse
  */
 interface DecisionPoint {
     suspend fun checkAuthorized(request: AccessRequest): AccessResponse
+
+    /**
+     * A batch check of access requests for a collection of resources.
+     *
+     * @return The corresponding [AccessResponse] for each resource.
+     */
+    suspend fun checkAuthorizedBatch(request: AccessRequestBatch): List<AccessResponse>
 }

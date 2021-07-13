@@ -2,6 +2,7 @@ package codes.laurence.warden.decision
 
 import codes.laurence.warden.Access
 import codes.laurence.warden.AccessRequest
+import codes.laurence.warden.AccessRequestBatch
 import codes.laurence.warden.AccessResponse
 import codes.laurence.warden.information.InformationPoint
 import codes.laurence.warden.information.InformationPointPassThrough
@@ -54,6 +55,18 @@ class DecisionPointLocal(
             is Access.Denied -> {
                 accessResult
             }
+        }
+    }
+
+    override suspend fun checkAuthorizedBatch(request: AccessRequestBatch): List<AccessResponse> {
+        val baseRequest = AccessRequest(
+            subject = request.subject,
+            action = request.action,
+            environment = request.environment,
+            resource = emptyMap()
+        )
+        return request.resources.map { resource ->
+            checkAuthorized(baseRequest.copy(resource = resource))
         }
     }
 }
