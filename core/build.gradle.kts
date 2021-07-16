@@ -91,5 +91,6 @@ tasks {
 
     artifactoryPublish {
         dependsOn(build)
+        dependsOn("publishJvmPublicationToMavenLocal")
     }
 }
