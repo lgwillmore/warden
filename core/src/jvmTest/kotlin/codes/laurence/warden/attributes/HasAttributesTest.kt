@@ -13,6 +13,9 @@ internal class HasAttributesTest {
             aThing = ThingWithoutAtts(
                 noAtts = randString()
             ),
+            customTypeThing = CustomTypeThing(
+                anAtt = randString()
+            ),
             primeChild = NestedThingWithAtts(
                 nestedAtt = randString(),
             ),
@@ -35,6 +38,10 @@ internal class HasAttributesTest {
         val expected = mapOf(
             "type" to "ParentThing",
             "aThing" to source.aThing,
+            "customTypeThing" to mapOf(
+                "customType" to "CustomTypeThing",
+                "anAtt" to source.customTypeThing.anAtt
+            ),
             "childrenList" to source.childrenList.map {
                 mapOf(
                     "type" to "NestedThing",
@@ -65,6 +72,7 @@ internal class HasAttributesTest {
 
 internal data class ParentThingWithAtts(
     val aThing: ThingWithoutAtts,
+    val customTypeThing: CustomTypeThing,
     val primeChild: NestedThingWithAtts,
     val childrenList: List<NestedThingWithAtts>,
     val childrenSet: Set<NestedThingWithAtts>,
@@ -79,3 +87,7 @@ internal data class NestedThingWithAtts(
 internal data class ThingWithoutAtts(
     val noAtts: String
 )
+
+internal data class CustomTypeThing(
+    val anAtt: String
+) : HasAttributes(type = "CustomTypeThing", typeKeyword = "customType")

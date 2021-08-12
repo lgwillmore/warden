@@ -4,8 +4,8 @@ import kotlin.reflect.KVisibility
 import kotlin.reflect.full.declaredMemberProperties
 
 open class HasAttributes(
-    val type: String? = null,
-    val typeKeyword: String = "type"
+    private val type: String? = null,
+    private val typeKeyword: String = "type"
 ) : HasAttributesI {
 
     override fun toAttributes(): Map<String, Any?> {
