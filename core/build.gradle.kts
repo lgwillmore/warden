@@ -14,6 +14,7 @@ repositories {
 
 val assertKVersion: String by project
 val mockkVersion: String by project
+val kotlinVersion: String by project
 
 kotlin {
     jvm {}
@@ -37,6 +38,7 @@ kotlin {
         jvm().compilations["main"].defaultSourceSet {
             dependencies {
                 implementation(kotlin("stdlib-jdk8"))
+                implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
             }
         }
         // JVM-specific tests and their dependencies:
