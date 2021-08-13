@@ -1,6 +1,6 @@
 package codes.laurence.warden.attributes
 
-internal fun convertToAttributeMap(value: Any?): Any? {
+internal fun convertToAttributeForm(value: Any?): Any? {
     var converted = value
     if (converted is HasAttributesI) {
         converted = converted.attributes()
