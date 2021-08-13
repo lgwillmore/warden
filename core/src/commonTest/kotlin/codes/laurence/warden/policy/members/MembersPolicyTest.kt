@@ -131,6 +131,32 @@ class ForAnyMemberPolicyTest {
     }
 
     @Test
+    fun `check - member source present`() {
+        val memberPolicies: List<MemberPolicy> = listOf(
+            GRANTED_ALL_MEMBER_POLICY,
+            GRANTED_ALL_MEMBER_POLICY,
+        )
+        val accessRequest: AccessRequest = mockk()
+        val memberSource: ValueReference = mockk {
+            every { get(accessRequest) } throws NoSuchAttributeException()
+        }
+
+        val testObj = ForAnyMemberPolicy(
+            memberSource = memberSource,
+            memberPolicies = memberPolicies
+        )
+
+        val actual = testObj.checkAuthorized(accessRequest)
+
+        assertThat(actual).isEqualTo(
+            AccessResponse(
+                access = Access.Denied(),
+                request = accessRequest
+            )
+        )
+    }
+
+    @Test
     fun `check - members not maps`() {
         val memberPolicies: List<MemberPolicy> = listOf(
             GRANTED_ALL_MEMBER_POLICY,
@@ -277,6 +303,32 @@ class ForAllMembersPolicyTest {
         val accessRequest: AccessRequest = mockk()
         val memberSource: ValueReference = mockk {
             every { get(accessRequest) } returns "MEMBERS"
+        }
+
+        val testObj = ForAllMembersPolicy(
+            memberSource = memberSource,
+            memberPolicies = memberPolicies
+        )
+
+        val actual = testObj.checkAuthorized(accessRequest)
+
+        assertThat(actual).isEqualTo(
+            AccessResponse(
+                access = Access.Denied(),
+                request = accessRequest
+            )
+        )
+    }
+
+    @Test
+    fun `check - member source not present`() {
+        val memberPolicies: List<MemberPolicy> = listOf(
+            GRANTED_ALL_MEMBER_POLICY,
+            GRANTED_ALL_MEMBER_POLICY,
+        )
+        val accessRequest: AccessRequest = mockk()
+        val memberSource: ValueReference = mockk {
+            every { get(accessRequest) } throws NoSuchAttributeException()
         }
 
         val testObj = ForAllMembersPolicy(
