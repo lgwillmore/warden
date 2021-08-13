@@ -4,11 +4,12 @@ import kotlin.reflect.KVisibility
 import kotlin.reflect.full.declaredMemberProperties
 
 open class HasAttributes(
-    private val attributeType: AttributeType
+    private val attributeType: AttributeType? = null
 ) : HasAttributesI {
 
     override fun attributes(): Map<String, Any?> {
-        val map: MutableMap<String, Any?> = mutableMapOf(attributeType.typeKeyword to attributeType.type)
+        val map: MutableMap<String, Any?> =
+            if (attributeType != null) mutableMapOf(attributeType.typeKeyword to attributeType.type) else mutableMapOf()
         map.putAll(allProps())
         return map
     }
