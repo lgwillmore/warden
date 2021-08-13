@@ -5,10 +5,7 @@ import codes.laurence.warden.AccessRequest
 import codes.laurence.warden.AccessResponse
 import codes.laurence.warden.policy.Policy
 import codes.laurence.warden.policy.PolicyDSL
-import codes.laurence.warden.policy.expression.ExpressionPolicy
-import codes.laurence.warden.policy.expression.OperatorType
-import codes.laurence.warden.policy.expression.ValueReference
-import codes.laurence.warden.policy.expression.getValueFromAttributes
+import codes.laurence.warden.policy.expression.*
 
 interface MemberPolicy {
     fun checkAuthorized(member: Map<*, *>, accessRequest: AccessRequest): AccessResponse
@@ -54,6 +51,11 @@ class ForAnyMemberPolicy(
                 access = Access.Denied(),
                 request = accessRequest
             )
+        } catch (e: NoSuchAttributeException) {
+            return AccessResponse(
+                access = Access.Denied(),
+                request = accessRequest
+            )
         }
     }
 
@@ -95,6 +97,11 @@ class ForAllMembersPolicy(
                 request = accessRequest
             )
         } catch (e: InvalidMemberException) {
+            return AccessResponse(
+                access = Access.Denied(),
+                request = accessRequest
+            )
+        } catch (e: NoSuchAttributeException) {
             return AccessResponse(
                 access = Access.Denied(),
                 request = accessRequest
