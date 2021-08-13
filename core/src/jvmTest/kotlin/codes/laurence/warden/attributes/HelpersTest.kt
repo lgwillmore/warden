@@ -5,10 +5,10 @@ import assertk.assertions.isEqualTo
 import codes.laurence.warden.test.randString
 import kotlin.test.Test
 
-internal class HasAttributesTest {
+class HelpersTest {
 
     @Test
-    fun attributes() {
+    fun attributesOf() {
         val source = ParentThingWithAtts(
             aThing = ThingWithoutAtts(
                 noAtts = randString(),
@@ -39,7 +39,6 @@ internal class HasAttributesTest {
             ),
         )
         val expected = mapOf(
-            "attributeType" to "ParentThing",
             "aThing" to source.aThing,
             "customTypeThing" to mapOf(
                 "customType" to "CustomTypeThing",
@@ -71,7 +70,7 @@ internal class HasAttributesTest {
                 "nestedAtt" to source.primeChild.nestedAtt
             ),
         )
-        val actual = source.attributes()
+        val actual = attributesOf(source)
         assertThat(actual).isEqualTo(expected)
     }
 }
