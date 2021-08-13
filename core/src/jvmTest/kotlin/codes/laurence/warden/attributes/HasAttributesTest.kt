@@ -11,10 +11,13 @@ internal class HasAttributesTest {
     fun attributes() {
         val source = ParentThingWithAtts(
             aThing = ThingWithoutAtts(
-                noAtts = randString()
+                noAtts = randString(),
             ),
             customTypeThing = CustomTypeThing(
                 anAtt = randString()
+            ),
+            customAttsThing = CustomAttsThing(
+                shouldNotSeeMe = randString(),
             ),
             primeChild = NestedThingWithAtts(
                 nestedAtt = randString(),
@@ -41,6 +44,9 @@ internal class HasAttributesTest {
             "customTypeThing" to mapOf(
                 "customType" to "CustomTypeThing",
                 "anAtt" to source.customTypeThing.anAtt
+            ),
+            "customAttsThing" to mapOf(
+                "shouldSeeMe" to source.customAttsThing.shouldNotSeeMe
             ),
             "childrenList" to source.childrenList.map {
                 mapOf(

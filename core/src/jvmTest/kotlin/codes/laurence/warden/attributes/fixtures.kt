@@ -5,6 +5,7 @@ import codes.laurence.warden.test.randString
 internal data class ParentThingWithAtts(
     val aThing: ThingWithoutAtts,
     val customTypeThing: CustomTypeThing,
+    val customAttsThing: CustomAttsThing,
     val primeChild: NestedThingWithAtts,
     val childrenList: List<NestedThingWithAtts>,
     val childrenSet: Set<NestedThingWithAtts>,
@@ -23,3 +24,12 @@ internal data class ThingWithoutAtts(
 internal data class CustomTypeThing(
     val anAtt: String
 ) : HasAttributes(attributeType = AttributeType("CustomTypeThing", typeKeyword = "customType"))
+
+internal data class CustomAttsThing(
+    val shouldNotSeeMe: String
+) : HasAttributesI {
+
+    override fun attributes(): Attributes {
+        return mapOf("shouldSeeMe" to shouldNotSeeMe)
+    }
+}
