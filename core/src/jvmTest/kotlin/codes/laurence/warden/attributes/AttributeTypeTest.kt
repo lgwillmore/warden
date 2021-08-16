@@ -12,7 +12,7 @@ internal class AttributeTypeTest {
     fun `asHasAttributes - withAttributes`() {
         val testObj = AttributeType(type = "SomeType", typeKeyword = "customType")
 
-        val additionalAttributes = mapOf(
+        val additionalAttributesVararg = listOf(
             "id" to randInt(),
             "collectionOfHasAttributes" to listOf(
                 NestedThingWithAtts(
@@ -24,9 +24,13 @@ internal class AttributeTypeTest {
                 "foo" to NestedThingWithAtts(nestedAtt = randString(), aPrivateAtt = randString())
             )
         )
+        val additionalAttributes = mapOf(
+            *additionalAttributesVararg.toTypedArray()
+        )
 
         val hasAttributesMap = testObj.asHasAttributes(additionalAttributes).attributes()
         val attributesMap = testObj.withAttributes(additionalAttributes)
+        val attributesVarargs = testObj.withAttributes(*additionalAttributesVararg.toTypedArray())
 
         val expectedMap = mapOf(
             "customType" to "SomeType",
@@ -38,5 +42,16 @@ internal class AttributeTypeTest {
 
         assertThat(hasAttributesMap).isEqualTo(expectedMap)
         assertThat(attributesMap).isEqualTo(expectedMap)
+        assertThat(attributesVarargs).isEqualTo(expectedMap)
+    }
+
+    @Test
+    fun attributes() {
+        val testObj = AttributeType(type = "SomeType", typeKeyword = "customType")
+        assertThat(testObj.attributes()).isEqualTo(
+            mapOf(
+                "customType" to "SomeType"
+            )
+        )
     }
 }
