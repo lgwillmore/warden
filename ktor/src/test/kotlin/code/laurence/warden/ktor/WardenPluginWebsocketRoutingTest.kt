@@ -5,13 +5,13 @@ import codes.laurence.warden.Access
 import codes.laurence.warden.AccessRequest
 import codes.laurence.warden.AccessResponse
 import codes.laurence.warden.enforce.NotAuthorizedException
-import io.ktor.application.*
-import io.ktor.features.*
 import io.ktor.http.*
-import io.ktor.http.cio.websocket.*
-import io.ktor.response.*
-import io.ktor.routing.*
+import io.ktor.server.application.*
+import io.ktor.server.plugins.statuspages.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 import io.ktor.server.testing.*
+import io.ktor.server.websocket.*
 import io.ktor.websocket.*
 import io.mockk.every
 import io.mockk.mockk
@@ -41,13 +41,13 @@ private fun Application.testableAppWebsockets() {
         )
     }
     install(StatusPages) {
-        exception<NotAuthorizedException> { cause ->
+        exception<NotAuthorizedException> { call, cause ->
             call.respondText(
                 cause.deniedProperties.getOrDefault("message", "No Denied message") as String,
                 status = HttpStatusCode.Forbidden
             )
         }
-        exception<SomeOtherException> {
+        exception<SomeOtherException> { call, _ ->
             call.respond(
                 status = HttpStatusCode.InternalServerError,
                 "Something went wrong"

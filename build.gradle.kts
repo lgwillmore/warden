@@ -1,6 +1,6 @@
 val projectVersion: String by project
 plugins {
-    kotlin("jvm") version "1.4.20"
+    kotlin("jvm") version "1.6.20"
     id("org.jlleitschuh.gradle.ktlint") version "10.1.0"
     id("com.palantir.git-version") version "0.12.3"
 }

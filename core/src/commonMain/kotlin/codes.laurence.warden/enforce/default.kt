@@ -18,6 +18,7 @@ class EnforcementPointDefault(val decisionPoint: DecisionPoint) : EnforcementPoi
             is Access.Denied -> {
                 throw NotAuthorizedException(response.request, access.properties)
             }
+            else -> {}
         }
     }
 

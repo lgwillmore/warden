@@ -11,13 +11,14 @@ val slf4jVersion: String by project
 group = "codes.laurence.warden"
 
 dependencies {
-    api(project(":warden-core"))
+    implementation(project(":warden-core", "jvmRuntimeElements"))
 
     implementation("io.ktor:ktor-server-core:$ktorVersion")
     implementation("org.slf4j", "slf4j-api", slf4jVersion)
 
     testImplementation("io.ktor", "ktor-websockets", ktorVersion)
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
+    testImplementation("io.ktor:ktor-server-status-pages:$ktorVersion")
     testImplementation("io.mockk:mockk:$mockkVersion")
     testImplementation("com.willowtreeapps.assertk:assertk-jvm:$assertKVersion")
     testImplementation(kotlin("test"))
@@ -98,7 +99,7 @@ artifactory {
 }
 
 configure<JavaPluginConvention> {
-    sourceCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_11
 }
 
 tasks {
