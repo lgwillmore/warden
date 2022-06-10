@@ -1,15 +1,15 @@
 package code.laurence.warden.ktor
 
-import io.ktor.application.ApplicationCallPipeline
-import io.ktor.application.ApplicationFeature
-import io.ktor.application.call
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.*
-import io.ktor.request.httpMethod
-import io.ktor.request.uri
-import io.ktor.response.ApplicationSendPipeline
-import io.ktor.routing.*
+import io.ktor.server.application.ApplicationCallPipeline
+import io.ktor.server.application.Plugin
+import io.ktor.server.application.call
+import io.ktor.server.request.httpMethod
+import io.ktor.server.request.uri
+import io.ktor.server.response.ApplicationSendPipeline
+import io.ktor.server.routing.*
 import io.ktor.util.AttributeKey
 
 /**
@@ -61,7 +61,7 @@ class Warden(config: WardenConfiguration) {
         var routePriorityStack: List<WardenRoute> = emptyList()
     }
 
-    companion object Feature : ApplicationFeature<ApplicationCallPipeline, WardenConfiguration, Warden> {
+    companion object Feature : Plugin<ApplicationCallPipeline, WardenConfiguration, Warden> {
 
         internal val WARDEN_ENFORCED = AttributeKey<Boolean>("warden.enforced")
         val WARDEN_IGNORED = AttributeKey<Boolean>("warden.ignored")

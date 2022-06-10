@@ -17,7 +17,11 @@ val mockkVersion: String by project
 val kotlinVersion: String by project
 
 kotlin {
-    jvm {}
+    jvm {
+        compilations.all {
+            kotlinOptions.jvmTarget = "11"
+        }
+    }
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -37,7 +41,7 @@ kotlin {
         // Default source set for JVM-specific sources and dependencies:
         jvm().compilations["main"].defaultSourceSet {
             dependencies {
-                implementation(kotlin("stdlib-jdk8"))
+                implementation(kotlin("stdlib"))
                 implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
             }
         }
