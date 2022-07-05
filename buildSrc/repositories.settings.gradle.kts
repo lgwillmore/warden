@@ -7,7 +7,6 @@ dependencyResolutionManagement {
     jcenter()
     mavenCentral()
     gradlePluginPortal()
-//    jitpack()
   }
 
   pluginManagement {
@@ -15,12 +14,6 @@ dependencyResolutionManagement {
       jcenter()
       gradlePluginPortal()
       mavenCentral()
-//      jitpack()
     }
   }
-}
-
-// TODO verify if jitpack is required
-fun RepositoryHandler.jitpack() {
-  maven("https://jitpack.io")
 }
