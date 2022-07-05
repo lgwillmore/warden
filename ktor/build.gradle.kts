@@ -1,6 +1,4 @@
 import buildsrc.config.createWardenPom
-import buildsrc.config.defaults
-import buildsrc.config.publish
 
 plugins {
     buildsrc.convention.`kotlin-jvm`
