@@ -10,3 +10,8 @@ kotlin {
         (this as JavaToolchainSpec).languageVersion.set(JavaLanguageVersion.of(11))
     }
 }
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
