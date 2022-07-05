@@ -3,11 +3,11 @@ package buildsrc.config
 import org.gradle.api.publish.maven.MavenPublication
 
 fun MavenPublication.createWardenPom(
-    description: String = "https://github.com/lgwillmore/warden",
+    pomDescription: String = "https://github.com/lgwillmore/warden",
 ): Unit = pom {
-    // Note: 'group' and 'name' are set from the Gradle Project group and name
+    // Note: Gradle will automatically set the POM 'group' and 'name' from the subproject group and name
 
-    description.set(description)
+    description.set(pomDescription)
     url.set("https://warden-kotlin.netlify.com/")
 
     licenses {

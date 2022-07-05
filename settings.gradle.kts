@@ -2,8 +2,8 @@ rootProject.name = "warden"
 
 include(
     ":core",
-   ":ktor",
-   ":docs",
+    ":ktor",
+    ":docs",
 )
 
 project(":core").name = "warden-core"

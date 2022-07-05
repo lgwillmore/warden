@@ -6,6 +6,8 @@ import org.jfrog.gradle.plugin.artifactory.dsl.DoubleDelegateWrapper
 import org.jfrog.gradle.plugin.artifactory.dsl.PublisherConfig
 import org.jfrog.gradle.plugin.artifactory.task.ArtifactoryTask
 
+// Manually created kotlin-dsl extension functions for configuring the Artifactory plugin,
+// because it's a bit nicer than using the Kotlin-Gradle interop directly.
 
 /** Configure [PublisherConfig] */
 fun ArtifactoryPluginConvention.publish(configure: PublisherConfig.() -> Unit) {
