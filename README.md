@@ -1,6 +1,8 @@
 # Warden
 
-![Build Status](https://github.com/lgwillmore/warden/actions/workflows/test.yml/badge.svg?branch=main) ![version](https://img.shields.io/github/v/tag/lgwillmore/warden?include_prereleases&label=release) [![Netlify Status](https://api.netlify.com/api/v1/badges/0d20e576-551e-42be-9e8c-66355d420603/deploy-status)](https://app.netlify.com/sites/warden-kotlin/deploys)
+![Build Status](https://github.com/lgwillmore/warden/actions/workflows/test.yml/badge.svg?branch=main) 
+![version](https://img.shields.io/github/v/tag/lgwillmore/warden?include_prereleases&label=release) 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/0d20e576-551e-42be-9e8c-66355d420603/deploy-status)](https://app.netlify.com/sites/warden-kotlin/deploys)
 
 > **Attribute Based Access Control for Kotlin**
 >
@@ -11,7 +13,7 @@
 
 **Contents**
 - [What is Attribute Based Access Control?](#what-is-attribute-based-access-control)
-- [Advantages of ABAC](#advantages-of-an-abac)
+- [Advantages of ABAC](#advantages-of-abac)
 - [A Quick Intro](#a-quick-intro)
   * [Policies](#policies)
   * [Enforcement](#enforcement)
@@ -22,7 +24,7 @@
 ABAC allows us to define access/deny policies based around any conceivable attribute of a request. Attributes of:
 
  - **The subject**: The entity performing the request/action, typically a user.
- - **The action**: The action being performed eg. A Forced update.
+ - **The action**: The action being performed e.g. A Forced update.
  - **The resource**: The entity the action is related to or being performed on.
  - **The environment**: Any environmental attributes eg. Time, IP address, location.
 
@@ -49,13 +51,13 @@ With ABAC, and the separation between decision and enforcement, your authorizati
 
 ## A Quick Intro
 
-Let us say we have a blog site and we have the following entities: `User` and `Article`.
+Let us say we have a blog site, and we have the following entities: `User` and `Article`.
 
 We would like the following authorization rules:
 
  - Any `User` can read any `Article`
  - The author of an `Article` can modify and delete their `Article`
- - A `User` must be be an Author to be able to create an article.
+ - A `User` must be an Author to be able to create an article.
  
 ### Policies
  
@@ -75,7 +77,7 @@ val policies = listOf(
         action("type") isIn listOf("MODIFY", "DELETE")
         subject("id") equalTo resource("authorID")
     },
-    // A User must be be an Author to be able to create an article.
+    // A User must be an Author to be able to create an article.
     allOf {
         resource("type") equalTo "Article"
         action("type") equalTo "CREATE"
@@ -83,7 +85,7 @@ val policies = listOf(
     }
 )
  ```
-Here we have a single `AllOf` policy for each one of our logical desired policies. These each define all of the conditions that must be met to satisfy what we want logically.
+Here we have a single `AllOf` policy for each one of our logical desired policies. These each define all conditions that must be met to satisfy what we want logically.
 
 Now that we have our policies, we can enforce them.
 
@@ -109,7 +111,7 @@ interface HasAttributes {
  */
 class HasAttributesComponent : HasAttributes {
     override fun attributes(): Map<String, Any?> {
-        TODO("Implement some way of transforming to a Map - reflecion can help here")
+        TODO("Implement some way of transforming to a Map - reflection can help here")
     }
 }
 
@@ -160,7 +162,7 @@ At the point of enforcement, if no access had been granted, a `NotAuthorizedExce
 
 ```kotlin
 repositories {
-        maven(url = "https://laurencecodes.jfrog.io/artifactory/codes.laurence.warden/")
+    maven(url = "https://laurencecodes.jfrog.io/artifactory/codes.laurence.warden/")
 }
 
 dependencies {
