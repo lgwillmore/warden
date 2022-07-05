@@ -18,32 +18,28 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(kotlin("stdlib-common"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.3")
             }
         }
         val commonTest by getting {
             dependencies {
-                implementation(kotlin("test-common"))
-                implementation(kotlin("test-annotations-common"))
-                implementation("io.mockk:mockk-common:$mockkVersion")
-                implementation("com.willowtreeapps.assertk:assertk-common:0.14")
+                implementation(kotlin("test"))
+                implementation("io.mockk:mockk:$mockkVersion")
+                implementation("com.willowtreeapps.assertk:assertk:$assertKVersion")
             }
         }
 
-        // Default source set for JVM-specific sources and dependencies:
-        jvm().compilations["main"].defaultSourceSet {
+        val jvmMain by getting {
+            // Default source set for JVM-specific sources and dependencies:
             dependencies {
-                implementation(kotlin("stdlib"))
-                implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
+                implementation(kotlin("reflect"))
             }
         }
-        // JVM-specific tests and their dependencies:
-        jvm().compilations["test"].defaultSourceSet {
+
+        val jvmTest by getting {
+            // JVM-specific tests and their dependencies:
             dependencies {
                 implementation(kotlin("test-junit"))
-                implementation("io.mockk:mockk:1.9.3")
-                implementation("com.willowtreeapps.assertk:assertk-jvm:$assertKVersion")
             }
         }
     }
