@@ -3,17 +3,17 @@
 @Suppress("UnstableApiUsage") // Central declaration of repositories is an incubating feature
 dependencyResolutionManagement {
 
-  repositories {
-    jcenter()
-    mavenCentral()
-    gradlePluginPortal()
-  }
-
-  pluginManagement {
     repositories {
-      jcenter()
-      gradlePluginPortal()
-      mavenCentral()
+        jcenter()
+        mavenCentral()
+        gradlePluginPortal()
     }
-  }
+
+    pluginManagement {
+        repositories {
+            jcenter()
+            gradlePluginPortal()
+            mavenCentral()
+        }
+    }
 }
