@@ -8,6 +8,15 @@ plugins {
     id("com.jfrog.artifactory")
 }
 
+publishing {
+    repositories {
+        // publish to local dir, for testing
+        maven(rootProject.layout.buildDirectory.dir("maven-internal")) {
+            name = "maven-internal"
+        }
+    }
+}
+
 artifactory {
     setContextUrl("https://laurencecodes.jfrog.io/artifactory")
     publish {

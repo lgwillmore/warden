@@ -26,20 +26,14 @@ dependencies {
     testImplementation(kotlin("test"))
 }
 
-val artifactName = "warden-ktor"
-val artifactGroup = "codes.laurence.warden"
-
 publishing {
     publications {
         create<MavenPublication>("ktor") {
-            groupId = artifactGroup
-            artifactId = artifactName
-
             artifact(tasks.jar)
             artifact(tasks.sourcesJar)
             artifact(tasks.javadocJar)
 
-            createWardenPom(artifactName) // TODO should the pom name be the root project name?
+            createWardenPom()
         }
     }
 }

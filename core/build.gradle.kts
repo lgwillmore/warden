@@ -45,18 +45,10 @@ kotlin {
 publishing {
     publications {
         create<MavenPublication>("coreJVM") {
-            groupId = "codes.laurence.warden"
-            artifactId = "warden-core"
-
-//            artifact("$buildDir/libs/warden-core-jvm-${project.version}-sources.jar") {
-//                classifier = "sources"
-//            }
-//            artifact("$buildDir/libs/warden-core-jvm-${project.version}.jar")
-//
             artifact(tasks.jvmJar)
             artifact(tasks.jvmSourcesJar)
 
-            createWardenPom(artifactId) // TODO should the pom name be the root project name?
+            createWardenPom()
         }
     }
 }
