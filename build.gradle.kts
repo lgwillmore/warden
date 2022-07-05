@@ -34,3 +34,8 @@ buildscript {
         classpath("org.jfrog.buildinfo:build-info-extractor-gradle:4.21.0")
     }
 }
+
+tasks.wrapper {
+    gradleVersion = "7.4.2"
+    distributionType = Wrapper.DistributionType.ALL
+}
