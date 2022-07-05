@@ -1,15 +1,8 @@
-
-
-
 plugins {
-    kotlin("multiplatform")
+    buildsrc.convention.`kotlin-multiplatform`
+
     id("com.jfrog.artifactory")
     id("maven-publish")
-}
-
-repositories {
-    mavenCentral()
-    jcenter()
 }
 
 val assertKVersion: String by project

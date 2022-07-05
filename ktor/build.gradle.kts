@@ -1,7 +1,7 @@
 plugins {
-    kotlin("jvm")
+    buildsrc.convention.`kotlin-jvm`
     id("com.jfrog.artifactory")
-    id("maven-publish")
+    `maven-publish`
 }
 
 val ktorVersion: String by project
@@ -96,10 +96,6 @@ artifactory {
             )
         }
     )
-}
-
-configure<JavaPluginConvention> {
-    sourceCompatibility = JavaVersion.VERSION_11
 }
 
 tasks {

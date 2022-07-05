@@ -1,31 +1,32 @@
 plugins {
-    id("com.eden.orchidPlugin") version "0.21.1"
+    `java-library`
+    id("com.eden.orchidPlugin") //version "0.21.1"
 }
 
-repositories {
-    mavenCentral()
-    jcenter()
-    maven(url = "https://jitpack.io")
-}
+//repositories {
+//    mavenCentral()
+//    jcenter()
+//    maven(url = "https://jitpack.io")
+//}
 
 val orchidVersion: String by project
 
 dependencies {
     orchidImplementation("io.github.javaeden.orchid:OrchidCore:$orchidVersion")
     orchidImplementation("io.github.javaeden.orchid:OrchidPages:$orchidVersion")
-    orchidRuntime("io.github.javaeden.orchid:OrchidSearch:$orchidVersion")
+    orchidRuntimeOnly("io.github.javaeden.orchid:OrchidSearch:$orchidVersion")
 
     // Themes
     orchidImplementation("io.github.javaeden.orchid:OrchidBsDoc:$orchidVersion")
-    orchidRuntime("io.github.javaeden.orchid:OrchidEditorial:$orchidVersion")
+    orchidRuntimeOnly("io.github.javaeden.orchid:OrchidEditorial:$orchidVersion")
 
     orchidImplementation("io.github.javaeden.orchid:OrchidSyntaxHighlighter:$orchidVersion")
-    orchidRuntime("io.github.javaeden.orchid:OrchidGithub:$orchidVersion")
+    orchidRuntimeOnly("io.github.javaeden.orchid:OrchidGithub:$orchidVersion")
 
     // Source Docs
-    orchidRuntime("io.github.javaeden.orchid:OrchidDocs:$orchidVersion")
-    orchidRuntime("io.github.javaeden.orchid:OrchidKotlindoc:$orchidVersion")
-    orchidRuntime("io.github.javaeden.orchid:OrchidPluginDocs:$orchidVersion")
+    orchidRuntimeOnly("io.github.javaeden.orchid:OrchidDocs:$orchidVersion")
+    orchidRuntimeOnly("io.github.javaeden.orchid:OrchidKotlindoc:$orchidVersion")
+    orchidRuntimeOnly("io.github.javaeden.orchid:OrchidPluginDocs:$orchidVersion")
 }
 
 fun envOrProperty(name: String, required: Boolean = false): String? {
