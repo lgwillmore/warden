@@ -17,9 +17,9 @@ dependencies {
     implementation(projects.wardenCore)
 
     implementation("io.ktor:ktor-server-core:$ktorVersion")
-    implementation("org.slf4j", "slf4j-api", slf4jVersion)
+    implementation("org.slf4j:slf4j-api:$slf4jVersion")
 
-    testImplementation("io.ktor", "ktor-websockets", ktorVersion)
+    testImplementation("io.ktor:ktor-websockets:$ktorVersion")
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
     testImplementation("io.ktor:ktor-server-status-pages:$ktorVersion")
     testImplementation("io.mockk:mockk:$mockkVersion")
