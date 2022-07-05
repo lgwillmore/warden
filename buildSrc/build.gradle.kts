@@ -15,7 +15,6 @@ val artifactoryPluginVersion: String = "4.28.4"
 val orchidPluginVersion: String = "0.21.1"
 val ktlintPluginVersion: String = "10.3.0"
 
-
 dependencies {
     implementation(platform("org.jetbrains.kotlin:kotlin-bom:$kotlinPluginVersion"))
     implementation("org.jetbrains.kotlin:kotlin-serialization")
