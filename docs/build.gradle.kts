@@ -1,13 +1,9 @@
+import buildsrc.config.envOrProperty
+
 plugins {
     `java-library`
-    id("com.eden.orchidPlugin") //version "0.21.1"
+    id("com.eden.orchidPlugin")
 }
-
-//repositories {
-//    mavenCentral()
-//    jcenter()
-//    maven(url = "https://jitpack.io")
-//}
 
 val orchidVersion: String by project
 
@@ -29,12 +25,6 @@ dependencies {
     orchidRuntimeOnly("io.github.javaeden.orchid:OrchidPluginDocs:$orchidVersion")
 }
 
-fun envOrProperty(name: String, required: Boolean = false): String? {
-    val result = project.findProperty(name) as? String ?: System.getenv(name)
-    check(result != null || required.not()) { "Missing required environment property:\n  export $name=\"...\"" }
-    return result
-}
-
 orchid {
     val isProd = envOrProperty("env") == "prod"
     environment = if (isProd) "production" else "debug"
@@ -45,8 +35,9 @@ orchid {
     version = version
     args = listOf("--experimentalSourceDoc")
     baseUrl = when {
-        isProd && envOrProperty("PULL_REQUEST") == "true" -> envOrProperty("DEPLOY_URL", required = true)
-        isProd -> envOrProperty("URL", required = true)
-        else -> "http://localhost:8080"
+        isProd && envOrProperty("PULL_REQUEST") == "true" ->
+            envOrProperty("DEPLOY_URL", required = true)
+        isProd                                            -> envOrProperty("URL", required = true)
+        else                                              -> "http://localhost:8080"
     }
 }

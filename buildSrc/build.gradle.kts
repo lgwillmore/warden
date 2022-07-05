@@ -16,6 +16,8 @@ dependencies {
     implementation("org.jfrog.buildinfo:build-info-extractor-gradle:4.21.0")
 
     implementation("gradle.plugin.com.eden:orchidPlugin:0.21.1")
+
+    implementation("org.jlleitschuh.gradle:ktlint-gradle:10.3.0")
 }
 
 val gradleJvmTarget = "11"
