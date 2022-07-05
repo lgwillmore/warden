@@ -4,8 +4,7 @@ import buildsrc.config.publish
 
 plugins {
     buildsrc.convention.`kotlin-jvm`
-    buildsrc.convention.publishing
-    id("com.jfrog.artifactory")
+    buildsrc.convention.`artifactory-publish`
 }
 
 val ktorVersion: String by project
@@ -35,43 +34,22 @@ publishing {
         create<MavenPublication>("ktor") {
             groupId = artifactGroup
             artifactId = artifactName
-            version = version
-            artifact("$buildDir/libs/warden-ktor-${project.version}-sources.jar") {
-                classifier = "sources"
-            }
 
-            artifact("$buildDir/libs/warden-ktor-${project.version}.jar")
+            artifact(tasks.jar)
+            artifact(tasks.sourcesJar)
+            artifact(tasks.javadocJar)
 
             createWardenPom(artifactName) // TODO should the pom name be the root project name?
         }
     }
 }
 
-
 artifactory {
-    setContextUrl("https://laurencecodes.jfrog.io/artifactory")
     publish {
         defaults {
             publications("ktor")
         }
     }
-//    publish(
-//        delegateClosureOf<org.jfrog.gradle.plugin.artifactory.dsl.PublisherConfig> {
-//            repository(
-//                delegateClosureOf<org.jfrog.gradle.plugin.artifactory.dsl.DoubleDelegateWrapper> {
-//                    setProperty("repoKey", "codes.laurence.warden")
-//                    setProperty("username", System.getenv("JFROG_USER"))
-//                    setProperty("password", System.getenv("JFROG_PASSWORD"))
-//                    setProperty("maven", true)
-//                }
-//            )
-//            defaults(
-//                delegateClosureOf<org.jfrog.gradle.plugin.artifactory.task.ArtifactoryTask> {
-//                    publications("ktor")
-//                }
-//            )
-//        }
-//    )
 }
 
 tasks.build.configure {

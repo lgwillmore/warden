@@ -1,8 +1,10 @@
+import buildsrc.config.createWardenPom
+import buildsrc.config.defaults
+import buildsrc.config.publish
+
 plugins {
     buildsrc.convention.`kotlin-multiplatform`
-
-    id("com.jfrog.artifactory")
-    id("maven-publish")
+    buildsrc.convention.`artifactory-publish`
 }
 
 val assertKVersion: String by project
@@ -10,11 +12,6 @@ val mockkVersion: String by project
 val kotlinVersion: String by project
 
 kotlin {
-    jvm {
-        compilations.all {
-            kotlinOptions.jvmTarget = "11"
-        }
-    }
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -50,42 +47,29 @@ publishing {
         create<MavenPublication>("coreJVM") {
             groupId = "codes.laurence.warden"
             artifactId = "warden-core"
-            version = version
 
-            artifact("$buildDir/libs/warden-core-jvm-${project.version}-sources.jar") {
-                classifier = "sources"
-            }
-            artifact("$buildDir/libs/warden-core-jvm-${project.version}.jar")
+//            artifact("$buildDir/libs/warden-core-jvm-${project.version}-sources.jar") {
+//                classifier = "sources"
+//            }
+//            artifact("$buildDir/libs/warden-core-jvm-${project.version}.jar")
+//
+            artifact(tasks.jvmJar)
+            artifact(tasks.jvmSourcesJar)
+
+            createWardenPom(artifactId) // TODO should the pom name be the root project name?
         }
     }
 }
 
 artifactory {
-    setContextUrl("https://laurencecodes.jfrog.io/artifactory")
-    publish(
-        delegateClosureOf<org.jfrog.gradle.plugin.artifactory.dsl.PublisherConfig> {
-            repository(
-                delegateClosureOf<org.jfrog.gradle.plugin.artifactory.dsl.DoubleDelegateWrapper> {
-                    setProperty("repoKey", "codes.laurence.warden")
-                    setProperty("username", System.getenv("JFROG_USER"))
-                    setProperty("password", System.getenv("JFROG_PASSWORD"))
-                    setProperty("maven", true)
-                }
-            )
-            defaults(
-                delegateClosureOf<org.jfrog.gradle.plugin.artifactory.task.ArtifactoryTask> {
-                    publications("coreJVM")
-                }
-            )
+    publish {
+        defaults {
+            publications("coreJVM")
         }
-    )
+    }
 }
 
-tasks {
-    val build by existing
-
-    artifactoryPublish {
-        dependsOn(build)
-        dependsOn("publishJvmPublicationToMavenLocal")
-    }
+tasks.artifactoryPublish.configure {
+    dependsOn(tasks.build)
+//    dependsOn(tasks.publishJvmPublicationToMavenLocal)
 }

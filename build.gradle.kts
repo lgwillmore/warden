@@ -1,6 +1,6 @@
 plugins {
-//    id("org.jlleitschuh.gradle.ktlint") version "10.1.0" // TODO re-enable ktlint
     id("com.palantir.git-version") version "0.15.0"
+    buildsrc.convention.ktlint
 }
 
 val gitVersion: groovy.lang.Closure<String> by extra

@@ -1,7 +1,6 @@
 import buildsrc.config.envOrProperty
 
 plugins {
-    `java-library`
     id("com.eden.orchidPlugin")
 }
 

@@ -1,12 +1,6 @@
 package buildsrc.config
 
-import org.gradle.api.publish.PublicationContainer
 import org.gradle.api.publish.maven.MavenPublication
-import org.gradle.api.Project
-import org.gradle.api.publish.PublishingExtension
-import org.gradle.kotlin.dsl.configure
-import org.gradle.kotlin.dsl.getByType
-import org.gradle.plugins.signing.SigningExtension
 
 object PublishingAttributes {
 
@@ -29,7 +23,7 @@ object PublishingAttributes {
 }
 
 fun MavenPublication.createWardenPom(
-    artifactName : String,
+    artifactName: String,
 ): Unit = pom {
     name.set(artifactName)
     description.set("https://github.com/lgwillmore/warden")
