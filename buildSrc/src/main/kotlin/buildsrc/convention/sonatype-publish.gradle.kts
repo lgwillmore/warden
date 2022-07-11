@@ -3,7 +3,7 @@ package buildsrc.convention
 import buildsrc.config.createWardenPom
 import buildsrc.config.credentialsAction
 import buildsrc.config.isKotlinMultiplatformJavaEnabled
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinMultiplatformPlugin
+import org.jetbrains.kotlin.gradle.plugin.KotlinMultiplatformPluginWrapper
 
 plugins {
     `maven-publish`
@@ -93,11 +93,10 @@ publishing {
     }
 }
 
-plugins.withType<KotlinMultiplatformPlugin>().configureEach {
-    publishing.publications.withType<MavenPublication>().configureEach {
-        // if required, do specific Kotlin Multiplatform configuration
-        // Kotlin Multiplatform automatically registers publications
-    }
+plugins.withType<KotlinMultiplatformPluginWrapper>().configureEach {
+    // if required, do specific Kotlin Multiplatform configuration
+    // Kotlin Multiplatform automatically registers publications
+    javadocStubTask()
 }
 
 plugins.withType<JavaPlugin>().configureEach {
@@ -107,22 +106,29 @@ plugins.withType<JavaPlugin>().configureEach {
         if (!isKotlinMultiplatformJavaEnabled()) {
             publishing.publications.create<MavenPublication>("mavenJava") {
                 from(components["java"])
-//                artifact(tasks["sourcesJar"])
             }
         }
     }
 }
 
+/**
+ * Sonatype requires a Javadoc jar, even if the project is not a Java project.
+ *
+ * [They recommend](https://central.sonatype.org/publish/requirements/#supply-javadoc-and-sources)
+ * creating an empty Javadoc jar in this instance.
+ */
 fun Project.javadocStubTask(): Jar {
+    logger.lifecycle("[${project.displayName}] stubbing Javadoc Jar")
 
-    // use creating, not registering, because the signing plugin sucks
+    // use creating, not registering, because the signing plugin isn't compatible with
+    // config-avoidance API
     val javadocJarStub by tasks.creating(Jar::class) {
         group = JavaBasePlugin.DOCUMENTATION_GROUP
         description = "Stub javadoc.jar artifact (required by Maven Central)"
         archiveClassifier.set("javadoc")
     }
 
-    tasks.withType<AbstractPublishToMaven>().all {
+    tasks.withType<AbstractPublishToMaven>().configureEach {
         dependsOn(javadocJarStub)
     }
 
@@ -134,8 +140,10 @@ fun Project.javadocStubTask(): Jar {
 
     if (sonatypeRepositoryCredentials.isPresent()) {
         val signingTasks = signing.sign(javadocJarStub)
-        tasks.withType<AbstractPublishToMaven>().all {
-            signingTasks.forEach { dependsOn(it) }
+        tasks.withType<AbstractPublishToMaven>().configureEach {
+            signingTasks.forEach { signingTask ->
+                dependsOn(signingTask)
+            }
         }
     }
 
