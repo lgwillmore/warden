@@ -1,8 +1,6 @@
-import buildsrc.config.createWardenPom
-
 plugins {
     buildsrc.convention.`kotlin-multiplatform`
-    buildsrc.convention.`artifactory-publish`
+    buildsrc.convention.`sonatype-publish`
 }
 
 val assertKVersion: String by project
@@ -10,6 +8,9 @@ val mockkVersion: String by project
 val kotlinVersion: String by project
 
 kotlin {
+
+    jvm()
+
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -38,28 +39,4 @@ kotlin {
             }
         }
     }
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("coreJVM") {
-            artifact(tasks.jvmJar)
-            artifact(tasks.jvmSourcesJar)
-
-            createWardenPom()
-        }
-    }
-}
-
-artifactory {
-    publish {
-        defaults {
-            publications("coreJVM")
-        }
-    }
-}
-
-tasks.artifactoryPublish.configure {
-    dependsOn(tasks.build)
-//    dependsOn(tasks.publishJvmPublicationToMavenLocal)
 }

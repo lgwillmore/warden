@@ -1,8 +1,6 @@
-import buildsrc.config.createWardenPom
-
 plugins {
     buildsrc.convention.`kotlin-jvm`
-    buildsrc.convention.`artifactory-publish`
+    buildsrc.convention.`sonatype-publish`
 }
 
 val ktorVersion: String by project
@@ -22,32 +20,4 @@ dependencies {
     testImplementation("io.mockk:mockk:$mockkVersion")
     testImplementation("com.willowtreeapps.assertk:assertk-jvm:$assertKVersion")
     testImplementation(kotlin("test"))
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("ktor") {
-            artifact(tasks.jar)
-            artifact(tasks.sourcesJar)
-            artifact(tasks.javadocJar)
-
-            createWardenPom()
-        }
-    }
-}
-
-artifactory {
-    publish {
-        defaults {
-            publications("ktor")
-        }
-    }
-}
-
-tasks.build.configure {
-    dependsOn(tasks.kotlinSourcesJar)
-}
-
-tasks.artifactoryPublish.configure {
-    dependsOn(tasks.build)
 }
