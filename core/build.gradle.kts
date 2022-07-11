@@ -1,15 +1,8 @@
-
-
+import buildsrc.config.createWardenPom
 
 plugins {
-    kotlin("multiplatform")
-    id("com.jfrog.artifactory")
-    id("maven-publish")
-}
-
-repositories {
-    mavenCentral()
-    jcenter()
+    buildsrc.convention.`kotlin-multiplatform`
+    buildsrc.convention.`artifactory-publish`
 }
 
 val assertKVersion: String by project
@@ -17,40 +10,31 @@ val mockkVersion: String by project
 val kotlinVersion: String by project
 
 kotlin {
-    jvm {
-        compilations.all {
-            kotlinOptions.jvmTarget = "11"
-        }
-    }
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(kotlin("stdlib-common"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.3")
             }
         }
         val commonTest by getting {
             dependencies {
-                implementation(kotlin("test-common"))
-                implementation(kotlin("test-annotations-common"))
-                implementation("io.mockk:mockk-common:$mockkVersion")
-                implementation("com.willowtreeapps.assertk:assertk-common:0.14")
+                implementation(kotlin("test"))
+                implementation("io.mockk:mockk:$mockkVersion")
+                implementation("com.willowtreeapps.assertk:assertk:$assertKVersion")
             }
         }
 
-        // Default source set for JVM-specific sources and dependencies:
-        jvm().compilations["main"].defaultSourceSet {
+        val jvmMain by getting {
+            // Default source set for JVM-specific sources and dependencies:
             dependencies {
-                implementation(kotlin("stdlib"))
-                implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
+                implementation(kotlin("reflect"))
             }
         }
-        // JVM-specific tests and their dependencies:
-        jvm().compilations["test"].defaultSourceSet {
+
+        val jvmTest by getting {
+            // JVM-specific tests and their dependencies:
             dependencies {
                 implementation(kotlin("test-junit"))
-                implementation("io.mockk:mockk:1.9.3")
-                implementation("com.willowtreeapps.assertk:assertk-jvm:$assertKVersion")
             }
         }
     }
@@ -59,44 +43,23 @@ kotlin {
 publishing {
     publications {
         create<MavenPublication>("coreJVM") {
-            groupId = "codes.laurence.warden"
-            artifactId = "warden-core"
-            version = version
+            artifact(tasks.jvmJar)
+            artifact(tasks.jvmSourcesJar)
 
-            artifact("$buildDir/libs/warden-core-jvm-${project.version}-sources.jar") {
-                classifier = "sources"
-            }
-            artifact("$buildDir/libs/warden-core-jvm-${project.version}.jar")
+            createWardenPom()
         }
     }
 }
 
 artifactory {
-    setContextUrl("https://laurencecodes.jfrog.io/artifactory")
-    publish(
-        delegateClosureOf<org.jfrog.gradle.plugin.artifactory.dsl.PublisherConfig> {
-            repository(
-                delegateClosureOf<org.jfrog.gradle.plugin.artifactory.dsl.DoubleDelegateWrapper> {
-                    setProperty("repoKey", "codes.laurence.warden")
-                    setProperty("username", System.getenv("JFROG_USER"))
-                    setProperty("password", System.getenv("JFROG_PASSWORD"))
-                    setProperty("maven", true)
-                }
-            )
-            defaults(
-                delegateClosureOf<org.jfrog.gradle.plugin.artifactory.task.ArtifactoryTask> {
-                    publications("coreJVM")
-                }
-            )
+    publish {
+        defaults {
+            publications("coreJVM")
         }
-    )
+    }
 }
 
-tasks {
-    val build by existing
-
-    artifactoryPublish {
-        dependsOn(build)
-        dependsOn("publishJvmPublicationToMavenLocal")
-    }
+tasks.artifactoryPublish.configure {
+    dependsOn(tasks.build)
+//    dependsOn(tasks.publishJvmPublicationToMavenLocal)
 }
