@@ -1,7 +1,7 @@
 # Warden
 
-![Build Status](https://github.com/lgwillmore/warden/actions/workflows/test.yml/badge.svg?branch=main) 
-![version](https://img.shields.io/github/v/tag/lgwillmore/warden?include_prereleases&label=release) 
+![Build Status](https://github.com/lgwillmore/warden/actions/workflows/test.yml/badge.svg?branch=main)
+![version](https://img.shields.io/github/v/tag/lgwillmore/warden?include_prereleases&label=release)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/0d20e576-551e-42be-9e8c-66355d420603/deploy-status)](https://app.netlify.com/sites/warden-kotlin/deploys)
 
 > **Attribute Based Access Control for Kotlin**
@@ -12,23 +12,25 @@
 **[FULL DOCUMENTATION](https://warden-kotlin.netlify.com/)**
 
 **Contents**
+
 - [What is Attribute Based Access Control?](#what-is-attribute-based-access-control)
 - [Advantages of ABAC](#advantages-of-abac)
 - [A Quick Intro](#a-quick-intro)
-  * [Policies](#policies)
-  * [Enforcement](#enforcement)
+    * [Policies](#policies)
+    * [Enforcement](#enforcement)
 - [Installation](#installation)
 
 ## What is Attribute Based Access Control?
 
 ABAC allows us to define access/deny policies based around any conceivable attribute of a request. Attributes of:
 
- - **The subject**: The entity performing the request/action, typically a user.
- - **The action**: The action being performed e.g. A Forced update.
- - **The resource**: The entity the action is related to or being performed on.
- - **The environment**: Any environmental attributes eg. Time, IP address, location.
+- **The subject**: The entity performing the request/action, typically a user.
+- **The action**: The action being performed e.g. A Forced update.
+- **The resource**: The entity the action is related to or being performed on.
+- **The environment**: Any environmental attributes eg. Time, IP address, location.
 
-With policies defined using rules with access to this information we can then enforce our Policies in any part of a distributed system.
+With policies defined using rules with access to this information we can then enforce our Policies in any part of a
+distributed system.
 
 You can find out more about the concepts involved here: [ABAC Overview]({{ link('ABAC Overview') }}).
 
@@ -37,17 +39,23 @@ You can find out more about the concepts involved here: [ABAC Overview]({{ link(
 ABAC has the following advantages over role based access control implemented with your flavour of web framework:
 
 ### Decouple Authorization from Routing
+
 Defining the rules for authorization separately from your routing provides all the benefits of low coupling.
 
 In your routing, all you have to ensure is that Authorization is checked, not how or what the Authorization rules are.
- 
-Your authorization rules are business rules and are formulated against business domain objects, not URLs. You can have multiple URLs that need the same rules to be enforced, and this is better done in a lower layer.
+
+Your authorization rules are business rules and are formulated against business domain objects, not URLs. You can have
+multiple URLs that need the same rules to be enforced, and this is better done in a lower layer.
 
 ### Expressive Authorization logic
-Role based authorization is a subset of the rules that can be defined with ABAC. You will likely find your needs extending beyond Role Based Authorization quickly and ABAC has you covered.
+
+Role based authorization is a subset of the rules that can be defined with ABAC. You will likely find your needs
+extending beyond Role Based Authorization quickly and ABAC has you covered.
 
 ### Architectural flexibility
-With ABAC, and the separation between decision and enforcement, your authorization rules can be leveraged across systems, languages, frontend, backend. It also exposes Policies as business data for CRUD.
+
+With ABAC, and the separation between decision and enforcement, your authorization rules can be leveraged across
+systems, languages, frontend, backend. It also exposes Policies as business data for CRUD.
 
 ## A Quick Intro
 
@@ -55,19 +63,21 @@ Let us say we have a blog site, and we have the following entities: `User` and `
 
 We would like the following authorization rules:
 
- - Any `User` can read any `Article`
- - The author of an `Article` can modify and delete their `Article`
- - A `User` must be an Author to be able to create an article.
- 
+- Any `User` can read any `Article`
+- The author of an `Article` can modify and delete their `Article`
+- A `User` must be an Author to be able to create an article.
+
 ### Policies
- 
-We can use the **Warden** policy DSL to build these rules in a way that is not tightly coupled to our routes, and could in theory be used anywhere that we would like to check user permissions.
- 
+
+We can use the **Warden** policy DSL to build these rules in a way that is not tightly coupled to our routes, and could
+in theory be used anywhere that we would like to check user permissions.
+
 Here is a list of our `Article` Policies.
+
 ```kotlin
 val policies = listOf(
     // Any User can read any Article
-    allOf{
+    allOf {
         resource("type") equalTo "Article"
         action("type") equalTo "READ"
     },
@@ -85,47 +95,36 @@ val policies = listOf(
     }
 )
  ```
-Here we have a single `AllOf` policy for each one of our logical desired policies. These each define all conditions that must be met to satisfy what we want logically.
+
+Here we have a single `AllOf` policy for each one of our logical desired policies. These each define all conditions that
+must be met to satisfy what we want logically.
 
 Now that we have our policies, we can enforce them.
 
 ### Enforcement
 
-An `EnforcementPoint` allows us to protect any given execution path with an Exception. If a request is not authorized, an Exception is thrown.
+An `EnforcementPoint` allows us to protect any given execution path with an Exception. If a request is not authorized,
+an Exception is thrown.
 
-`EnforcementPoint`s and `DecisionPoint`s both work on maps of attributes for subject, action, resource, environment. Maps allow for subsets of attributes as well as the merging of attributes.  
+`EnforcementPoint`s and `DecisionPoint`s both work on maps of attributes for subject, action, resource, environment.
+Maps allow for subsets of attributes as well as the merging of attributes.
 
-Let us say we have the following business domain objects and helper functions for transforming them into Maps of attributes.
+Let us say we have the following business domain objects, and we are using the Warden `HasAttributes` helper class to
+provide easy conversion into Maps of attributes.
 
 ```kotlin
 
-/**
- * An interface that allows for something to be transformed into a map of attributes
- */
-interface HasAttributes {
-    fun attributes(): Map<String, Any?>
-}
-
-/**
- * An implementation of our HasAttributes interface that could leverage some reflection 
- */
-class HasAttributesComponent : HasAttributes {
-    override fun attributes(): Map<String, Any?> {
-        TODO("Implement some way of transforming to a Map - reflection can help here")
-    }
-}
-
 data class User(
     val id: String
-) : HasAttributes by HasAttributesComponent()
+) : HasAttributes()
 
 class Article(
     val id: String?,
     val authorID: String
-) : HasAttributes by HasAttributesComponent()
+) : HasAttributes()
 ```
 
-We have our `User` and `Article` and we have defined a simple interface for getting the attribute map from each of our entities. Now let us look at a Service layer function for reading an Article.
+We have our `User` and `Article`, now let us look at a Service layer function for reading an Article.
 
 ```kotlin
 val enforcementPoint = EnforcementPointDefault(policies)
@@ -148,13 +147,16 @@ suspend fun readArticle(user: User, articleID: String): Article {
 
 Here we have an instance of an `EnforcementPoint` constructed from our policies.
 
-We also have our service layer function with an already resolved `User` instance (possibly from a preceding authentication layer), and the user is requesting an `Article` by ID. The following occurs:
+We also have our service layer function with an already resolved `User` instance (possibly from a preceding
+authentication layer), and the user is requesting an `Article` by ID. The following occurs:
 
 - We retrieve the `Article`.
-- We build our `AccessRequest` from the attributes of the `User` and `Article`, and we manually construct the Action attributes based on the purpose of the function.
+- We build our `AccessRequest` from the attributes of the `User` and `Article`, and we manually construct the Action
+  attributes based on the purpose of the function.
 - We use the `EnforcementPoint` to check the request, and then return the result.
 
-At the point of enforcement, if no access had been granted, a `NotAuthorizedException` would have been thrown and the article would not be returned. If access is granted, execution continues without a hitch.
+At the point of enforcement, if no access had been granted, a `NotAuthorizedException` would have been thrown and the
+article would not be returned. If access is granted, execution continues without a hitch.
 
 ## Installation
 
@@ -167,6 +169,6 @@ repositories {
 
 dependencies {
     //ABAC
-    implementation("codes.laurence.warden:warden-core:0.0.1")
+    implementation("codes.laurence.warden:warden-core:0.1.0")
 }
 ```

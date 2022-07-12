@@ -31,12 +31,13 @@ orchid {
     theme = "Editorial"
 
     // The following properties are optional
+    port = 8082
     version = version
     args = listOf("--experimentalSourceDoc")
     baseUrl = when {
         isProd && envOrProperty("PULL_REQUEST") == "true" ->
             envOrProperty("DEPLOY_URL", required = true)
         isProd                                            -> envOrProperty("URL", required = true)
-        else                                              -> "http://localhost:8080"
+        else                                              -> "http://localhost:8082"
     }
 }

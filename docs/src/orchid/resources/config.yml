@@ -20,6 +20,8 @@ theme:
     - type: 'page'
       itemId: 'Components'
     - type: 'page'
+      itemId: "Attributes"
+    - type: 'page'
       itemId: 'Web Framework Plugins'
     - type: 'page'
       itemId: 'ABAC Overview'

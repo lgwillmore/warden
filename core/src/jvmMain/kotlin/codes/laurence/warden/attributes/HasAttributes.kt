@@ -1,5 +1,11 @@
 package codes.laurence.warden.attributes
 
+
+/**
+ * A base implementation of [HasAttributesI]. Will build attributes using [attributesOf].
+ *
+ * @param attributeType: Optional [AttributeType] that will be added to the attributes defined by object properties.
+ */
 open class HasAttributes(
     private val attributeType: AttributeType? = null
 ) : HasAttributesI {
