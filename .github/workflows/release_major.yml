@@ -25,4 +25,6 @@ jobs:
         run: JFROG_USER='${{ secrets.JFROG_USER }}' JFROG_PASSWORD='${{ secrets.JFROG_PASSWORD }}' ./gradlew warden-core::artifactoryPublish
       - name: Publish Ktor
         run: JFROG_USER='${{ secrets.JFROG_USER }}' JFROG_PASSWORD='${{ secrets.JFROG_PASSWORD }}' ./gradlew warden-ktor::artifactoryPublish
+      - name: Publish atts
+        run: JFROG_USER='${{ secrets.JFROG_USER }}' JFROG_PASSWORD='${{ secrets.JFROG_PASSWORD }}' ./gradlew warden-atts::artifactoryPublish
 
