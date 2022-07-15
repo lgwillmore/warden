@@ -9,7 +9,7 @@ import codes.laurence.warden.information.InformationPointPassThrough
 import codes.laurence.warden.policy.Policy
 import codes.laurence.warden.policy.PolicySource
 import codes.laurence.warden.policy.PolicySourceInMemory
-import codes.laurence.warden.policy.boolean.AnyOf
+import codes.laurence.warden.policy.bool.AnyOf
 
 /**
  * An in memory Decision point.
