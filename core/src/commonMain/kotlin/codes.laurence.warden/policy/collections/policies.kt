@@ -2,9 +2,9 @@ package codes.laurence.warden.policy.collections
 
 import codes.laurence.warden.policy.Policy
 import codes.laurence.warden.policy.PolicyDSL
-import codes.laurence.warden.policy.boolean.AllOf
-import codes.laurence.warden.policy.boolean.AnyOf
-import codes.laurence.warden.policy.boolean.Not
+import codes.laurence.warden.policy.bool.AllOf
+import codes.laurence.warden.policy.bool.AnyOf
+import codes.laurence.warden.policy.bool.Not
 import codes.laurence.warden.policy.expression.AttributeReference
 import codes.laurence.warden.policy.expression.AttributeType
 import codes.laurence.warden.policy.expression.OperatorBuilder

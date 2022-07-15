@@ -1,5 +1,8 @@
 package codes.laurence.warden.attributes
 
+/**
+ * Recursive and Reflective conversion of nested [HasAttributesI] properties to [Attributes]
+ */
 internal fun convertToAttributeForm(value: Any?): Any? {
     var converted = value
     if (converted is HasAttributesI) {

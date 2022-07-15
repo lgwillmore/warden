@@ -1,10 +1,9 @@
-package codes.laurence.warden.policy.boolean
+package codes.laurence.warden.policy.bool
 
 import assertk.assertThat
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotEmpty
 import codes.laurence.warden.policy.*
-import codes.laurence.warden.policy.collections.*
 import codes.laurence.warden.policy.expression.AttributeType
 import codes.laurence.warden.policy.expression.ExpressionPolicy
 import kotlin.test.Test

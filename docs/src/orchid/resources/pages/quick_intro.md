@@ -46,41 +46,29 @@ Now that we have our policies, we can enforce them.
 
 ## Enforcement
 
-An `EnforcementPoint` allows us to protect any given execution path with an Exception. If a request is not authorized, an Exception is thrown.
+An `EnforcementPoint` allows us to protect any given execution path with an Exception. If a request is not authorized,
+an Exception is thrown.
 
-`EnforcementPoint`s and `DecisionPoint`s both work on maps of attributes for subject, action, resource, environment. Maps allow for subsets of attributes as well as the merging of attributes.  
+`EnforcementPoint`s and `DecisionPoint`s both work on maps of attributes for subject, action, resource, environment.
+Maps allow for subsets of attributes as well as the merging of attributes.
 
-Let us say we have the following business domain objects and helper functions for transforming them into Maps of attributes.
+Let us say we have the following business domain objects, and we are using the Warden `HasAttributes` helper class to
+provide easy conversion into Maps of attributes.
 
 ```kotlin
 
-/**
- * An interface that allows for something to be transformed into a map of attributes
- */
-interface HasAttributes {
-    fun attributes(): Map<String, Any?>
-}
-
-/**
- * An implementation of our HasAttributes interface that could leverage some reflection 
- */
-class HasAttributesComponent : HasAttributes {
-    override fun attributes(): Map<String, Any?> {
-        TODO("Implement some way of transforming to a Map - reflecion can help here")
-    }
-}
-
 data class User(
     val id: String
-) : HasAttributes by HasAttributesComponent()
+) : HasAttributes()
 
 class Article(
     val id: String?,
     val authorID: String
-) : HasAttributes by HasAttributesComponent()
+) : HasAttributes()
 ```
 
-We have our `User` and `Article` and we have defined a simple interface for getting the attribute map from each of our entities. Now let us look at a Service layer function for reading an Article.
+We have our `User` and `Article` and we have defined a simple interface for getting the attribute map from each of our
+entities. Now let us look at a Service layer function for reading an Article.
 
 ```kotlin
 val enforcementPoint = EnforcementPointDefault(policies)
@@ -103,10 +91,13 @@ suspend fun readArticle(user: User, articleID: String): Article {
 
 Here we have an instance of an `EnforcementPoint` constructed from our policies.
 
-We also have our service layer function with an already resolved `User` instance (possibly from a preceding authentication layer), and the user is requesting an `Article` by ID. The following occurs:
+We also have our service layer function with an already resolved `User` instance (possibly from a preceding
+authentication layer), and the user is requesting an `Article` by ID. The following occurs:
 
 - We retrieve the `Article`.
-- We build our `AccessRequest` from the attributes of the `User` and `Article`, and we manually construct the Action attributes based on the purpose of the function.
+- We build our `AccessRequest` from the attributes of the `User` and `Article`, and we manually construct the Action
+  attributes based on the purpose of the function.
 - We use the `EnforcementPoint` to check the request, and then return the result.
 
-At the point of enforcement, if no access had been granted, a `NotAuthorizedException` would have been thrown and the article would not be returned. If access is granted, execution continues without a hitch.
+At the point of enforcement, if no access had been granted, a `NotAuthorizedException` would have been thrown and the
+article would not be returned. If access is granted, execution continues without a hitch.

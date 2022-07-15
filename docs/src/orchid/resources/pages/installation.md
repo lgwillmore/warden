@@ -10,8 +10,7 @@ repositories {
 
 dependencies {
     //ABAC
-    implementation("codes.laurence.warden:warden-core:0.0.1")
+    implementation("codes.laurence.warden:warden-core:0.1.0")
 }
 ```
-**And to include the Ktor plugin**
   
