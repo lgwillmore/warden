@@ -88,7 +88,7 @@ routing {
             }
             route("public") {
                 unwarded {
-                    // This nested un-warded block is open, even though it has a parent warded block
+                    // This nested unwarded block is open, even though it has a parent warded block
                 }
             }
 
@@ -111,7 +111,7 @@ The first `WardenRoute` to match the route being called is what will determine t
 
 install(Warden) {
     routePriorityStack = listOf(
-        // This top priority route will be un-warded for Post method calls
+        // This top priority route will be unwarded for Post method calls
         WardenRoute("/api/public/.*", WardenRouteBehaviour.IGNORE, setOf(HttpMethod.Post)),
         // This regex route will be enforced for all http methods, but will be superseded by routes above it.
         WardenRoute("/api/.*", WardenRouteBehaviour.ENFORCE),
