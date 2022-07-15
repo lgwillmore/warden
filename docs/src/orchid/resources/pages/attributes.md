@@ -2,18 +2,20 @@
 title: 'Attributes'
 ---
 
-Warden provides some jvm tools for working with the attributes of your data classes and class instances. These tools are
-not required by the core components and are included as a convenience.
+Warden provides some jvm tools for working with the attributes of your data classes and class
+instances. These tools are not required by the core components and are included as a convenience.
 
-## HasAttributesI and Attributes
+## `HasAttributesI` and `Attributes`
 
-The 2 core pieces of the attribute toolset are the `HasAttributesI` interface and a type alias for a Map of
-attributes `Attributes`. This allows us to easily convert the data classes that represent our subjects, actions,
-resource and environment into attributes at any point we are building an `AccessRequest`.
+The 2 core pieces of the attribute toolset are the `HasAttributesI` interface and a type alias for a
+Map of attributes `Attributes`. This allows us to easily convert the data classes that represent our
+subjects, actions, resource and environment into attributes at any point we are building
+an `AccessRequest`.
 
 ### Single Inheritance
 
-The toolset comes with a quick reflection based implementation `HasAttributes`, and its usage is as simple as extending
+The toolset comes with a quick reflection based implementation `HasAttributes`, and its usage is as
+simple as extending
 the class.
 
 ```kotlin
@@ -29,8 +31,9 @@ data class User(
 
 ### Multiple Inheritance
 
-Often, we need to implement multiple interfaces and then need to choose our single concrete implementation. In that case
-there are helpers for easily implementing `HasAttributesI` such as the `attributeOf` function.
+Often, we need to implement multiple interfaces and then need to choose our single concrete
+implementation. In that case there are helpers for easily implementing `HasAttributesI` such as
+the `attributeOf` function.
 
 ```kotlin
 data class UserNew(
@@ -44,20 +47,24 @@ data class UserNew(
 }
 ```
 
-## AttributeType
+## `AttributeType`
 
-It is highly likely that the first and primary attribute that a domain object needs is some sort of `type` attribute. It
-is also highly likely that this type will be shared by several data classes representing different aspects of the same
-domain object. `AttributeType` helps us handle this.
+It is highly likely that the first and primary attribute that a domain object needs is some sort
+of `type` attribute. It is also highly likely that this type will be shared by several data classes
+representing different
+aspects of the same domain object. `AttributeType` helps us handle this.
 
 `AttributeType` takes `type` and an optional `typeKeyword` constructor arguments:
 
 - `type`: A string defining the type of the Attributes
-- `typeKeyword`: Optional aliasing of the key that the type will be mapped to in order to avoid conflicts with other
+- `typeKeyword`: Optional aliasing of the key that the type will be mapped to in order to avoid
+  conflicts with other
   attributes.
 
-`AttributeType` also implements `HasAttributesI` and we can see a usage example below. In particular, it is convenient
-for constructing attributes when we do not have an instance of some domain data class for building an `AccessRequest`.
+`AttributeType` also implements `HasAttributesI` and we can see a usage example below. In
+particular, it is convenient
+for constructing attributes when we do not have an instance of some domain data class for building
+an `AccessRequest`.
 
 ```kotlin
 val USER_TYPE = AttributeType(
@@ -87,13 +94,13 @@ println(
 
 ```
 
-### HasAttributes and AttributeType
+### `HasAttributes` and `AttributeType`
 
-The `AttributeType` can then be used across your `HasAttributesI` implementing data classes as seen in the example
+The `AttributeType` can then be used across your `HasAttributesI` implementing data classes as seen
+in the example
 below.
 
 ```kotlin
-
 val USER_TYPE = AttributeType(
     type = "USER",
     typeKeyword = "authType"
@@ -124,12 +131,13 @@ data class UserNew(
 
 ## Helpers and Extensions
 
-### attributesOf
+### `attributesOf`
 
-The `attributesOf` function is used to recursively and reflectively convert the instance of a class into `Attributes`.
-It will also handle the conversion of aggregates of nested implementers of the `HasAttributesI` interface.
+The `attributesOf` function is used to recursively and reflectively convert the instance of a class
+into `Attributes`. It will also handle the conversion of aggregates of nested implementers of
+the `HasAttributesI` interface.
 
-### withAttributes
+### `withAttributes`
 
-`withAttributes` is an extension function on `HasAttributesI` that lets us conveniently merge other attributes into the
-attributes of the original object.
+`withAttributes` is an extension function on `HasAttributesI` that lets us conveniently merge other
+attributes into the attributes of the original object.
