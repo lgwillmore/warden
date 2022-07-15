@@ -8,6 +8,7 @@ import kotlin.test.Test
 
 internal class AttributeTypeTest {
 
+    @Suppress("UNCHECKED_CAST")
     @Test
     fun `asHasAttributes - withAttributes`() {
         val testObj = AttributeType(type = "SomeType", typeKeyword = "customType")
