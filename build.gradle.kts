@@ -1,5 +1,5 @@
 plugins {
-    id("com.palantir.git-version") version "0.15.0"
+    id("com.palantir.git-version") version "0.12.3"
     buildsrc.convention.ktlint
 }
 
