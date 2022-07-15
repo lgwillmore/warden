@@ -3,7 +3,7 @@ package codes.laurence.warden.policy.members
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.fail
-import codes.laurence.warden.policy.boolean.allOf
+import codes.laurence.warden.policy.bool.allOf
 import codes.laurence.warden.policy.expression.AttributeReference
 import codes.laurence.warden.policy.expression.AttributeType
 import codes.laurence.warden.policy.expression.OperatorType

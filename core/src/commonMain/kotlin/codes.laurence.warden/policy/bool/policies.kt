@@ -1,4 +1,4 @@
-package codes.laurence.warden.policy.boolean
+package codes.laurence.warden.policy.bool
 
 import codes.laurence.warden.Access
 import codes.laurence.warden.AccessRequest
