@@ -1,6 +1,4 @@
-package codes.laurence.warden.attributes
-
-import codes.laurence.warden.test.randString
+package codes.laurence.warden.atts
 
 internal data class ParentThingWithAtts(
     val aThing: ThingWithoutAtts,

@@ -1,4 +1,4 @@
-package codes.laurence.warden.attributes
+package codes.laurence.warden.atts
 
 /**
  * Provides a definition of a "Type" attribute which is a common attribute required for subjects, actions and resources.

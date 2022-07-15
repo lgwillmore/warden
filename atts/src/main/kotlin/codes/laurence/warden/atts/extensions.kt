@@ -1,4 +1,4 @@
-package codes.laurence.warden.attributes
+package codes.laurence.warden.atts
 
 /**
  * Lets as us merge the attributes of something that [HasAttributesI] with additional attributes.

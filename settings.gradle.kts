@@ -4,10 +4,12 @@ include(
     ":core",
     ":ktor",
     ":docs",
+    ":atts",
 )
 
 project(":core").name = "warden-core"
 project(":ktor").name = "warden-ktor"
+project(":atts").name = "warden-atts"
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
