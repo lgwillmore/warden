@@ -1,4 +1,4 @@
-package codes.laurence.warden.attributes
+package codes.laurence.warden.atts
 
 /**
  * Recursive and Reflective conversion of nested [HasAttributesI] properties to [Attributes]

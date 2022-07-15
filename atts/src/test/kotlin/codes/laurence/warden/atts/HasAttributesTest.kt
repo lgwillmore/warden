@@ -1,8 +1,7 @@
-package codes.laurence.warden.attributes
+package codes.laurence.warden.atts
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import codes.laurence.warden.test.randString
 import kotlin.test.Test
 
 internal class HasAttributesTest {

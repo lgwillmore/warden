@@ -1,4 +1,4 @@
-package codes.laurence.warden.attributes
+package codes.laurence.warden.atts
 
 /**
  * A base implementation of [HasAttributesI]. Will build attributes using [attributesOf].

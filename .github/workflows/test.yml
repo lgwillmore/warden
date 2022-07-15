@@ -24,5 +24,7 @@ jobs:
       run: ./gradlew warden-core::jvmTest
     - name: Test Ktor
       run: ./gradlew warden-ktor::test
+    - name: Test Atts
+      run: ./gradlew warden-atts::test
     - name: Lint
       run: ./gradlew ktlintCheck

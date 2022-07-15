@@ -27,7 +27,6 @@ kotlin {
         val jvmMain by getting {
             // Default source set for JVM-specific sources and dependencies:
             dependencies {
-                implementation(kotlin("reflect"))
             }
         }
 

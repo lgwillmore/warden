@@ -1,4 +1,4 @@
-package codes.laurence.warden.attributes
+package codes.laurence.warden.atts
 
 import kotlin.reflect.KVisibility
 import kotlin.reflect.full.declaredMemberProperties
