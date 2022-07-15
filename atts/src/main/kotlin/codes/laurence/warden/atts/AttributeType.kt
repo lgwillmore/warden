@@ -41,7 +41,7 @@ data class AttributeType(
     }
 
     /**
-     * Provides the [Attributes] of this type with a single mapping from the typeKeyword to the type.
+     * Provides the [Attributes] of this type with a single mapping from the [typeKeyword] to the [type].
      */
     override fun attributes(): Attributes {
         return mapOf(typeKeyword to type)
