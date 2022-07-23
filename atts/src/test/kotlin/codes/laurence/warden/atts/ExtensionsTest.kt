@@ -17,7 +17,7 @@ class ExtensionsTest {
             aPrivateAtt = randString()
         )
 
-        val actual = thingWithAtts.withAttributes(
+        val actual = thingWithAtts.withAtts(
             "additional" to additionalThngWithAttributes
         )
 
@@ -25,7 +25,7 @@ class ExtensionsTest {
             mapOf(
                 "attributeType" to "NestedThing",
                 "nestedAtt" to thingWithAtts.nestedAtt,
-                "additional" to additionalThngWithAttributes.attributes()
+                "additional" to additionalThngWithAttributes.atts()
             )
         )
     }

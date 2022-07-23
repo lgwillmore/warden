@@ -69,7 +69,7 @@ class HelpersTest {
                 "nestedAtt" to source.primeChild.nestedAtt
             ),
         )
-        val actual = attributesOf(source)
+        val actual = attsOf(source)
         assertThat(actual).isEqualTo(expected)
     }
 }

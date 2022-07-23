@@ -53,7 +53,7 @@ an Exception is thrown.
 Maps allow for subsets of attributes as well as the merging of attributes.
 
 Let us say we have the following business domain objects, and we are using the Warden `HasAttributes` helper class to
-provide easy conversion into Maps of attributes.
+provide easy conversion into Maps of attributes. You can read more on the `warden-atts` library [here](attributes).
 
 ```kotlin
 

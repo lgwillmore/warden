@@ -8,12 +8,12 @@ internal data class ParentThingWithAtts(
     val childrenList: List<NestedThingWithAtts>,
     val childrenSet: Set<NestedThingWithAtts>,
     val childrenMap: Map<String, NestedThingWithAtts>,
-) : HasAttributes(attributeType = AttributeType("ParentThing"))
+) : HasAtts(attType = AttType("ParentThing"))
 
 internal data class NestedThingWithAtts(
     val nestedAtt: String,
     private val aPrivateAtt: String = randString()
-) : HasAttributes(attributeType = AttributeType("NestedThing"))
+) : HasAtts(attType = AttType("NestedThing"))
 
 internal data class ThingWithoutAtts(
     val noAtts: String
@@ -21,13 +21,13 @@ internal data class ThingWithoutAtts(
 
 internal data class CustomTypeThing(
     val anAtt: String
-) : HasAttributes(attributeType = AttributeType("CustomTypeThing", typeKeyword = "customType"))
+) : HasAtts(attType = AttType("CustomTypeThing", typeKeyword = "customType"))
 
 internal data class CustomAttsThing(
     val shouldNotSeeMe: String
-) : HasAttributesI {
+) : HasAttsI {
 
-    override fun attributes(): Attributes {
+    override fun atts(): Atts {
         return mapOf("shouldSeeMe" to shouldNotSeeMe)
     }
 }

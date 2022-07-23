@@ -4,12 +4,12 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import kotlin.test.Test
 
-internal class AttributeTypeTest {
+internal class AttTypeTest {
 
     @Suppress("UNCHECKED_CAST")
     @Test
     fun `asHasAttributes - withAttributes`() {
-        val testObj = AttributeType(type = "SomeType", typeKeyword = "customType")
+        val testObj = AttType(type = "SomeType", typeKeyword = "customType")
 
         val additionalAttributesVararg = listOf(
             "id" to randInt(),
@@ -27,15 +27,15 @@ internal class AttributeTypeTest {
             *additionalAttributesVararg.toTypedArray()
         )
 
-        val hasAttributesMap = testObj.asHasAttributes(additionalAttributes).attributes()
-        val attributesMap = testObj.withAttributes(additionalAttributes)
-        val attributesVarargs = testObj.withAttributes(*additionalAttributesVararg.toTypedArray())
+        val hasAttributesMap = testObj.asHasAtts(additionalAttributes).atts()
+        val attributesMap = testObj.withAtts(additionalAttributes)
+        val attributesVarargs = testObj.withAtts(*additionalAttributesVararg.toTypedArray())
 
         val expectedMap = mapOf(
             "customType" to "SomeType",
             "id" to additionalAttributes["id"],
-            "collectionOfHasAttributes" to (additionalAttributes["collectionOfHasAttributes"] as List<HasAttributesI>).map { it.attributes() },
-            "mapOfHasAttributes" to (additionalAttributes["mapOfHasAttributes"] as Map<*, HasAttributesI>).map { it.key to it.value.attributes() }
+            "collectionOfHasAttributes" to (additionalAttributes["collectionOfHasAttributes"] as List<HasAttsI>).map { it.atts() },
+            "mapOfHasAttributes" to (additionalAttributes["mapOfHasAttributes"] as Map<*, HasAttsI>).map { it.key to it.value.atts() }
                 .toMap()
         )
 
@@ -46,8 +46,8 @@ internal class AttributeTypeTest {
 
     @Test
     fun attributes() {
-        val testObj = AttributeType(type = "SomeType", typeKeyword = "customType")
-        assertThat(testObj.attributes()).isEqualTo(
+        val testObj = AttType(type = "SomeType", typeKeyword = "customType")
+        assertThat(testObj.atts()).isEqualTo(
             mapOf(
                 "customType" to "SomeType"
             )

@@ -1,13 +1,13 @@
 package codes.laurence.warden.atts
 
 /**
- * Something that has [Attributes]
+ * Something that has [Atts]
  */
-interface HasAttributesI {
-    fun attributes(): Attributes
+interface HasAttsI {
+    fun atts(): Atts
 }
 
 /**
  * A Map of key values.
  */
-typealias Attributes = Map<String, Any?>
+typealias Atts = Map<String, Any?>
