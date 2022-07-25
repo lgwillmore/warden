@@ -2,13 +2,13 @@
 title: 'Quick Intro'
 ---
 
-Let us say we have a blog site and we have the following entities: `User` and `Article`.
+Let us say we have a blog site, and we have the following entities: `User` and `Article`.
 
 We would like the following authorization rules:
 
 - Any `User` can read any `Article`
 - The author of an `Article` can modify and delete their `Article`
-- A `User` must be be an Author to be able to create an article.
+- A `User` must be an Author to be able to create an article.
 
 ## Policies
 
@@ -30,7 +30,7 @@ val policies = listOf(
         action("type") isIn listOf("MODIFY", "DELETE")
         subject("id") equalTo resource("authorID")
     },
-    // A User must be be an Author to be able to create an article.
+    // A User must be an Author to be able to create an article.
     allOf {
         resource("type") equalTo "Article"
         action("type") equalTo "CREATE"
@@ -39,7 +39,7 @@ val policies = listOf(
 )
  ```
 
-Here we have a single `AllOf` policy for each one of our logical desired policies. These each define all of the
+Here we have a single `AllOf` policy for each one of our logical desired policies. These each define all the
 conditions that must be met to satisfy what we want logically.
 
 Now that we have our policies, we can enforce them.
@@ -56,7 +56,6 @@ Let us say we have the following business domain objects, and we are using the W
 provide easy conversion into Maps of attributes.
 
 ```kotlin
-
 data class User(
     val id: String
 ) : HasAttributes()

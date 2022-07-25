@@ -79,7 +79,6 @@ result of the evaluation will depend on:
 previous example.**
 
 ```kotlin
-
 val allowPolicies = listOf<Policy>(
     // Some set of policies
 )
@@ -127,5 +126,3 @@ val enforcementPointFromPolicies = EnforcementPointDefault(
     deny = denyPolicies
 )
 ```
-
-
