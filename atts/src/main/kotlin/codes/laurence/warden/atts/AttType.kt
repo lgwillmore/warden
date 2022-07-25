@@ -41,7 +41,7 @@ data class AttType(
     }
 
     /**
-     * Provides the [Atts] of this type with a single mapping from the typeKeyword to the type.
+     * Provides the [Atts] of this type with a single mapping from the [typeKeyword] to the [type].
      */
     override fun atts(): Atts {
         return mapOf(typeKeyword to type)

@@ -6,7 +6,8 @@ title: 'Home'
 > - Simple and expressive Policy based Authorization
 > - Decoupled from web frameworks
 
-![Build Status](https://github.com/lgwillmore/warden/actions/workflows/test.yml/badge.svg?branch=main) ![version](https://img.shields.io/github/v/tag/lgwillmore/warden?include_prereleases&label=release)
+![Build Status](https://github.com/lgwillmore/warden/actions/workflows/test.yml/badge.svg?branch=main) 
+![version](https://img.shields.io/github/v/tag/lgwillmore/warden?include_prereleases&label=release)
 
 ## What is Attribute Based Access Control?
 
@@ -57,7 +58,7 @@ systems, languages, frontend, backend. It also exposes Policies as business data
 
 ## Planned Features
 
-- Enforcement Point for Spring
+- Enforcement Point for Spring [#27](https://github.com/lgwillmore/warden/issues/27)
 - Tools for CRUDing persistent policies
 - Policy naming
-- More informative responses to allow insight into how a request was approved/denied
+- More informative responses to allow insight into how a request was approved/denied [#25](https://github.com/lgwillmore/warden/issues/25)

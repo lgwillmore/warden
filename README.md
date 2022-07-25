@@ -32,7 +32,7 @@ ABAC allows us to define access/deny policies based around any conceivable attri
 With policies defined using rules with access to this information we can then enforce our Policies in any part of a
 distributed system.
 
-You can find out more about the concepts involved here: [ABAC Overview]({{ link('ABAC Overview') }}).
+You can find out more about the concepts involved here: [ABAC Overview](./docs/src/orchid/resources/pages/abac.md).
 
 ## Advantages of ABAC
 
@@ -109,8 +109,8 @@ an Exception is thrown.
 `EnforcementPoint`s and `DecisionPoint`s both work on maps of attributes for subject, action, resource, environment.
 Maps allow for subsets of attributes as well as the merging of attributes.
 
-Let us say we have the following business domain objects, and we are using the Warden `HasAtts` helper class to
-provide easy conversion into Maps of attributes. You can read more on the `warden-atts`
+Let us say we have the following business domain objects, and we are using the Warden `HasAtts` helper class to provide
+easy conversion into Maps of attributes. You can read more on the `warden-atts`
 library [here](https://warden-kotlin.netlify.com/attributes).
 
 ```kotlin
@@ -170,6 +170,6 @@ repositories {
 
 dependencies {
     //ABAC
-    implementation("codes.laurence.warden:warden-core:0.2.0")
+    implementation("codes.laurence.warden:warden-core:0.3.0")
 }
 ```

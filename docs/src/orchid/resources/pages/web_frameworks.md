@@ -3,7 +3,7 @@ title: 'Web Framework Plugins'
 ---
 
 `Warden` is built to be portable with your business logic and not tightly coupled to any particular web framework. But,
-there are concerns for Authorization that are handled very well at an http layer.
+there are concerns for Authorization that are handled very well at a http layer.
 
 If you are serving content and functionality over http, you want to be sure that you have not accidentally left any
 unauthorized doors open.
@@ -64,7 +64,7 @@ fun Application.myWebApplication() {
             /* ----------
              The rest of your routing is wrapped by this block.
              
-             As long as you call the `EnforcementPointKtor` on every route and it allows access, the route will proceed normally.
+             As long as you call the `EnforcementPointKtor` on every route, and it allows access, the route will proceed normally.
              ------------*/
         }
     }
@@ -74,8 +74,8 @@ fun Application.myWebApplication() {
 
 ### Open non-enforced routes
 
-It is often the case that you have routes that do not need to be authorized and should be open. There are 2 ways to
-achieve this.
+It is often the case that you have routes that do not need to be authorized and should be open. 
+There are 2 ways to achieve this.
 
 The easiest is to use an `unwarded` routing block, as demonstrated below.
 
@@ -151,9 +151,3 @@ routing {
     }
 }
 ```
-
-
-
-
-
-
