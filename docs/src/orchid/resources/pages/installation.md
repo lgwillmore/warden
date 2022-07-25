@@ -11,6 +11,6 @@ repositories {
 
 dependencies {
     //ABAC
-    implementation("codes.laurence.warden:warden-core:0.1.0")
+    implementation("codes.laurence.warden:warden-core:0.3.0")
 }
 ```

@@ -109,19 +109,20 @@ an Exception is thrown.
 `EnforcementPoint`s and `DecisionPoint`s both work on maps of attributes for subject, action, resource, environment.
 Maps allow for subsets of attributes as well as the merging of attributes.
 
-Let us say we have the following business domain objects, and we are using the Warden `HasAttributes` helper class to
-provide easy conversion into Maps of attributes.
+Let us say we have the following business domain objects, and we are using the Warden `HasAtts` helper class to provide
+easy conversion into Maps of attributes. You can read more on the `warden-atts`
+library [here](https://warden-kotlin.netlify.com/attributes).
 
 ```kotlin
 
 data class User(
     val id: String
-) : HasAttributes()
+) : HasAtts()
 
 class Article(
     val id: String?,
     val authorID: String
-) : HasAttributes()
+) : HasAtts()
 ```
 
 We have our `User` and `Article`, now let us look at a Service layer function for reading an Article.
@@ -135,9 +136,9 @@ suspend fun readArticle(user: User, articleID: String): Article {
     // Check authorization with our EnforcementPoint
     enforcementPoint.enforceAuthorization(
         AccessRequest(
-            subject = user.attributes(),
+            subject = user.atts(),
             action = mapOf("type" to "READ"),
-            resource = article.attributes()
+            resource = article.atts()
         )
     )
     // return the article if execution was allowed to proceed.
@@ -169,6 +170,6 @@ repositories {
 
 dependencies {
     //ABAC
-    implementation("codes.laurence.warden:warden-core:0.1.0")
+    implementation("codes.laurence.warden:warden-core:0.3.0")
 }
 ```

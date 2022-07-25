@@ -4,7 +4,7 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import kotlin.test.Test
 
-internal class HasAttributesTest {
+internal class HasAttsTest {
 
     @Test
     fun attributes() {
@@ -70,7 +70,7 @@ internal class HasAttributesTest {
                 "nestedAtt" to source.primeChild.nestedAtt
             ),
         )
-        val actual = source.attributes()
+        val actual = source.atts()
         assertThat(actual).isEqualTo(expected)
     }
 }
