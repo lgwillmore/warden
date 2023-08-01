@@ -19,7 +19,7 @@ description = "Configuration for publishing to Sonatype Maven Central"
 // ORG_GRADLE_PROJECT_sonatypeRepositoryUsername=...
 // ORG_GRADLE_PROJECT_sonatypeRepositoryPassword=...
 val sonatypeRepositoryCredentials: Provider<Action<PasswordCredentials>> =
-    providers.credentialsAction("sonatypeRepository")
+    providers.credentialsAction("SONATYPE")
 
 val sonatypeRepositoryReleaseUrl: Provider<String> = provider {
     if (version.toString().endsWith("SNAPSHOT")) {
@@ -29,14 +29,10 @@ val sonatypeRepositoryReleaseUrl: Provider<String> = provider {
     }
 }
 
-val signingKeyId: Provider<String> =
-    providers.gradleProperty("signing.keyId")
 val signingKey: Provider<String> =
-    providers.gradleProperty("signing.key")
+    providers.environmentVariable("SONATYPE_SIGNING_KEY")
 val signingPassword: Provider<String> =
-    providers.gradleProperty("signing.password")
-val signingSecretKeyRingFile: Provider<String> =
-    providers.gradleProperty("signing.secretKeyRingFile")
+    providers.environmentVariable("SONATYPE_SIGNING_PASSWORD")
 
 
 tasks.withType<AbstractPublishToMaven>().configureEach {
@@ -54,42 +50,46 @@ afterEvaluate {
     // Register signatures afterEvaluate, otherwise the signing plugin creates the signing tasks
     // too early, before all the publications are added.
 
-    if (sonatypeRepositoryCredentials.isPresent()) {
+    if (listOf(signingKey.isPresent, signingPassword.isPresent).all { it }) {
         // Use .all { }, not .configureEach { }, otherwise the signing plugin doesn't create the
         // signing tasks soon enough.
+        println("Creating signing task")
         publishing.publications.withType<MavenPublication>().all {
             signing.sign(this)
             logger.lifecycle("configuring signature for publication ${this.name}")
         }
+    } else {
+        println("No signing task ${signingKey.isPresent} ${signingPassword.isPresent}")
     }
 }
 
 signing {
-    if (sonatypeRepositoryCredentials.isPresent()) {
-        if (signingKeyId.isPresent() && signingKey.isPresent() && signingPassword.isPresent()) {
-            useInMemoryPgpKeys(signingKeyId.get(), signingKey.get(), signingPassword.get())
-        } else {
-            useGpgCmd()
-        }
+    if (signingKey.isPresent && signingPassword.isPresent) {
+        println("Using in-memory PGP keys")
+        useInMemoryPgpKeys(signingKey.get(), signingPassword.get())
+    } else {
+        println("Using GPG command")
+        useGpgCmd()
     }
 }
 
 
 publishing {
-    if (sonatypeRepositoryCredentials.isPresent()) {
-        repositories {
+    repositories {
+        if (sonatypeRepositoryCredentials.isPresent) {
             maven(sonatypeRepositoryReleaseUrl) {
                 name = "sonatype"
                 credentials(sonatypeRepositoryCredentials.get())
             }
+        } else {
             // publish to local dir, for testing
             maven(rootProject.layout.buildDirectory.dir("maven-internal")) {
                 name = "LocalProjectDir"
             }
         }
-        publications.withType<MavenPublication>().configureEach {
-            createWardenPom()
-        }
+    }
+    publications.withType<MavenPublication>().configureEach {
+        createWardenPom()
     }
 }
 
@@ -138,7 +138,7 @@ fun Project.javadocStubTask(): Jar {
         }
     }
 
-    if (sonatypeRepositoryCredentials.isPresent()) {
+    if (listOf(signingKey.isPresent, signingPassword.isPresent).all { it }) {
         val signingTasks = signing.sign(javadocJarStub)
         tasks.withType<AbstractPublishToMaven>().configureEach {
             signingTasks.forEach { signingTask ->
@@ -148,4 +148,10 @@ fun Project.javadocStubTask(): Jar {
     }
 
     return javadocJarStub
+}
+
+tasks.register("checkEnvVars") {
+    doLast {
+        println("signingKeyId: ${System.getenv()["SONATYPE_SIGNING_KEY_ID"]}")
+    }
 }
