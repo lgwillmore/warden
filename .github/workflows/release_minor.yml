@@ -7,6 +7,11 @@ on:
 jobs:
   tag:
     runs-on: ubuntu-latest
+    env:
+      SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+      SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+      SONATYPE_SIGNING_PASSWORD: ${{ secrets.SONATYPE_SIGNING_PASSWORD }}
+      SONATYPE_SIGNING_KEY: ${{ secrets.SONATYPE_SIGNING_KEY }}
     steps:
       - name: bump
         uses: zwaldowski/semver-release-action@v2
@@ -21,9 +26,5 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - name: Publish Core
-        run: JFROG_USER='${{ secrets.JFROG_USER }}' JFROG_PASSWORD='${{ secrets.JFROG_PASSWORD }}' ./gradlew warden-core::artifactoryPublish
-      - name: Publish Ktor
-        run: JFROG_USER='${{ secrets.JFROG_USER }}' JFROG_PASSWORD='${{ secrets.JFROG_PASSWORD }}' ./gradlew warden-ktor::artifactoryPublish
-      - name: Publish atts
-        run: JFROG_USER='${{ secrets.JFROG_USER }}' JFROG_PASSWORD='${{ secrets.JFROG_PASSWORD }}' ./gradlew warden-atts::artifactoryPublish
+      - name: Publish
+        run: ./gradlew publish
