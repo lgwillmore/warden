@@ -53,8 +53,8 @@ fun MavenPublication.createWardenPom(
 fun ProviderFactory.credentialsAction(
     repositoryName: String
 ): Provider<Action<PasswordCredentials>> = zip(
-    gradleProperty("${repositoryName}Username"),
-    gradleProperty("${repositoryName}Password"),
+    environmentVariable("${repositoryName}_USERNAME"),
+    environmentVariable("${repositoryName}_PASSWORD"),
 ) { user, pass ->
     Action<PasswordCredentials> {
         username = user

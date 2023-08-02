@@ -2,7 +2,7 @@ import buildsrc.config.createWardenPom
 
 plugins {
     buildsrc.convention.`kotlin-jvm`
-    buildsrc.convention.`artifactory-publish`
+    buildsrc.convention.`sonatype-publish`
 }
 
 val mockkVersion: String by project
@@ -28,18 +28,6 @@ publishing {
     }
 }
 
-artifactory {
-    publish {
-        defaults {
-            publications("atts")
-        }
-    }
-}
-
 tasks.build.configure {
     dependsOn(tasks.kotlinSourcesJar)
-}
-
-tasks.artifactoryPublish.configure {
-    dependsOn(tasks.build)
 }
