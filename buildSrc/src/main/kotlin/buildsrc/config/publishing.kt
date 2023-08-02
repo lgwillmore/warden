@@ -11,10 +11,11 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
 
 fun MavenPublication.createWardenPom(
+    projectName: String,
     pomDescription: String = "https://github.com/lgwillmore/warden",
 ): Unit = pom {
-    // Note: Gradle will automatically set the POM 'group' and 'name' from the subproject group and name
-
+    // Note: Gradle will automatically set the POM 'group' and 'artifactId' from the subproject group and name
+    name.set(projectName)
     description.set(pomDescription)
     url.set("https://warden-kotlin.netlify.com/")
 

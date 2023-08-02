@@ -89,7 +89,9 @@ publishing {
         }
     }
     publications.withType<MavenPublication>().configureEach {
-        createWardenPom()
+        createWardenPom(
+            projectName = project.name,
+        )
     }
 }
 
@@ -150,8 +152,3 @@ fun Project.javadocStubTask(): Jar {
     return javadocJarStub
 }
 
-tasks.register("checkEnvVars") {
-    doLast {
-        println("signingKeyId: ${System.getenv()["SONATYPE_SIGNING_KEY_ID"]}")
-    }
-}

@@ -15,19 +15,3 @@ dependencies {
     testImplementation("com.willowtreeapps.assertk:assertk-jvm:$assertKVersion")
     testImplementation(kotlin("test"))
 }
-
-publishing {
-    publications {
-        create<MavenPublication>("atts") {
-            artifact(tasks.jar)
-            artifact(tasks.sourcesJar)
-            artifact(tasks.javadocJar)
-
-            createWardenPom()
-        }
-    }
-}
-
-tasks.build.configure {
-    dependsOn(tasks.kotlinSourcesJar)
-}
