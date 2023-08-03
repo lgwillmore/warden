@@ -1,8 +1,9 @@
 # Warden
 
 ![Build Status](https://github.com/lgwillmore/warden/actions/workflows/test.yml/badge.svg?branch=main)
-![version](https://img.shields.io/github/v/tag/lgwillmore/warden?include_prereleases&label=release)
+[![Maven Central](https://img.shields.io/maven-central/v/codes.laurence.warden/warden-core-jvm)](https://central.sonatype.com/artifact/codes.laurence.warden/warden-core-jvm)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/0d20e576-551e-42be-9e8c-66355d420603/deploy-status)](https://app.netlify.com/sites/warden-kotlin/deploys)
+
 
 > **Attribute Based Access Control for Kotlin**
 >
