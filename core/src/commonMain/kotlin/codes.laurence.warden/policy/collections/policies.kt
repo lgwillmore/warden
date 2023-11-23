@@ -19,9 +19,68 @@ open class CollectionBasedPolicy(val policies: MutableList<Policy>) {
             addToCollectionHandler(this)
         )
 
+    fun subject(arg0: AttributeReference, vararg pathRest: String) =
+        OperatorBuilder(
+            AttributeReference(AttributeType.SUBJECT, arg0, *pathRest),
+            addToCollectionHandler(this)
+        )
+
+    fun subject(arg0: String, arg1: AttributeReference, vararg pathRest: String) =
+        OperatorBuilder(
+            AttributeReference(AttributeType.SUBJECT, arg0, arg1, *pathRest),
+            addToCollectionHandler(this)
+        )
+
+    fun subject(arg0: String, arg1: String, arg2: AttributeReference, vararg pathRest: String) =
+        OperatorBuilder(
+            AttributeReference(AttributeType.SUBJECT, arg0, arg1, arg2, *pathRest),
+            addToCollectionHandler(this)
+        )
+
+    fun subject(
+        arg0: String,
+        arg1: String,
+        arg2: String,
+        arg3: AttributeReference,
+        vararg pathRest: String) =
+        OperatorBuilder(
+            AttributeReference(AttributeType.SUBJECT, arg0, arg1, arg2, arg3, *pathRest),
+            addToCollectionHandler(this)
+        )
+
     fun action(pathRoot: String, vararg pathRest: String) =
         OperatorBuilder(
             AttributeReference(AttributeType.ACTION, listOf(pathRoot) + pathRest.toList()),
+            addToCollectionHandler(this)
+        )
+
+    fun action(arg0: AttributeReference, vararg pathRest: String) =
+        OperatorBuilder(
+            AttributeReference(AttributeType.ACTION, arg0, *pathRest),
+            addToCollectionHandler(this)
+        )
+
+    fun action(arg0: String, arg1: AttributeReference, vararg pathRest: String) =
+        OperatorBuilder(
+            AttributeReference(AttributeType.ACTION, arg0, arg1, *pathRest),
+            addToCollectionHandler(this)
+        )
+
+    fun action(arg0: String, arg1: String, arg2: AttributeReference, vararg pathRest: String) =
+        OperatorBuilder(
+            AttributeReference(AttributeType.ACTION, arg0, arg1, arg2, *pathRest),
+            addToCollectionHandler(this)
+        )
+
+    fun action(
+        arg0: String,
+        arg1: String,
+        arg2: String,
+        arg3: AttributeReference,
+        vararg pathRest: String
+    ) =
+        OperatorBuilder(
+            AttributeReference(AttributeType.ACTION, arg0, arg1, arg2, arg3, *pathRest),
             addToCollectionHandler(this)
         )
 
@@ -31,9 +90,69 @@ open class CollectionBasedPolicy(val policies: MutableList<Policy>) {
             addToCollectionHandler(this)
         )
 
+    fun resource(arg0: AttributeReference, vararg pathRest: String) =
+        OperatorBuilder(
+            AttributeReference(AttributeType.RESOURCE, arg0, *pathRest),
+            addToCollectionHandler(this)
+        )
+
+    fun resource(arg0: String, arg1: AttributeReference, vararg pathRest: String) =
+        OperatorBuilder(
+            AttributeReference(AttributeType.RESOURCE, arg0, arg1, *pathRest),
+            addToCollectionHandler(this)
+        )
+
+    fun resource(arg0: String, arg1: String, arg2: AttributeReference, vararg pathRest: String) =
+        OperatorBuilder(
+            AttributeReference(AttributeType.RESOURCE, arg0, arg1, arg2, *pathRest),
+            addToCollectionHandler(this)
+        )
+
+    fun resource(
+        arg0: String,
+        arg1: String,
+        arg2: String,
+        arg3: AttributeReference,
+        vararg pathRest: String
+    ) =
+        OperatorBuilder(
+            AttributeReference(AttributeType.RESOURCE, arg0, arg1, arg2, arg3, *pathRest),
+            addToCollectionHandler(this)
+        )
+
     fun environment(pathRoot: String, vararg pathRest: String) =
         OperatorBuilder(
             AttributeReference(AttributeType.ENVIRONMENT, listOf(pathRoot) + pathRest.toList()),
+            addToCollectionHandler(this)
+        )
+
+    fun environment(arg0: AttributeReference, vararg pathRest: String) =
+        OperatorBuilder(
+            AttributeReference(AttributeType.ENVIRONMENT, arg0, *pathRest),
+            addToCollectionHandler(this)
+        )
+
+    fun environment(arg0: String, arg1: AttributeReference, vararg pathRest: String) =
+        OperatorBuilder(
+            AttributeReference(AttributeType.ENVIRONMENT, arg0, arg1, *pathRest),
+            addToCollectionHandler(this)
+        )
+
+    fun environment(arg0: String, arg1: String, arg2: AttributeReference, vararg pathRest: String) =
+        OperatorBuilder(
+            AttributeReference(AttributeType.ENVIRONMENT, arg0, arg1, arg2, *pathRest),
+            addToCollectionHandler(this)
+        )
+
+    fun environment(
+        arg0: String,
+        arg1: String,
+        arg2: String,
+        arg3: AttributeReference,
+        vararg pathRest: String
+    ) =
+        OperatorBuilder(
+            AttributeReference(AttributeType.ENVIRONMENT, arg0, arg1, arg2, arg3, *pathRest),
             addToCollectionHandler(this)
         )
 
