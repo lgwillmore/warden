@@ -170,6 +170,37 @@ fun AttributeReference(
     type, path.toPathSegments()
 )
 
+fun AttributeReference(
+    type: AttributeType,
+    arg0: AttributeReference, vararg pathRest: String
+) = AttributeReference(
+    type, listOf(AttributePathSegment.AReference(arg0)) + pathRest.toList().toPathSegments()
+)
+
+fun AttributeReference(
+    type: AttributeType,
+    arg0: String, arg1: AttributeReference, vararg pathRest: String
+) = AttributeReference(
+    type, listOf(arg0).toPathSegments() +
+        listOf(AttributePathSegment.AReference(arg1)) + pathRest.toList().toPathSegments()
+)
+
+fun AttributeReference(
+    type: AttributeType,
+    arg0: String, arg1: String, arg2: AttributeReference, vararg pathRest: String
+) = AttributeReference(
+    type, listOf(arg0, arg1).toPathSegments() +
+        listOf(AttributePathSegment.AReference(arg2)) + pathRest.toList().toPathSegments()
+)
+
+fun AttributeReference(
+    type: AttributeType,
+    arg0: String, arg1: String, arg2: String, arg3: AttributeReference, vararg pathRest: String
+) = AttributeReference(
+    type, listOf(arg0, arg1, arg2).toPathSegments() +
+        listOf(AttributePathSegment.AReference(arg3)) + pathRest.toList().toPathSegments()
+)
+
 data class AttributeReference(
     val type: AttributeType,
     val path: List<AttributePathSegment>
