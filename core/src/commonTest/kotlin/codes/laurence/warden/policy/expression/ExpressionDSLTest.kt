@@ -11,33 +11,33 @@ class ExpTest {
     fun `leftOperand - Subject`() {
         val key = "key1"
         val policy = Exp.subject(key) equalTo 1
-        assertLeftOperand(policy, AttributeType.SUBJECT, listOf(key))
+        assertLeftOperand(policy, AttributeType.SUBJECT, listOf(AString(key)))
     }
 
     @Test
     fun `leftOperand - Action`() {
         val key = "key2"
         val policy = Exp.action(key) equalTo 1
-        assertLeftOperand(policy, AttributeType.ACTION, listOf(key))
+        assertLeftOperand(policy, AttributeType.ACTION, listOf(AString(key)))
     }
 
     @Test
     fun `leftOperand - Resource`() {
         val key = "key2"
         val policy = Exp.resource(key) equalTo 1
-        assertLeftOperand(policy, AttributeType.RESOURCE, listOf(key))
+        assertLeftOperand(policy, AttributeType.RESOURCE, listOf(AString(key)))
     }
 
     @Test
     fun `leftOperand - Environment`() {
         val key = "key2"
         val policy = Exp.environment(key) equalTo 1
-        assertLeftOperand(policy, AttributeType.ENVIRONMENT, listOf(key))
+        assertLeftOperand(policy, AttributeType.ENVIRONMENT, listOf(AString(key)))
     }
 
     @Test
     fun `leftOperand - nested`() {
-        val expectedPath = listOf("key1", "key2")
+        val expectedPath = listOf(AString("key1"), AString("key2"))
         val policy = Exp.environment("key1", "key2") equalTo 1
         assertLeftOperand(policy, AttributeType.ENVIRONMENT, expectedPath)
     }
@@ -46,28 +46,28 @@ class ExpTest {
     fun `rightOperand - Subject`() {
         val key = "key1"
         val policy = Exp.subject("blah") equalTo subjectVal(key)
-        assertRightOperand(policy, AttributeType.SUBJECT, listOf(key))
+        assertRightOperand(policy, AttributeType.SUBJECT, listOf(AString(key)))
     }
 
     @Test
     fun `rightOperand - Action`() {
         val key = "key2"
         val policy = Exp.subject("blah") equalTo actionVal(key)
-        assertRightOperand(policy, AttributeType.ACTION, listOf(key))
+        assertRightOperand(policy, AttributeType.ACTION, listOf(AString(key)))
     }
 
     @Test
     fun `rightOperand - Resource`() {
         val key = "key2"
         val policy = Exp.subject("blah") equalTo resourceVal(key)
-        assertRightOperand(policy, AttributeType.RESOURCE, listOf(key))
+        assertRightOperand(policy, AttributeType.RESOURCE, listOf(AString(key)))
     }
 
     @Test
     fun `rightOperand - Environment`() {
         val key = "key2"
         val policy = Exp.subject("blah") equalTo environmentVal(key)
-        assertRightOperand(policy, AttributeType.ENVIRONMENT, listOf(key))
+        assertRightOperand(policy, AttributeType.ENVIRONMENT, listOf(AString(key)))
     }
 
     @Test
@@ -80,12 +80,12 @@ class ExpTest {
 
     @Test
     fun `rightOperand - nested`() {
-        val expectedPath = listOf("key1", "key2")
+        val expectedPath = listOf(AString("key1"), AString("key2"))
         val policy = Exp.subject("blah") equalTo environmentVal("key1", "key2")
         assertRightOperand(policy, AttributeType.ENVIRONMENT, expectedPath)
     }
 
-    private fun assertRightOperand(policy: ExpressionPolicy, expectedType: AttributeType, expectedPath: List<String>) {
+    private fun assertRightOperand(policy: ExpressionPolicy, expectedType: AttributeType, expectedPath: List<AttributePathSegment>) {
         val rightOperand = policy.rightOperand as AttributeReference
         assertThat(rightOperand.type).isEqualTo(expectedType)
         assertThat(rightOperand.path).isEqualTo(expectedPath)

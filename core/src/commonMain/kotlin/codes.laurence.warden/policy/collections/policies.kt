@@ -5,10 +5,7 @@ import codes.laurence.warden.policy.PolicyDSL
 import codes.laurence.warden.policy.bool.AllOf
 import codes.laurence.warden.policy.bool.AnyOf
 import codes.laurence.warden.policy.bool.Not
-import codes.laurence.warden.policy.expression.AttributeReference
-import codes.laurence.warden.policy.expression.AttributeType
-import codes.laurence.warden.policy.expression.OperatorBuilder
-import codes.laurence.warden.policy.expression.PolicyBuiltHandler
+import codes.laurence.warden.policy.expression.*
 
 @PolicyDSL
 open class CollectionBasedPolicy(val policies: MutableList<Policy>) {
@@ -70,3 +67,5 @@ private fun addToCollectionHandler(collection: CollectionBasedPolicy): PolicyBui
         collection.add(policy)
     }
 }
+
+fun List<String>.toPathSegments(): List<AttributePathSegment> = map { AttributePathSegment.AString(it) }

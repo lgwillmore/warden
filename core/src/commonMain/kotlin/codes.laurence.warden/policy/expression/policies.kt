@@ -5,6 +5,7 @@ import codes.laurence.warden.AccessRequest
 import codes.laurence.warden.AccessResponse
 import codes.laurence.warden.policy.Policy
 import codes.laurence.warden.policy.PolicyDSL
+import codes.laurence.warden.policy.collections.toPathSegments
 
 /**
  * A policy for building basic 2 operand expressions.
@@ -33,6 +34,7 @@ data class ExpressionPolicy(
                 OperatorType.GREATER_THAN_EQUAL,
                 OperatorType.LESS_THAN,
                 OperatorType.LESS_THAN_EQUAL -> checkComparable(left, right, operatorType)
+
                 OperatorType.IS_IN -> {
                     @Suppress("UNCHECKED_CAST")
                     try {
@@ -42,6 +44,7 @@ data class ExpressionPolicy(
                     }
                     right.contains(left)
                 }
+
                 OperatorType.CONTAINS -> {
                     @Suppress("UNCHECKED_CAST")
                     try {
@@ -51,6 +54,7 @@ data class ExpressionPolicy(
                     }
                     left.contains(right)
                 }
+
                 OperatorType.CONTAINS_ANY,
                 OperatorType.CONTAINS_ALL -> checkCollection(left, right, operatorType)
             }
@@ -131,12 +135,16 @@ data class PassThroughReference(val value: Any?) : ValueReference {
     }
 }
 
-internal fun getValueFromAttributes(path: List<String>, attributes: Map<*, *>): Any? {
+internal fun getValueFromAttributes(
+    path: List<AttributePathSegment>,
+    attributes: Map<*, *>,
+    request: AccessRequest
+): Any? {
     val pathQueue = path.toMutableList()
     var currentAttributeMap: Map<*, *> = attributes
     var currentLinkValue: Any? = null
     while (pathQueue.isNotEmpty()) {
-        val pathLink = pathQueue.removeFirst()
+        val pathLink = pathQueue.removeFirst().resolve(request)
         if (!currentAttributeMap.containsKey(pathLink)) {
             throw NoSuchAttributeException()
         }
@@ -147,6 +155,7 @@ internal fun getValueFromAttributes(path: List<String>, attributes: Map<*, *>): 
                 is Map<*, *> -> {
                     currentAttributeMap = currentLinkValue
                 }
+
                 else -> throw NoSuchAttributeException()
             }
         }
@@ -154,9 +163,16 @@ internal fun getValueFromAttributes(path: List<String>, attributes: Map<*, *>): 
     return currentLinkValue
 }
 
+fun AttributeReference(
+    type: AttributeType,
+    path: List<String>
+) = AttributeReference(
+    type, path.toPathSegments()
+)
+
 data class AttributeReference(
     val type: AttributeType,
-    val path: List<String>
+    val path: List<AttributePathSegment>
 ) : ValueReference {
 
     init {
@@ -171,9 +187,30 @@ data class AttributeReference(
                 AttributeType.ACTION -> accessRequest.action
                 AttributeType.RESOURCE -> accessRequest.resource
                 AttributeType.ENVIRONMENT -> accessRequest.environment
-            }
+            },
+            accessRequest
         )
     }
 }
 
 class NoSuchAttributeException : Exception()
+
+sealed class AttributePathSegment {
+    abstract fun resolve(request: AccessRequest): String?
+
+    data class AString(val value: String) : AttributePathSegment() {
+        override fun resolve(request: AccessRequest) = value
+    }
+
+    data class AReference(val value: AttributeReference) : AttributePathSegment() {
+        override fun resolve(request: AccessRequest): String? {
+            return when (val result = value.get(request)) {
+                is String -> result
+                else -> null
+            }
+        }
+    }
+}
+
+fun AString(value: String) = AttributePathSegment.AString(value)
+fun AReference(value: AttributeReference) = AttributePathSegment.AReference(value)

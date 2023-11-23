@@ -5,6 +5,7 @@ import codes.laurence.warden.AccessRequest
 import codes.laurence.warden.AccessResponse
 import codes.laurence.warden.policy.Policy
 import codes.laurence.warden.policy.PolicyDSL
+import codes.laurence.warden.policy.collections.toPathSegments
 import codes.laurence.warden.policy.expression.*
 
 interface MemberPolicy {
@@ -120,8 +121,12 @@ class ForAllMembersPolicy(
 
 class InvalidMemberException(message: String) : Exception(message)
 
+fun MemberAttributeReference(
+    path: List<String>
+): MemberAttributeReference = MemberAttributeReference(path.toPathSegments())
+
 data class MemberAttributeReference(
-    val path: List<String>
+    val path: List<AttributePathSegment>
 ) : ValueReference {
 
     init {
@@ -133,7 +138,8 @@ data class MemberAttributeReference(
     override fun get(accessRequest: AccessRequest): Any? {
         return getValueFromAttributes(
             path,
-            member ?: throw IllegalStateException("Member must be set before getting")
+            member ?: throw IllegalStateException("Member must be set before getting"),
+            accessRequest
         )
     }
 }

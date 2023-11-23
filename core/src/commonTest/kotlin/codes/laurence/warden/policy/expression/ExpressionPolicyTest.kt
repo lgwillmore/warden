@@ -288,7 +288,7 @@ class AttributeReferenceTest {
         try {
             AttributeReference(
                 type = AttributeType.values().random(),
-                path = emptyList()
+                path = emptyList<String>()
             )
         } catch (e: Exception) {
             assertThat(e).isInstanceOf(IllegalArgumentException::class)

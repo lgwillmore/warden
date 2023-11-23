@@ -457,7 +457,7 @@ class MemberAttributeReferenceTest {
     fun `cannot instantiate with empty list`() {
         try {
             MemberAttributeReference(
-                path = emptyList()
+                path = emptyList<String>()
             )
         } catch (e: Exception) {
             assertThat(e).isInstanceOf(IllegalArgumentException::class)

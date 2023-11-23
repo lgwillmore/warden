@@ -4,6 +4,7 @@ import assertk.assertThat
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotEmpty
 import codes.laurence.warden.policy.*
+import codes.laurence.warden.policy.expression.AString
 import codes.laurence.warden.policy.expression.AttributeType
 import codes.laurence.warden.policy.expression.ExpressionPolicy
 import kotlin.test.Test
@@ -14,28 +15,28 @@ class CollectionBasedBuildersTest {
     fun `leftOperand - Subject`() {
         val key = "key1"
         val policy = anyOf { subject(key) equalTo 1 }
-        assertLeftOperand(policy.policies[0] as ExpressionPolicy, AttributeType.SUBJECT, listOf(key))
+        assertLeftOperand(policy.policies[0] as ExpressionPolicy, AttributeType.SUBJECT, listOf(AString(key)))
     }
 
     @Test
     fun `leftOperand - Action`() {
         val key = "key1"
         val policy = anyOf { action(key) equalTo 1 }
-        assertLeftOperand(policy.policies[0] as ExpressionPolicy, AttributeType.ACTION, listOf(key))
+        assertLeftOperand(policy.policies[0] as ExpressionPolicy, AttributeType.ACTION, listOf(AString(key)))
     }
 
     @Test
     fun `leftOperand - Resource`() {
         val key = "key1"
         val policy = allOf { resource(key) equalTo 1 }
-        assertLeftOperand(policy.policies[0] as ExpressionPolicy, AttributeType.RESOURCE, listOf(key))
+        assertLeftOperand(policy.policies[0] as ExpressionPolicy, AttributeType.RESOURCE, listOf(AString(key)))
     }
 
     @Test
     fun `leftOperand - Environment`() {
         val key = "key1"
         val policy = allOf { environment(key) equalTo 1 }
-        assertLeftOperand(policy.policies[0] as ExpressionPolicy, AttributeType.ENVIRONMENT, listOf(key))
+        assertLeftOperand(policy.policies[0] as ExpressionPolicy, AttributeType.ENVIRONMENT, listOf(AString(key)))
     }
 
     @Test
