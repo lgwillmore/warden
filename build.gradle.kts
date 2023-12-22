@@ -1,5 +1,6 @@
 plugins {
     id("com.palantir.git-version") version "0.12.3"
+    id("com.google.devtools.ksp") apply false
     buildsrc.convention.ktlint
 }
 
@@ -15,6 +16,6 @@ ktlint {
 }
 
 tasks.wrapper {
-    gradleVersion = "7.4.2"
+    gradleVersion = "8.5"
     distributionType = Wrapper.DistributionType.ALL
 }

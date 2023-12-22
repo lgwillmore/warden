@@ -7,6 +7,7 @@ dependencyResolutionManagement {
         jcenter()
         mavenCentral()
         gradlePluginPortal()
+        google()
     }
 
     pluginManagement {
@@ -14,6 +15,11 @@ dependencyResolutionManagement {
             jcenter()
             gradlePluginPortal()
             mavenCentral()
+            google()
+        }
+
+        plugins {
+            id("com.google.devtools.ksp") version "1.9.10-1.0.13" apply false
         }
     }
 }

@@ -1,22 +1,27 @@
 package codes.laurence.warden.test
 
-import assertk.assertThat
-import assertk.assertions.isEqualTo
-import assertk.assertions.isInstanceOf
 import codes.laurence.warden.Access
 import codes.laurence.warden.AccessRequest
 import codes.laurence.warden.AccessResponse
+import kotlin.test.assertEquals
+import kotlin.test.assertIs
 
-fun assertDenied(response: AccessResponse, expectedRequest: AccessRequest? = null) {
-    assertThat(response.access).isInstanceOf(Access.Denied::class)
+fun assertDenied(
+    response: AccessResponse,
+    expectedRequest: AccessRequest? = null,
+) {
+    assertIs<Access.Denied>(response.access)
     expectedRequest?.let {
-        assertThat(response.request).isEqualTo(expectedRequest)
+        assertEquals(expectedRequest, response.request)
     }
 }
 
-fun assertGranted(response: AccessResponse, expectedRequest: AccessRequest? = null) {
-    assertThat(response.access).isInstanceOf(Access.Granted::class)
+fun assertGranted(
+    response: AccessResponse,
+    expectedRequest: AccessRequest? = null,
+) {
+    assertIs<Access.Granted>(response.access)
     expectedRequest?.let {
-        assertThat(response.request).isEqualTo(expectedRequest)
+        assertEquals(expectedRequest, response.request)
     }
 }
