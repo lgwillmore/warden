@@ -4,33 +4,51 @@ import codes.laurence.warden.Access
 import codes.laurence.warden.AccessRequest
 import codes.laurence.warden.AccessResponse
 import codes.laurence.warden.policy.Policy
-import io.mockk.every
-import io.mockk.mockk
+import io.mockative.Mock
+import io.mockative.classOf
+import io.mockative.every
+import io.mockative.mock
+import kotlinx.coroutines.runBlocking
+import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-val accessRequest = AccessRequest().copy(
-    action = mapOf("foo" to "bar")
-)
-val willAuthorizePolicy = mockk<Policy> {
-    every { checkAuthorized(accessRequest) } returns AccessResponse(Access.Granted(), accessRequest)
-}
+val accessRequest =
+    AccessRequest().copy(
+        action = mapOf("foo" to "bar"),
+    )
+
+@Mock
+val willAuthorizePolicy = mock(classOf<Policy>())
 val denial = AccessResponse(Access.Denied(mapOf("arbitrary" to "denial")), accessRequest)
 val granted = AccessResponse(Access.Granted(), accessRequest)
-val willNotAuthorizePolicy = mockk<Policy> {
-    every { checkAuthorized(accessRequest) } returns denial
-}
+
+@Mock
+val willNotAuthorizePolicy = mock(classOf<Policy>())
 
 class AllOfTest {
+
+    @BeforeTest
+    fun beforeEachTest() =
+        runBlocking {
+            every { willAuthorizePolicy.checkAuthorized(accessRequest) }.returns(
+                AccessResponse(
+                    Access.Granted(),
+                    accessRequest,
+                ),
+            )
+
+            every { willNotAuthorizePolicy.checkAuthorized(accessRequest) }.returns(denial)
+        }
 
     @Test
     fun checkAuthorized_emptyPolicies() {
         assertEquals(
             AccessResponse(
                 access = Access.Denied(),
-                request = accessRequest
+                request = accessRequest,
             ),
-            AllOf().checkAuthorized(accessRequest)
+            AllOf().checkAuthorized(accessRequest),
         )
     }
 
@@ -42,8 +60,8 @@ class AllOfTest {
                 willAuthorizePolicy,
                 willAuthorizePolicy,
                 willNotAuthorizePolicy,
-                willAuthorizePolicy
-            ).checkAuthorized(accessRequest)
+                willAuthorizePolicy,
+            ).checkAuthorized(accessRequest),
         )
     }
 
@@ -54,8 +72,8 @@ class AllOfTest {
             AllOf(
                 willAuthorizePolicy,
                 willAuthorizePolicy,
-                willAuthorizePolicy
-            ).checkAuthorized(accessRequest)
+                willAuthorizePolicy,
+            ).checkAuthorized(accessRequest),
         )
     }
 
@@ -66,22 +84,21 @@ class AllOfTest {
             AllOf(
                 willNotAuthorizePolicy,
                 willNotAuthorizePolicy,
-                willNotAuthorizePolicy
-            ).checkAuthorized(accessRequest)
+                willNotAuthorizePolicy,
+            ).checkAuthorized(accessRequest),
         )
     }
 }
 
 class AnyOfTest {
-
     @Test
     fun checkAuthorized_emptyPolicies() {
         assertEquals(
             AccessResponse(
                 access = Access.Denied(),
-                request = accessRequest
+                request = accessRequest,
             ),
-            AnyOf().checkAuthorized(accessRequest)
+            AnyOf().checkAuthorized(accessRequest),
         )
     }
 
@@ -93,8 +110,8 @@ class AnyOfTest {
                 willAuthorizePolicy,
                 willAuthorizePolicy,
                 willNotAuthorizePolicy,
-                willAuthorizePolicy
-            ).checkAuthorized(accessRequest)
+                willAuthorizePolicy,
+            ).checkAuthorized(accessRequest),
         )
     }
 
@@ -105,8 +122,8 @@ class AnyOfTest {
             AnyOf(
                 willAuthorizePolicy,
                 willAuthorizePolicy,
-                willAuthorizePolicy
-            ).checkAuthorized(accessRequest)
+                willAuthorizePolicy,
+            ).checkAuthorized(accessRequest),
         )
     }
 
@@ -115,24 +132,23 @@ class AnyOfTest {
         assertEquals(
             AccessResponse(
                 access = Access.Denied(),
-                request = accessRequest
+                request = accessRequest,
             ),
             AnyOf(
                 willNotAuthorizePolicy,
                 willNotAuthorizePolicy,
-                willNotAuthorizePolicy
-            ).checkAuthorized(accessRequest)
+                willNotAuthorizePolicy,
+            ).checkAuthorized(accessRequest),
         )
     }
 }
 
 class NotTest {
-
     @Test
     fun checkAuthorized_isWhenInnerIsNot() {
         assertEquals(
             denial.copy(access = Access.Granted()),
-            Not(willNotAuthorizePolicy).checkAuthorized(accessRequest)
+            Not(willNotAuthorizePolicy).checkAuthorized(accessRequest),
         )
     }
 
@@ -140,7 +156,7 @@ class NotTest {
     fun checkAuthorized_isNotWhenInnerIs() {
         assertEquals(
             granted.copy(access = Access.Denied()),
-            Not(willAuthorizePolicy).checkAuthorized(accessRequest)
+            Not(willAuthorizePolicy).checkAuthorized(accessRequest),
         )
     }
 }

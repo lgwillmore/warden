@@ -1,33 +1,40 @@
 package codes.laurence.warden.information
 
-import assertk.assertThat
-import assertk.assertions.isSameAs
 import codes.laurence.warden.coroutines.runBlockingTest
 import codes.laurence.warden.test.accessRequestFixture
-import io.mockk.coEvery
-import io.mockk.mockk
+import io.mockative.Mock
+import io.mockative.classOf
+import io.mockative.coEvery
+import io.mockative.mock
 import kotlin.test.Test
+import kotlin.test.assertSame
 
 class InformationPointAggregateTest {
 
+    @Mock
+    val informationPoint1Mock = mock(classOf<InformationPoint>())
+
+    @Mock
+    val informationPoint2Mock = mock(classOf<InformationPoint>())
+
     @Test
-    fun enrich() = runBlockingTest {
-        val originalRequest = accessRequestFixture()
-        val enrichedBy1Request = accessRequestFixture()
-        val enrichedBy2Request = accessRequestFixture()
+    fun enrich() =
+        runBlockingTest {
+            val originalRequest = accessRequestFixture()
+            val enrichedBy1Request = accessRequestFixture()
+            val enrichedBy2Request = accessRequestFixture()
 
-        val informationPoint1Mock = mockk<InformationPoint> {
-            coEvery { enrich(originalRequest) } returns enrichedBy1Request
+            coEvery { informationPoint1Mock.enrich(originalRequest) }.returns(enrichedBy1Request)
+
+            coEvery { informationPoint2Mock.enrich(enrichedBy1Request) }.returns(enrichedBy2Request)
+
+            val testObj =
+                InformationPointAggregate(
+                    listOf(informationPoint1Mock, informationPoint2Mock),
+                )
+
+            val actual = testObj.enrich(originalRequest)
+
+            assertSame(enrichedBy2Request, actual)
         }
-        val informationPoint2Mock = mockk<InformationPoint> {
-            coEvery { enrich(enrichedBy1Request) } returns enrichedBy2Request
-        }
-        val testObj = InformationPointAggregate(
-            listOf(informationPoint1Mock, informationPoint2Mock)
-        )
-
-        val actual = testObj.enrich(originalRequest)
-
-        assertThat(actual).isSameAs(enrichedBy2Request)
-    }
 }
