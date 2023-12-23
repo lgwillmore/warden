@@ -9,14 +9,14 @@ kotlin {
     targets.all {
         compilations.all {
             kotlinOptions {
-                languageVersion = "1.6"
-                apiVersion = "1.6"
+                languageVersion = "1.9"
+                apiVersion = "1.9"
             }
         }
     }
     jvm {
         compilations.all {
-            kotlinOptions.jvmTarget = "1.8"
+            kotlinOptions.jvmTarget = "17"
         }
     }
 }

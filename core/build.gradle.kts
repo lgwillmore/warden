@@ -9,12 +9,17 @@ val mockkVersion: String by project
 val mockativeVersion: String by project
 val kotlinVersion: String by project
 
+val isMac = System.getProperty("os.name").contains("Mac")
+
 kotlin {
     targetHierarchy.default()
 
     jvm()
-    iosArm64()
-    iosSimulatorArm64()
+    if(isMac){
+        iosArm64()
+        iosSimulatorArm64()
+    }
+
 
     sourceSets {
         val commonMain by getting {
@@ -42,13 +47,16 @@ kotlin {
             }
         }
 
-        val nativeMain by getting {
-            dependsOn(commonMain)
+        if (isMac) {
+            val nativeMain by getting {
+                dependsOn(commonMain)
+            }
+
+            val nativeTest by getting {
+                dependsOn(commonTest)
+            }
         }
 
-        val nativeTest by getting {
-            dependsOn(commonTest)
-        }
     }
 }
 
