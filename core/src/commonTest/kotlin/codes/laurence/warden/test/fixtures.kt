@@ -10,7 +10,7 @@ fun expressionPolicyFixture(): ExpressionPolicy {
     return ExpressionPolicy(
         leftOperand = valueReferenceFixture(),
         operatorType = randEnum(),
-        rightOperand = valueReferenceFixture()
+        rightOperand = valueReferenceFixture(),
     )
 }
 
@@ -18,9 +18,9 @@ fun valueReferenceFixture(): ValueReference {
     return listOf(
         AttributeReference(
             type = randEnum(),
-            path = listOf(randString())
+            path = listOf(randString()),
         ),
-        PassThroughReference(randString())
+        PassThroughReference(randString()),
     ).random()
 }
 

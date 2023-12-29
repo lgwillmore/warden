@@ -1,34 +1,43 @@
 plugins {
     buildsrc.convention.`kotlin-multiplatform`
     buildsrc.convention.`sonatype-publish`
+    id("com.google.devtools.ksp")
 }
 
 val assertKVersion: String by project
 val mockkVersion: String by project
+val mockativeVersion: String by project
 val kotlinVersion: String by project
 
+val isMac = System.getProperty("os.name").contains("Mac")
+
 kotlin {
+    targetHierarchy.default()
 
     jvm()
+    if(isMac){
+        iosArm64()
+        iosSimulatorArm64()
+    }
+
 
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.3")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
             }
         }
         val commonTest by getting {
             dependencies {
+                implementation(kotlin("test-junit"))
                 implementation(kotlin("test"))
-                implementation("io.mockk:mockk:$mockkVersion")
-                implementation("com.willowtreeapps.assertk:assertk:$assertKVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+                implementation("io.mockative:mockative:$mockativeVersion")
             }
         }
 
         val jvmMain by getting {
-            // Default source set for JVM-specific sources and dependencies:
-            dependencies {
-            }
+            dependsOn(commonMain)
         }
 
         val jvmTest by getting {
@@ -37,5 +46,36 @@ kotlin {
                 implementation(kotlin("test-junit"))
             }
         }
+
+        if (isMac) {
+            val nativeMain by getting {
+                dependsOn(commonMain)
+            }
+
+            val nativeTest by getting {
+                dependsOn(commonTest)
+            }
+        }
+
     }
 }
+
+dependencies {
+    configurations
+        .filter { it.name.startsWith("ksp") && it.name.contains("Test") }
+        .forEach {
+            add(it.name, "io.mockative:mockative-processor:$mockativeVersion")
+        }
+}
+
+ktlint {
+    filter {
+        include { element ->
+            element.file.extension in setOf("kt", "kts")
+        }
+        exclude { element ->
+            element.file.path.contains("generated") || element.file.name == "build.gradle.kts"
+        }
+    }
+}
+

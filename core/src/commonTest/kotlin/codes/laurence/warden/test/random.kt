@@ -17,15 +17,24 @@ fun <T> MutableList<T>.randomPop(): T {
     return removeAt(random.nextInt(this.size))
 }
 
-fun randRange(min: Double, max: Double): Double {
+fun randRange(
+    min: Double,
+    max: Double,
+): Double {
     return min + (max - min) * random.nextDouble()
 }
 
-fun randRange(min: Int, max: Int): Int {
+fun randRange(
+    min: Int,
+    max: Int,
+): Int {
     return random.nextInt(max - min) + min
 }
 
-fun randRange(min: Long, max: Long): Long {
+fun randRange(
+    min: Long,
+    max: Long,
+): Long {
     return (min + (max - min) * random.nextDouble()).toLong()
 }
 
