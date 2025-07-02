@@ -10,7 +10,7 @@
 > - Simple and expressive Policy based Authorization
 > - Decoupled from web frameworks
 
-**[FULL DOCUMENTATION](https://warden-kotlin.netlify.com/)**
+**[FULL DOCUMENTATION](https://warden-kotlin.netlify.app/)**
 
 **Contents**
 
