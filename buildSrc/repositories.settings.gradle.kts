@@ -4,17 +4,17 @@
 dependencyResolutionManagement {
 
     repositories {
-        jcenter()
         mavenCentral()
+        jcenter()
         gradlePluginPortal()
         google()
     }
 
     pluginManagement {
         repositories {
+            mavenCentral()
             jcenter()
             gradlePluginPortal()
-            mavenCentral()
             google()
         }
 

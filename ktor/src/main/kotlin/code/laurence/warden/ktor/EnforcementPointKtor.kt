@@ -9,7 +9,6 @@ import codes.laurence.warden.enforce.EnforcementPointDefault
 import codes.laurence.warden.policy.Policy
 import kotlinx.coroutines.currentCoroutineContext
 import org.slf4j.LoggerFactory
-import kotlin.coroutines.coroutineContext
 
 /**
  * An [EnforcementPoint] that works with the Ktor [Warden] feature.
