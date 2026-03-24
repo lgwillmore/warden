@@ -40,3 +40,7 @@ orchid {
         else                                              -> "http://localhost:8080"
     }
 }
+
+tasks.check {
+    dependsOn(tasks.named("orchidBuild"))
+}
