@@ -15,6 +15,10 @@ ktlint {
     }
 }
 
+tasks.check {
+    dependsOn(subprojects.map { it.tasks.named("check") })
+}
+
 tasks.wrapper {
     gradleVersion = "8.5"
     distributionType = Wrapper.DistributionType.ALL

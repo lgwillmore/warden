@@ -2,11 +2,11 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     `kotlin-dsl`
-    kotlin("jvm") version "1.9.10"
+    kotlin("jvm") version "2.1.0"
 }
 
 // set the versions of Gradle plugins that the subprojects will use here
-val kotlinPluginVersion: String = "1.9.10"
+val kotlinPluginVersion: String = "2.1.0"
 val artifactoryPluginVersion: String = "4.28.4"
 val orchidPluginVersion: String = "0.21.1"
 val ktlintPluginVersion: String = "10.3.0"

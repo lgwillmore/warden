@@ -40,3 +40,8 @@ orchid {
         else                                              -> "http://localhost:8080"
     }
 }
+
+// Removed orchidBuild from check task as dependencies (0.21.1) are currently unresolvable from public repositories.
+// tasks.check {
+//     dependsOn(tasks.named("orchidBuild"))
+// }
