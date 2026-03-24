@@ -11,13 +11,23 @@ import kotlin.coroutines.coroutineContext
 /**
  * Provides context for any nested calls to a [EnforcementPointKtor] to be registered and allow the call to return successfully if access is granted.
  */
-suspend fun PipelineContext<Unit, ApplicationCall>.warded(
+@JvmName("wardedCallGeneric")
+suspend fun PipelineContext<Unit, Any>.wardedCall(
+    bodyOfCall: suspend PipelineContext<Unit, Any>.() -> Unit
+) {
+    val wardenContext = enter(this.context as ApplicationCall)
+    withContext(wardenContext) {
+        bodyOfCall()
+    }
+    exit(wardenContext)
+}
+
+suspend fun PipelineContext<Unit, ApplicationCall>.wardedCall(
     bodyOfCall: suspend PipelineContext<Unit, ApplicationCall>.() -> Unit
 ) {
-    val pipeline = this
     val wardenContext = enter(this.call)
     withContext(wardenContext) {
-        pipeline.bodyOfCall()
+        bodyOfCall()
     }
     exit(wardenContext)
 }
@@ -25,7 +35,15 @@ suspend fun PipelineContext<Unit, ApplicationCall>.warded(
 /**
  * Allow this call to respond without enforcing authorization.
  */
-suspend fun PipelineContext<Unit, ApplicationCall>.unwarded(
+@JvmName("unwardedCallGeneric")
+suspend fun PipelineContext<Unit, Any>.unwardedCall(
+    bodyOfCall: suspend PipelineContext<Unit, Any>.() -> Unit
+) {
+    (this.context as ApplicationCall).attributes.put(Warden.WARDEN_IGNORED, true)
+    this.bodyOfCall()
+}
+
+suspend fun PipelineContext<Unit, ApplicationCall>.unwardedCall(
     bodyOfCall: suspend PipelineContext<Unit, ApplicationCall>.() -> Unit
 ) {
     call.attributes.put(Warden.WARDEN_IGNORED, true)
@@ -39,14 +57,14 @@ fun Route.warded(
     callback: Route.() -> Unit
 ): Route {
     // With createChild, we create a child node for this received Route
-    val wardedRoute = this.createChild(object : RouteSelector(1.0) {
-        override fun evaluate(context: RoutingResolveContext, segmentIndex: Int): RouteSelectorEvaluation =
+    val wardedRoute = this.createChild(object : RouteSelector() {
+        override suspend fun evaluate(context: RoutingResolveContext, segmentIndex: Int): RouteSelectorEvaluation =
             RouteSelectorEvaluation.Constant
     })
 
     // Intercepts calls from this route at the features step
-    wardedRoute.intercept(ApplicationCallPipeline.Call) {
-        val wardenContext = enter(this.call)
+    wardedRoute.intercept(ApplicationCallPipeline.Call) { _ ->
+        val wardenContext = enter(this.context as ApplicationCall)
         withContext(wardenContext) {
             proceed()
         }
@@ -66,14 +84,14 @@ fun Route.unwarded(
     callback: Route.() -> Unit
 ): Route {
     // With createChild, we create a child node for this received Route
-    val unWardedRoute = this.createChild(object : RouteSelector(1.0) {
-        override fun evaluate(context: RoutingResolveContext, segmentIndex: Int): RouteSelectorEvaluation =
+    val unWardedRoute = this.createChild(object : RouteSelector() {
+        override suspend fun evaluate(context: RoutingResolveContext, segmentIndex: Int): RouteSelectorEvaluation =
             RouteSelectorEvaluation.Constant
     })
 
     // Intercepts calls from this route at the features step
-    unWardedRoute.intercept(ApplicationCallPipeline.Call) {
-        this.call.attributes.put(Warden.WARDEN_IGNORED, true)
+    unWardedRoute.intercept(ApplicationCallPipeline.Call) { _ ->
+        (this.context as ApplicationCall).attributes.put(Warden.WARDEN_IGNORED, true)
         proceed()
     }
 
@@ -93,14 +111,14 @@ fun Route.beforeEach(
     callback: Route.() -> Unit
 ): Route {
     // With createChild, we create a child node for this received Route
-    val beforeEndpointRoute = this.createChild(object : RouteSelector(1.0) {
-        override fun evaluate(context: RoutingResolveContext, segmentIndex: Int): RouteSelectorEvaluation =
+    val beforeEndpointRoute = this.createChild(object : RouteSelector() {
+        override suspend fun evaluate(context: RoutingResolveContext, segmentIndex: Int): RouteSelectorEvaluation =
             RouteSelectorEvaluation.Constant
     })
 
     // Intercepts calls from this route at the features step
-    beforeEndpointRoute.intercept(ApplicationCallPipeline.Call) {
-        this.before()
+    beforeEndpointRoute.intercept(ApplicationCallPipeline.Call) { _ ->
+        (this as PipelineContext<Unit, ApplicationCall>).before()
         proceed()
     }
 
@@ -110,23 +128,14 @@ fun Route.beforeEach(
     return beforeEndpointRoute
 }
 
+internal class WardenCoroutineContext(val call: ApplicationCall) : AbstractCoroutineContextElement(WardenCoroutineContext) {
+    companion object Key : CoroutineContext.Key<WardenCoroutineContext>
+}
+
 internal suspend fun enter(call: ApplicationCall): CoroutineContext {
-    var context = coroutineContext
-    val wardenCall = WardenKtorCall(call)
-    context = context.plus(wardenCall)
-    return context
+    return coroutineContext + WardenCoroutineContext(call)
 }
 
 internal fun exit(context: CoroutineContext) {
-    val wardenCall = context[WardenKtorCall.Key]
-        ?: throw Exception("This should never be called before ensuring wardenCall present")
-    wardenCall.call = null
-}
-
-internal class WardenKtorCall(var call: ApplicationCall?) : AbstractCoroutineContextElement(WardenKtorCall) {
-    /**
-     * Key for [CoroutineActorStateStack] instance in the coroutine context.
-     */
-    companion object Key :
-        CoroutineContext.Key<WardenKtorCall>
+    // No-op
 }

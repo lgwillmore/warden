@@ -73,7 +73,7 @@ class Warden(config: WardenConfiguration) {
             val config = WardenConfiguration().apply(configure)
             val warden = Warden(config)
 
-            pipeline.sendPipeline.intercept(ApplicationSendPipeline.After) {
+            pipeline.sendPipeline.intercept(ApplicationSendPipeline.After) { subject ->
                 val configIgnored = when (evaluateRoute(warden.routeStack, call.request.uri, call.request.httpMethod)) {
                     WardenRouteBehaviour.ENFORCE -> false
                     WardenRouteBehaviour.IGNORE -> true

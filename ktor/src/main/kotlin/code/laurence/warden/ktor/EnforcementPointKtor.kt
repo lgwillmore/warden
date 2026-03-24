@@ -7,6 +7,7 @@ import codes.laurence.warden.decision.DecisionPoint
 import codes.laurence.warden.enforce.EnforcementPoint
 import codes.laurence.warden.enforce.EnforcementPointDefault
 import codes.laurence.warden.policy.Policy
+import kotlinx.coroutines.currentCoroutineContext
 import org.slf4j.LoggerFactory
 import kotlin.coroutines.coroutineContext
 
@@ -37,7 +38,7 @@ class EnforcementPointKtor(internalEnforcementPoint: EnforcementPoint) : Enforce
     }
 
     private suspend fun interactWithPlugin() {
-        val call = coroutineContext[WardenKtorCall.Key]?.call
+        val call = currentCoroutineContext()[WardenCoroutineContext]?.call
         if (call == null) {
             logger.debug("Being enforced outside of a `wardenCall` block. Cannot communicate with Warden ktor plugin")
         } else {
