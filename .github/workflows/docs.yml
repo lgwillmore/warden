@@ -1,0 +1,74 @@
+name: Docs
+
+on:
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+  workflow_call: # the Release workflow publishes the docs for each release
+
+permissions:
+  contents: read
+
+env:
+  # <Writerside module directory under docs/>/<instance id in warden.tree>
+  INSTANCE: guides/warden
+  ARTIFACT: webHelpWARDEN2-all.zip
+  WRITERSIDE_VERSION: 2026.10.0423
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # the guides show the latest release tag
+      - name: Set the documented version
+        run: |
+          latest=$(git tag --list --sort=-v:refname | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | head -n 1 || true)
+          if [ -n "$latest" ]; then
+            sed -i -E "s|(name=\"warden_version\" value=\")[^\"]*|\1$latest|" docs/guides/v.list
+          fi
+          grep warden_version docs/guides/v.list
+      - name: Build the guides
+        uses: JetBrains/writerside-github-action@v4
+        with:
+          location: docs
+          instance: ${{ env.INSTANCE }}
+          artifact: ${{ env.ARTIFACT }}
+          docker-version: ${{ env.WRITERSIDE_VERSION }}
+      - name: Fail on broken links and other guide errors
+        uses: JetBrains/writerside-checker-action@v1
+        with:
+          instance: ${{ env.INSTANCE }}
+      - name: Set up JDK 17
+        uses: actions/setup-java@v6
+        with:
+          java-version: 17
+          distribution: temurin
+      - uses: gradle/actions/setup-gradle@v5
+      - name: Build the API reference
+        run: ./gradlew dokkaGenerate
+      - name: Assemble the site
+        run: |
+          unzip -q "artifacts/$ARTIFACT" -d site
+          cp -r build/dokka/html site/api
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: site
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5

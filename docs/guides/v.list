@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE vars SYSTEM "https://resources.jetbrains.com/writerside/1.0/vars.dtd">
+<vars>
+    <!-- The docs workflow replaces this with the latest release tag before building. -->
+    <var name="warden_version" value="0.4.0"/>
+</vars>

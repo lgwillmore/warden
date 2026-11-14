@@ -1,0 +1,88 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: Version part to bump from the latest release tag
+        type: choice
+        options: [ patch, minor, major ]
+        default: minor
+        required: true
+
+# Each release computes its version from the tags earlier releases pushed, so they never overlap.
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    if: github.ref == 'refs/heads/main'
+    uses: ./.github/workflows/check.yml
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
+
+  release:
+    needs: check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # push the version tag and create the GitHub release
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # the next version is computed from the existing tags
+      # The tag stays local until Maven Central accepts the release, so a failed run tags nothing and can be re-run.
+      - name: Tag the next version
+        id: version
+        env:
+          BUMP: ${{ inputs.bump }}
+        run: |
+          if git tag --points-at HEAD | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "::error::$(git rev-parse --short HEAD) is already released as $(git tag --points-at HEAD)"
+            exit 1
+          fi
+          latest=$(git tag --list --sort=-v:refname | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | head -n 1 || true)
+          IFS=. read -r major minor patch <<< "${latest:-0.0.0}"
+          case "$BUMP" in
+            major) next="$((major + 1)).0.0" ;;
+            minor) next="$major.$((minor + 1)).0" ;;
+            patch) next="$major.$minor.$((patch + 1))" ;;
+          esac
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "$next" -m "Release $next"
+          echo "Releasing $next (previous: ${latest:-none})"
+          echo "version=$next" >> "$GITHUB_OUTPUT"
+      - name: Set up JDK 17
+        uses: actions/setup-java@v6
+        with:
+          java-version: 17
+          distribution: temurin
+      - uses: gradle/actions/setup-gradle@v5
+      - name: Publish to Maven Central
+        run: ./gradlew publishAndReleaseToMavenCentral
+        env:
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_PORTAL_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PORTAL_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SONATYPE_SIGNING_KEY }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SONATYPE_SIGNING_PASSWORD }}
+      - name: Push the tag and create the GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          git push origin "refs/tags/$VERSION"
+          gh release create "$VERSION" --verify-tag --generate-notes --title "$VERSION"
+
+  docs:
+    needs: release
+    uses: ./.github/workflows/docs.yml
+    permissions:
+      contents: read
+      pages: write
+      id-token: write

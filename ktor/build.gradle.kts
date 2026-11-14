@@ -1,23 +1,17 @@
 plugins {
-    buildsrc.convention.`kotlin-jvm`
-    buildsrc.convention.`sonatype-publish`
+  id("buildsrc.convention.kotlin-jvm")
+  id("buildsrc.convention.publish")
 }
 
-val ktorVersion: String by project
-val mockkVersion: String by project
-val assertKVersion: String by project
-val slf4jVersion: String by project
+description =
+    "Warden Ktor plugin: every route is enforced by an EnforcementPoint or explicitly left open"
 
 dependencies {
-    implementation(projects.wardenCore)
+  // Core and Ktor types appear in this module's public API.
+  api(project(":warden-core"))
+  api(libs.ktorServerCore)
+  implementation(libs.kotlinxCoroutines)
+  implementation(libs.slf4jApi)
 
-    implementation("io.ktor:ktor-server-core:$ktorVersion")
-    implementation("org.slf4j:slf4j-api:$slf4jVersion")
-
-    testImplementation("io.ktor:ktor-websockets:$ktorVersion")
-    testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
-    testImplementation("io.ktor:ktor-server-status-pages:$ktorVersion")
-    testImplementation("io.mockk:mockk:$mockkVersion")
-    testImplementation("com.willowtreeapps.assertk:assertk-jvm:$assertKVersion")
-    testImplementation(kotlin("test"))
+  testImplementation(libs.bundles.ktorTesting)
 }

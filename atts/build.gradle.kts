@@ -1,17 +1,8 @@
-
-
 plugins {
-    buildsrc.convention.`kotlin-jvm`
-    buildsrc.convention.`sonatype-publish`
+  id("buildsrc.convention.kotlin-jvm")
+  id("buildsrc.convention.publish")
 }
 
-val mockkVersion: String by project
-val assertKVersion: String by project
+description = "Warden helpers for turning domain objects into attribute maps by reflection"
 
-dependencies {
-    implementation(kotlin("reflect"))
-
-    testImplementation("io.mockk:mockk:$mockkVersion")
-    testImplementation("com.willowtreeapps.assertk:assertk-jvm:$assertKVersion")
-    testImplementation(kotlin("test"))
-}
+dependencies { implementation(kotlin("reflect")) }
