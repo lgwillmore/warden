@@ -1,46 +1,21 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
+    // The Kotlin DSL plugin provides a convenient way to develop convention plugins.
+    // Convention plugins are located in `src/main/kotlin`, with the file extension `.gradle.kts`,
+    // and are applied in the project's `build.gradle.kts` files as required.
     `kotlin-dsl`
-    kotlin("jvm") version "2.1.0"
-}
-
-// set the versions of Gradle plugins that the subprojects will use here
-val kotlinPluginVersion: String = "2.1.0"
-val artifactoryPluginVersion: String = "4.28.4"
-val orchidPluginVersion: String = "0.21.1"
-val ktlintPluginVersion: String = "10.3.0"
-
-dependencies {
-    implementation(platform("org.jetbrains.kotlin:kotlin-bom:$kotlinPluginVersion"))
-    implementation("org.jetbrains.kotlin:kotlin-serialization")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlin:kotlin-compiler-embeddable")
-    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinPluginVersion")
-
-    implementation("org.jfrog.buildinfo:build-info-extractor-gradle:$artifactoryPluginVersion")
-
-    implementation("gradle.plugin.com.eden:orchidPlugin:$orchidPluginVersion")
-
-    implementation("org.jlleitschuh.gradle:ktlint-gradle:$ktlintPluginVersion")
-}
-
-val gradleJvmTarget = "1.8"
-val gradleJvmTargetInt = 8
-
-tasks.withType<KotlinCompile>().configureEach {
-
-    kotlinOptions {
-        jvmTarget = gradleJvmTarget
-    }
 }
 
 kotlin {
-    jvmToolchain {
-        (this as JavaToolchainSpec).languageVersion.set(JavaLanguageVersion.of(gradleJvmTargetInt))
-    }
+    jvmToolchain(17)
+}
 
-    kotlinDslPluginOptions {
-        jvmTarget.set(gradleJvmTarget)
-    }
+dependencies {
+    // Add a dependency on the Kotlin Gradle plugin, so that convention plugins can apply it.
+    implementation(libs.kotlinGradlePlugin)
+    implementation(libs.mavenPublishPlugin)
+    implementation(libs.dokkaGradlePlugin)
+}
+
+repositories {
+    gradlePluginPortal()
 }

@@ -1,21 +1,34 @@
-rootProject.name = "warden"
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+    }
+}
+
+dependencyResolutionManagement {
+    @Suppress("UnstableApiUsage")
+    repositories {
+        mavenCentral()
+    }
+}
+
+plugins {
+    // Downloads the JDK the toolchain asks for when it is not installed.
+    id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
+}
 
 include(
     ":core",
-    ":ktor",
-    ":docs",
     ":atts",
+    ":ktor3",
+    ":docs-snippets",
 )
 
 project(":core").name = "warden-core"
-project(":ktor").name = "warden-ktor"
 project(":atts").name = "warden-atts"
+project(":ktor3").name = "warden-ktor3"
 
-enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+// Lives inside the Writerside module, whose topics quote its sources.
+project(":docs-snippets").projectDir = file("docs/guides/snippets")
 
-apply(from = "./buildSrc/repositories.settings.gradle.kts")
-
-@Suppress("UnstableApiUsage") // Central declaration of repositories is an incubating feature
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
-}
+rootProject.name = "warden"

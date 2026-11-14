@@ -1,0 +1,5 @@
+# Enable auto-env through the sdkman_auto_env config
+# Add key=value pairs of SDKs to use below
+# Java 17 matches jvmToolchain(17) in buildSrc and CI (Temurin 17), using the Corretto build already installed locally.
+# Gradle is provided by the wrapper (./gradlew), so it is not listed here.
+java=17.0.15-amzn

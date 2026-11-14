@@ -1,0 +1,56 @@
+package codes.laurence.warden.ktor
+
+import codes.laurence.warden.AccessRequest
+import codes.laurence.warden.FilterAccessRequest
+import codes.laurence.warden.decision.DecisionPoint
+import codes.laurence.warden.enforce.EnforcementPoint
+import codes.laurence.warden.enforce.EnforcementPointDefault
+import codes.laurence.warden.ktor.Warden.Feature.WARDEN_ENFORCED
+import codes.laurence.warden.policy.Policy
+import kotlinx.coroutines.currentCoroutineContext
+import org.slf4j.LoggerFactory
+
+/**
+ * An [EnforcementPoint] that works with the Ktor [Warden] feature.
+ *
+ * This means that all routes must have an [enforceAuthorization] call or be explicitly ignored.
+ */
+class EnforcementPointKtor(internalEnforcementPoint: EnforcementPoint) : EnforcementPoint {
+
+  companion object {
+    private val logger = LoggerFactory.getLogger(EnforcementPointKtor::class.qualifiedName)
+  }
+
+  constructor(
+      allow: List<Policy>,
+      deny: List<Policy> = emptyList()
+  ) : this(EnforcementPointDefault(allow, deny))
+
+  constructor(decisionPoint: DecisionPoint) : this(EnforcementPointDefault(decisionPoint))
+
+  private val enforcementPoint: EnforcementPoint = internalEnforcementPoint
+
+  override suspend fun enforceAuthorization(request: AccessRequest) {
+    interactWithPlugin()
+    enforcementPoint.enforceAuthorization(request)
+  }
+
+  override suspend fun <RESOURCE> filterAuthorization(
+      request: FilterAccessRequest<RESOURCE>
+  ): List<RESOURCE> {
+    interactWithPlugin()
+    return enforcementPoint.filterAuthorization(request)
+  }
+
+  private suspend fun interactWithPlugin() {
+    val call = currentCoroutineContext()[WardenCoroutineContext]?.call
+    if (call == null) {
+      logger.debug(
+          "Being enforced outside of a `warded` block. Cannot communicate with Warden ktor plugin")
+    } else {
+      call.attributes.put(WARDEN_ENFORCED, true)
+    }
+  }
+}
+
+class KtorEnforcementPointException(msg: String) : Exception(msg)

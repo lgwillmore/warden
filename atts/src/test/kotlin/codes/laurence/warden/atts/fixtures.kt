@@ -15,19 +15,14 @@ internal data class NestedThingWithAtts(
     private val aPrivateAtt: String = randString()
 ) : HasAtts(attType = AttType("NestedThing"))
 
-internal data class ThingWithoutAtts(
-    val noAtts: String
-)
+internal data class ThingWithoutAtts(val noAtts: String)
 
-internal data class CustomTypeThing(
-    val anAtt: String
-) : HasAtts(attType = AttType("CustomTypeThing", typeKeyword = "customType"))
+internal data class CustomTypeThing(val anAtt: String) :
+    HasAtts(attType = AttType("CustomTypeThing", typeKeyword = "customType"))
 
-internal data class CustomAttsThing(
-    val shouldNotSeeMe: String
-) : HasAttsI {
+internal data class CustomAttsThing(val shouldNotSeeMe: String) : HasAttsI {
 
-    override fun atts(): Atts {
-        return mapOf("shouldSeeMe" to shouldNotSeeMe)
-    }
+  override fun atts(): Atts {
+    return mapOf("shouldSeeMe" to shouldNotSeeMe)
+  }
 }

@@ -1,0 +1,40 @@
+# Version catalog is a central place for you to declare and version dependencies
+# https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog
+
+[versions]
+kotlin = "2.3.20"
+ktor = "3.3.3"
+slf4j = "2.0.17"
+kotlinxCoroutines = "1.10.2"
+assertk = "0.25"
+mockk = "1.14.2"
+foojayResolver = "1.0.0"
+ktfmt = "0.22.0"
+mavenPublish = "0.37.0"
+dokka = "2.3.0"
+
+[libraries]
+kotlinGradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+dokkaGradlePlugin = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka" }
+mavenPublishPlugin = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "mavenPublish" }
+
+kotlinxCoroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
+slf4jApi = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
+
+ktorServerCore = { module = "io.ktor:ktor-server-core", version.ref = "ktor" }
+ktorServerWebsockets = { module = "io.ktor:ktor-server-websockets", version.ref = "ktor" }
+ktorServerStatusPages = { module = "io.ktor:ktor-server-status-pages", version.ref = "ktor" }
+ktorServerTestHost = { module = "io.ktor:ktor-server-test-host", version.ref = "ktor" }
+ktorClientWebsockets = { module = "io.ktor:ktor-client-websockets", version.ref = "ktor" }
+
+assertk = { module = "com.willowtreeapps.assertk:assertk-jvm", version.ref = "assertk" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+
+[bundles]
+# Added to every module's test classpath by the kotlin-jvm convention, together with kotlin-test.
+testing = ["assertk", "mockk", "kotlinxCoroutines"]
+ktorTesting = ["ktorServerWebsockets", "ktorServerStatusPages", "ktorServerTestHost", "ktorClientWebsockets"]
+
+[plugins]
+foojayResolver = { id = "org.gradle.toolchains.foojay-resolver-convention", version.ref = "foojayResolver" }
+ktfmt = { id = "com.ncorti.ktfmt.gradle", version.ref = "ktfmt" }
