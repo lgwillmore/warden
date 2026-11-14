@@ -20,13 +20,13 @@ plugins {
 include(
     ":core",
     ":atts",
-    ":ktor",
+    ":ktor3",
     ":docs-snippets",
 )
 
 project(":core").name = "warden-core"
 project(":atts").name = "warden-atts"
-project(":ktor").name = "warden-ktor"
+project(":ktor3").name = "warden-ktor3"
 
 // Lives inside the Writerside module, whose topics quote its sources.
 project(":docs-snippets").projectDir = file("docs/guides/snippets")

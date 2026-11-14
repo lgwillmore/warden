@@ -4,7 +4,7 @@ plugins {
 }
 
 description =
-    "Warden Ktor plugin: every route is enforced by an EnforcementPoint or explicitly left open"
+    "Warden Ktor 3 plugin: every route is enforced by an EnforcementPoint or explicitly left open"
 
 dependencies {
   // Core and Ktor types appear in this module's public API.

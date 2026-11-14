@@ -1,6 +1,6 @@
 # Publishing
 
-The library modules (`warden-core`, `warden-atts`, `warden-ktor`) apply the `buildsrc.convention.publish` convention,
+The library modules (`warden-core`, `warden-atts`, `warden-ktor3`) apply the `buildsrc.convention.publish` convention,
 which publishes them to Maven Central under `codes.laurence.warden` with the
 [vanniktech Maven Publish plugin](https://vanniktech.github.io/gradle-maven-publish-plugin/): jar, sources, a
 javadoc jar holding the Dokka API reference, Gradle module metadata and POM, all signed. The guide snippets are never

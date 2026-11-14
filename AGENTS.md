@@ -16,7 +16,7 @@ library. A feature belongs in core only if it is needed to express or evaluate a
 | --- | --- | --- | --- |
 | `core` | `warden-core` | `codes.laurence.warden.*` | `AccessRequest`/`AccessResponse`, the policy DSL (`policy.expression`, `policy.bool`, `policy.collections`, `policy.members`), `PolicySource`, `InformationPoint`, `DecisionPoint`, `EnforcementPoint` and their default implementations. No dependencies. |
 | `atts` | `warden-atts` | `codes.laurence.warden.atts` | `HasAttsI`/`HasAtts`, `AttType`, `attsOf` and `withAtts`: reflection-based conversion of domain objects to attribute maps. Depends on `kotlin-reflect`. Independent of core. |
-| `ktor` | `warden-ktor` | `codes.laurence.warden.ktor` | The `Warden` Ktor server plugin, `warded`/`unwarded`/`beforeEach` route blocks, `EnforcementPointKtor`, route configuration. `wardedCall`/`unwardedCall` are `PipelineContext` extensions that no longer apply inside Ktor 3 route handlers (`RoutingContext`); they only work in `intercept` blocks. Depends on core and `ktor-server-core` through `api`. |
+| `ktor3` | `warden-ktor3` | `codes.laurence.warden.ktor` | The `Warden` Ktor 3 server plugin, `warded`/`unwarded`/`beforeEach` route blocks, `EnforcementPointKtor`, route configuration. `wardedCall`/`unwardedCall` are `PipelineContext` extensions that no longer apply inside Ktor 3 route handlers (`RoutingContext`); they only work in `intercept` blocks. Depends on core and `ktor-server-core` through `api`. |
 | `docs/guides/snippets` (`:docs-snippets`) | not published | `codes.laurence.warden.docs` | The blog application the guides quote, with its tests. |
 
 - Published under the Maven group `codes.laurence.warden`, which is also the root Kotlin package. Keep the two in
@@ -26,6 +26,9 @@ library. A feature belongs in core only if it is needed to express or evaluate a
   topic. Change a guide's code in the snippets module, never inline in the topic, and keep prose claims in step with
   the library. The Docs workflow builds the guides and the Dokka API reference and publishes both to GitHub Pages on
   each release.
+- Framework adapters are named after the framework's major version (`warden-ktor3`), so each Ktor major can have
+  its own artifact while all artifacts share Warden's version. The package stays `codes.laurence.warden.ktor`
+  without the version, so moving between adapters is a dependency swap, not an import change.
 - Core never depends on an adapter or on `warden-atts`. An adapter depends on core through `api`, since its public
   types implement core contracts. Public API changes are breaking for every consumer; prefer additions.
 

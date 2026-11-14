@@ -1,13 +1,14 @@
 # Ktor
 
 Warden keeps authorization rules out of the HTTP layer, but the HTTP layer has one authorization concern of its own:
-no route should be left open by accident. The `warden-ktor` plugin makes every route fail with `403` unless it was
-authorized through an `EnforcementPointKtor` or explicitly left open.
+no route should be left open by accident. The `warden-ktor3` plugin makes every route fail with `403` unless it was
+authorized through an `EnforcementPointKtor` or explicitly left open. The artifact is named after the Ktor major
+version it targets; the package is `codes.laurence.warden.ktor` regardless of the Ktor version.
 
 ```kotlin
 dependencies {
     implementation("codes.laurence.warden:warden-core:%warden_version%")
-    implementation("codes.laurence.warden:warden-ktor:%warden_version%")
+    implementation("codes.laurence.warden:warden-ktor3:%warden_version%")
 }
 ```
 

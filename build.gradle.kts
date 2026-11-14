@@ -33,5 +33,5 @@ dokka { moduleName = "Warden" }
 dependencies {
   dokka(project(":warden-core"))
   dokka(project(":warden-atts"))
-  dokka(project(":warden-ktor"))
+  dokka(project(":warden-ktor3"))
 }

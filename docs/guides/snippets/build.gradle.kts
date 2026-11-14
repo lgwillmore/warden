@@ -5,7 +5,7 @@ description = "Code quoted by the guides, compiled and tested with the build; no
 dependencies {
   implementation(project(":warden-core"))
   implementation(project(":warden-atts"))
-  implementation(project(":warden-ktor"))
+  implementation(project(":warden-ktor3"))
   // The sample Ktor application maps NotAuthorizedException to a status and serves a websocket.
   implementation(libs.ktorServerStatusPages)
   implementation(libs.ktorServerWebsockets)

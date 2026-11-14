@@ -79,7 +79,7 @@ repositories {
 dependencies {
     implementation("codes.laurence.warden:warden-core:<version>")
     implementation("codes.laurence.warden:warden-atts:<version>") // domain objects to attribute maps
-    implementation("codes.laurence.warden:warden-ktor:<version>") // Ktor plugin
+    implementation("codes.laurence.warden:warden-ktor3:<version>") // Ktor plugin
 }
 ```
 
@@ -87,7 +87,7 @@ dependencies {
 | --- | --- |
 | `warden-core` | Access requests, the policy DSL, decision, information and enforcement points |
 | `warden-atts` | `HasAtts` and `AttType`: turn domain objects into attribute maps by reflection |
-| `warden-ktor` | A [Ktor](https://ktor.io/) server plugin that makes enforcement mandatory per route |
+| `warden-ktor3` | A [Ktor](https://ktor.io/) 3 server plugin that makes enforcement mandatory per route |
 
 Requires JDK 17 or later.
 

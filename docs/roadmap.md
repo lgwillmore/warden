@@ -35,7 +35,8 @@ repository archived.
 8. **Ktor plugin tidy-up.** `KtorEnforcementPointException` is unused, `exit()` is a no-op, and `WARDEN_IGNORED` is
    public while `WARDEN_ENFORCED` is internal. Decide what is API and remove the rest at the next major version.
 9. **Other adapters.** A Spring enforcement point was planned in the original project. Keep adapters as separate
-   artifacts depending on core through `api`.
+   artifacts depending on core through `api`, named after the framework major they target (`warden-ktor3`). A
+   `warden-ktor2` is only worth adding if someone asks for it.
 
 ## Documentation
 

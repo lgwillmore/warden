@@ -23,7 +23,7 @@ guard a service method, a message handler or an HTTP route.
 |----------|----------|
 | `codes.laurence.warden:warden-core` | Access requests, the policy DSL, decision, information and enforcement points |
 | `codes.laurence.warden:warden-atts` | Turns your domain objects into attribute maps |
-| `codes.laurence.warden:warden-ktor` | The Ktor plugin and an enforcement point that works with it |
+| `codes.laurence.warden:warden-ktor3` | The Ktor 3 plugin and an enforcement point that works with it |
 
 ```kotlin
 repositories {
@@ -33,7 +33,7 @@ repositories {
 dependencies {
     implementation("codes.laurence.warden:warden-core:%warden_version%")
     implementation("codes.laurence.warden:warden-atts:%warden_version%")
-    implementation("codes.laurence.warden:warden-ktor:%warden_version%") // Ktor applications only
+    implementation("codes.laurence.warden:warden-ktor3:%warden_version%") // Ktor applications only
 }
 ```
 
