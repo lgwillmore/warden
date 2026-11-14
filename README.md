@@ -99,7 +99,7 @@ Requires JDK 17 or later.
 | [Getting started](https://lgwillmore.github.io/warden/getting-started.html) | Policies and enforcement for a small blog |
 | [Policies](https://lgwillmore.github.io/warden/policies.html) | Expression, boolean and collection member policies |
 | [Decision and enforcement](https://lgwillmore.github.io/warden/decision-and-enforcement.html) | Policy sources, information points, decision and enforcement points |
-| [Attributes](https://lgwillmore.github.io/warden/attributes.html) | `warden-atts` helpers |
+| [Attributes](https://lgwillmore.github.io/warden/attributes.html) | `warden-atts` helpers to build attributes|
 | [Testing](https://lgwillmore.github.io/warden/testing.html) | Testing policies, services and routes |
 | [Ktor](https://lgwillmore.github.io/warden/ktor.html) | The Ktor plugin |
 
