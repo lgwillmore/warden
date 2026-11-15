@@ -44,3 +44,13 @@ forgets to enforce is refused by the plugin, and that the routes you meant to le
 
 The refusal has a fixed body, `Not Authorized: EnforcementPoint not enforced`, which distinguishes it from a denial
 mapped by `StatusPages`.
+
+## Test an http4k application
+
+An http4k application is a function from `Request` to `Response`, so the sample is tested by calling it, with no
+server and no client. The cases are the same: a granted request, a denied one answered by `CatchNotAuthorized`, a
+route that forgets to enforce and is refused by the filter, and the routes left open:
+
+```kotlin
+```
+{src="src/test/kotlin/Http4kAppTest.kt" include-symbol="Http4kAppTest"}

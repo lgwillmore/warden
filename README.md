@@ -66,8 +66,8 @@ step in [Getting started](https://lgwillmore.github.io/warden/getting-started.ht
   `EnforcementPoint` turns a denial into an exception or filters a collection down to what is permitted.
 - **Information points enrich requests.** Load roles, ownership or anything else a policy needs before evaluation,
   without the caller knowing.
-- **The Ktor plugin closes the doors you forgot.** Every route must call the enforcement point or be explicitly
-  opened, or it answers 403.
+- **The web adapters close the doors you forgot.** With the Ktor plugin or the http4k filter installed, every route
+  must call the enforcement point or be explicitly opened, or it answers 403.
 
 ## Install
 
@@ -80,6 +80,7 @@ dependencies {
     implementation("codes.laurence.warden:warden-core:<version>")
     implementation("codes.laurence.warden:warden-atts:<version>") // domain objects to attribute maps
     implementation("codes.laurence.warden:warden-ktor3:<version>") // Ktor plugin
+    implementation("codes.laurence.warden:warden-http4k6:<version>") // http4k filter
 }
 ```
 
@@ -88,8 +89,9 @@ dependencies {
 | `warden-core` | Access requests, the policy DSL, decision, information and enforcement points |
 | `warden-atts` | `HasAtts` and `AttType`: turn domain objects into attribute maps by reflection |
 | `warden-ktor3` | A [Ktor](https://ktor.io/) 3 server plugin that makes enforcement mandatory per route |
+| `warden-http4k6` | An [http4k](https://www.http4k.org/) 6 filter that makes enforcement mandatory per route |
 
-Requires JDK 17 or later.
+Requires JDK 17 or later; `warden-http4k6` requires JDK 21, as http4k 6 does.
 
 ## Documentation
 
@@ -102,12 +104,13 @@ Requires JDK 17 or later.
 | [Attributes](https://lgwillmore.github.io/warden/attributes.html) | `warden-atts` helpers to build attributes|
 | [Testing](https://lgwillmore.github.io/warden/testing.html) | Testing policies, services and routes |
 | [Ktor](https://lgwillmore.github.io/warden/ktor.html) | The Ktor plugin |
+| [http4k](https://lgwillmore.github.io/warden/http4k.html) | The http4k filter |
 
 The [API reference](https://lgwillmore.github.io/warden/api/) covers every public type.
 
 ## Contributing
 
-Requires JDK 17.
+Requires JDK 17. Gradle downloads the JDK 21 toolchain that `warden-http4k6` and the guide snippets build with.
 
 ```shell
 ./gradlew test

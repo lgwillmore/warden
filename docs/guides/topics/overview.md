@@ -15,7 +15,8 @@ guard a service method, a message handler or an HTTP route.
 - **Attributes as maps.** Any part of a request can be a subset of attributes, assembled from several sources.
   `warden-atts` converts your own classes with one line.
 - **Filtering as well as checking.** Ask which of a list of resources a user may act on, in one call.
-- **A Ktor plugin that fails closed.** Every route must be authorized or explicitly left open, or it answers `403`.
+- **Web adapters that fail closed.** With the Ktor plugin or the http4k filter installed, every route must be
+  authorized or explicitly left open, or it answers `403`.
 
 ## Modules
 
@@ -24,6 +25,7 @@ guard a service method, a message handler or an HTTP route.
 | `codes.laurence.warden:warden-core` | Access requests, the policy DSL, decision, information and enforcement points |
 | `codes.laurence.warden:warden-atts` | Turns your domain objects into attribute maps |
 | `codes.laurence.warden:warden-ktor3` | The Ktor 3 plugin and an enforcement point that works with it |
+| `codes.laurence.warden:warden-http4k6` | The http4k 6 filter and an enforcement point that works with it |
 
 ```kotlin
 repositories {
@@ -34,11 +36,12 @@ dependencies {
     implementation("codes.laurence.warden:warden-core:%warden_version%")
     implementation("codes.laurence.warden:warden-atts:%warden_version%")
     implementation("codes.laurence.warden:warden-ktor3:%warden_version%") // Ktor applications only
+    implementation("codes.laurence.warden:warden-http4k6:%warden_version%") // http4k applications only
 }
 ```
 
-Warden needs JDK 17 or later. The Kotlin packages are `codes.laurence.warden`, `codes.laurence.warden.atts` and
-`codes.laurence.warden.ktor`.
+Warden needs JDK 17 or later; `warden-http4k6` needs JDK 21, as http4k 6 does. The Kotlin packages are
+`codes.laurence.warden`, `codes.laurence.warden.atts`, `codes.laurence.warden.ktor` and `codes.laurence.warden.http4k`.
 
 ## Where to start
 
@@ -48,6 +51,7 @@ Warden needs JDK 17 or later. The Kotlin packages are `codes.laurence.warden`, `
 - [](decision-and-enforcement.md) covers policy sources, information points and the decision point.
 - [](attributes.md) covers `warden-atts`.
 - [](ktor.md) installs the plugin and authorizes HTTP routes and websockets.
+- [](http4k.md) installs the filter and bridges handlers to Warden's suspending API.
 - [](testing.md) tests policies, services and routes.
 
 Every code sample in these guides comes from one small blog application that is compiled and tested with the library.

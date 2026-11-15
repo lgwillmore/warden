@@ -13,6 +13,7 @@
     </toc-element>
     <toc-element toc-title="Web frameworks">
         <toc-element topic="ktor.md"/>
+        <toc-element topic="http4k.md"/>
     </toc-element>
     <toc-element toc-title="API reference" href="https://lgwillmore.github.io/warden/api/"/>
 </instance-profile>

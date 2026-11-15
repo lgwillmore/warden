@@ -17,6 +17,7 @@ library. A feature belongs in core only if it is needed to express or evaluate a
 | `core` | `warden-core` | `codes.laurence.warden.*` | `AccessRequest`/`AccessResponse`, the policy DSL (`policy.expression`, `policy.bool`, `policy.collections`, `policy.members`), `PolicySource`, `InformationPoint`, `DecisionPoint`, `EnforcementPoint` and their default implementations. No dependencies. |
 | `atts` | `warden-atts` | `codes.laurence.warden.atts` | `HasAttsI`/`HasAtts`, `AttType`, `attsOf` and `withAtts`: reflection-based conversion of domain objects to attribute maps. Depends on `kotlin-reflect`. Independent of core. |
 | `ktor3` | `warden-ktor3` | `codes.laurence.warden.ktor` | The `Warden` Ktor 3 server plugin, `warded`/`unwarded`/`beforeEach` route blocks, `EnforcementPointKtor`, route configuration. `wardedCall`/`unwardedCall` are `PipelineContext` extensions that no longer apply inside Ktor 3 route handlers (`RoutingContext`); they only work in `intercept` blocks. Depends on core and `ktor-server-core` through `api`. |
+| `http4k6` | `warden-http4k6` | `codes.laurence.warden.http4k` | `WardenFilter`, `Unwarded`/`unwarded()`, `CatchNotAuthorized`, `EnforcementPointHttp4k`, route configuration, and the blocking bridges `warded {}` and the `...Blocking` extension functions. Depends on core and `http4k-core` through `api`. Built for JDK 21, as http4k 6 is. |
 | `docs/guides/snippets` (`:docs-snippets`) | not published | `codes.laurence.warden.docs` | The blog application the guides quote, with its tests. |
 
 - Published under the Maven group `codes.laurence.warden`, which is also the root Kotlin package. Keep the two in
@@ -26,9 +27,16 @@ library. A feature belongs in core only if it is needed to express or evaluate a
   topic. Change a guide's code in the snippets module, never inline in the topic, and keep prose claims in step with
   the library. The Docs workflow builds the guides and the Dokka API reference and publishes both to GitHub Pages on
   each release.
-- Framework adapters are named after the framework's major version (`warden-ktor3`), so each Ktor major can have
-  its own artifact while all artifacts share Warden's version. The package stays `codes.laurence.warden.ktor`
-  without the version, so moving between adapters is a dependency swap, not an import change.
+- Framework adapters are named after the framework's major version (`warden-ktor3`, `warden-http4k6`), so each
+  framework major can have its own artifact while all artifacts share Warden's version. The package stays
+  `codes.laurence.warden.ktor` or `codes.laurence.warden.http4k` without the version, so moving between adapters is a
+  dependency swap, not an import change.
+- Every adapter implements the same contract as the Ktor plugin: a successful response (2xx or 101) whose request was
+  neither enforced through the adapter's enforcement point nor explicitly left open becomes 403 with
+  `NOT_ENFORCED_MESSAGE`; OPTIONS is never checked; a regex-and-method route priority stack is matched top down with
+  enforce as the default; there is an inline opt-out; enforcing where the adapter cannot see the request still
+  enforces and logs at debug; non-success responses pass through. Route config and its evaluator are copied per
+  adapter because each uses the framework's own method type.
 - Core never depends on an adapter or on `warden-atts`. An adapter depends on core through `api`, since its public
   types implement core contracts. Public API changes are breaking for every consumer; prefer additions.
 
@@ -80,11 +88,27 @@ library. A feature belongs in core only if it is needed to express or evaluate a
 - `beforeEach` exists for websockets, where the handler runs after the upgrade and a denial can no longer produce a
   clean HTTP status.
 
+## http4k filter
+
+- `WardenFilter` is an http4k `Filter`. It publishes a `WardenCall` to the request thread in a `ThreadLocal` for the
+  duration of the handler, then inspects the returned `Response` and substitutes the 403 by the shared contract. The
+  route stack is matched against `request.uri.path`, so a query string cannot defeat it.
+- `EnforcementPointHttp4k` finds the call through a `WardenCoroutineContext` element first, then the thread local.
+  `warded {}` is `runBlocking` plus that element, so enforcement reached after a `withContext` to another dispatcher
+  still marks the request; a bare `runBlocking` only works while the coroutine stays on the request thread. The
+  `...Blocking` extension functions on `EnforcementPoint` and `DecisionPoint` are built on `warded {}`.
+- `Unwarded` is a `Filter` and `unwarded()` a function; both mark the current call ignored, so they only take effect
+  behind a `WardenFilter`. `CatchNotAuthorized` maps `NotAuthorizedException` to a response (403 by default), since
+  http4k has no status mapping of its own; it must sit behind `WardenFilter` so the filter sees a status, not an
+  exception.
+- The filter does not see http4k websocket handlers; websocket enforcement is on the roadmap.
+
 ## Testing
 
-- `./gradlew test` runs everything, including the guide snippets. Nothing needs external services.
+- `./gradlew test` runs everything, including the guide snippets. Nothing needs external services. `warden-http4k6`
+  and the snippets use a JDK 21 toolchain that Gradle downloads; the other modules build with 17.
 - Tests use `kotlin.test`, `assertk` and `mockk`, with full function bodies and nested `runBlocking` for suspend
-  calls. Ktor tests use `testApplication`.
+  calls. Ktor tests use `testApplication`; http4k tests call the filtered handler in memory.
 - Random fixtures live in each module's `test/.../fixtures.kt` and `random.kt`.
 - Before submitting a PR, run `./gradlew ktfmtFormat`; CI runs `ktfmtCheck`.
 

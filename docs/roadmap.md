@@ -1,15 +1,8 @@
 # Roadmap
 
-Status: backlog assembled on 2026-11-14 while reviving public maintenance. Current implementation rules live in
+Status: backlog assembled on 2026-11-14 while reviving public maintenance; `0.5.0` is released and the publishing
+pipeline in [`PUBLISHING_SETUP.md`](../PUBLISHING_SETUP.md) is in place. Current implementation rules live in
 [`AGENTS.md`](../AGENTS.md).
-
-## Before the first public release
-
-The Kotlin packages and the Maven group agree on `codes.laurence.warden`, the public home is
-`github.com/lgwillmore/warden`, and the release tags up to `0.4.0` match what Maven Central holds. What remains is
-operational and listed in [`PUBLISHING_SETUP.md`](../PUBLISHING_SETUP.md): the Central and signing secrets, GitHub
-Pages enabled with the GitHub Actions source, the old Netlify documentation site retired, and the private interim
-repository archived.
 
 ## Library
 
@@ -34,10 +27,14 @@ repository archived.
    pattern for one.
 8. **Ktor plugin tidy-up.** `KtorEnforcementPointException` is unused, `exit()` is a no-op, and `WARDEN_IGNORED` is
    public while `WARDEN_ENFORCED` is internal. Decide what is API and remove the rest at the next major version.
-9. **Other adapters.** A Spring enforcement point was planned in the original project. Keep adapters as separate
-   artifacts depending on core through `api`, named after the framework major they target (`warden-ktor3`). A
-   `warden-ktor2` is only worth adding if someone asks for it.
+9. **Other adapters.** A Spring Boot 4 adapter (`warden-springboot4`, Spring MVC and WebFlux) is planned,
+   mirroring the Ktor plugin and the http4k filter: the adapter's enforcement point marks the current request wherever
+   in the application it is called, and a successful response that was neither enforced nor explicitly left open
+   becomes a 403. Adapters stay separate artifacts depending on core through `api`, named after the framework major
+   they target. A `warden-ktor2` is only worth adding if someone asks for it.
+10. **http4k websockets.** `WardenFilter` does not see http4k websocket handlers. Decide how a websocket request is
+    marked as enforced, or refused before the upgrade as Ktor's `beforeEach` does.
 
 ## Documentation
 
-10. **Versioned documentation.** Keep the guides and API reference of earlier releases available once the API settles.
+11. **Versioned documentation.** Keep the guides and API reference of earlier releases available once the API settles.

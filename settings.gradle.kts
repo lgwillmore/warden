@@ -21,12 +21,14 @@ include(
     ":core",
     ":atts",
     ":ktor3",
+    ":http4k6",
     ":docs-snippets",
 )
 
 project(":core").name = "warden-core"
 project(":atts").name = "warden-atts"
 project(":ktor3").name = "warden-ktor3"
+project(":http4k6").name = "warden-http4k6"
 
 // Lives inside the Writerside module, whose topics quote its sources.
 project(":docs-snippets").projectDir = file("docs/guides/snippets")
