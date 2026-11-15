@@ -22,6 +22,8 @@ include(
     ":atts",
     ":ktor3",
     ":http4k6",
+    ":springboot4",
+    ":springboot4-webflux",
     ":docs-snippets",
 )
 
@@ -29,6 +31,8 @@ project(":core").name = "warden-core"
 project(":atts").name = "warden-atts"
 project(":ktor3").name = "warden-ktor3"
 project(":http4k6").name = "warden-http4k6"
+project(":springboot4").name = "warden-springboot4"
+project(":springboot4-webflux").name = "warden-springboot4-webflux"
 
 // Lives inside the Writerside module, whose topics quote its sources.
 project(":docs-snippets").projectDir = file("docs/guides/snippets")

@@ -54,3 +54,12 @@ route that forgets to enforce and is refused by the filter, and the routes left 
 ```kotlin
 ```
 {src="src/test/kotlin/Http4kAppTest.kt" include-symbol="Http4kAppTest"}
+
+## Test a Spring WebFlux application
+
+`@SpringBootTest` starts the application in process, and a `WebTestClient` bound to the application context calls it
+without a server. The cases are the same again:
+
+```kotlin
+```
+{src="src/test/kotlin/SpringWebFluxAppTest.kt" include-symbol="SpringWebFluxAppTest"}

@@ -27,13 +27,14 @@ pipeline in [`PUBLISHING_SETUP.md`](../PUBLISHING_SETUP.md) is in place. Current
    pattern for one.
 8. **Ktor plugin tidy-up.** `KtorEnforcementPointException` is unused, `exit()` is a no-op, and `WARDEN_IGNORED` is
    public while `WARDEN_ENFORCED` is internal. Decide what is API and remove the rest at the next major version.
-9. **Other adapters.** A Spring Boot 4 adapter (`warden-springboot4`, Spring MVC and WebFlux) is planned,
-   mirroring the Ktor plugin and the http4k filter: the adapter's enforcement point marks the current request wherever
-   in the application it is called, and a successful response that was neither enforced nor explicitly left open
-   becomes a 403. Adapters stay separate artifacts depending on core through `api`, named after the framework major
-   they target. A `warden-ktor2` is only worth adding if someone asks for it.
-10. **http4k websockets.** `WardenFilter` does not see http4k websocket handlers. Decide how a websocket request is
-    marked as enforced, or refused before the upgrade as Ktor's `beforeEach` does.
+9. **Spring MVC adapter.** `warden-springboot4-webmvc` on the `warden-springboot4` base, mirroring the WebFlux
+   filter with a servlet filter. `wardenCall()` already reads the request attribute Spring binds to the servlet
+   thread, so the filter stores the `WardenCall` there. It must run on async dispatches too and judge the response on
+   the final one, and decide at the first byte written rather than buffer. Suspending controllers lose the request
+   once the coroutine leaves the servlet thread, as in http4k, so a `warded {}` bridge is needed there. A
+   `warden-ktor2` is only worth adding if someone asks for it.
+10. **Websockets in http4k and WebFlux.** Neither `WardenFilter` nor `WardenWebFilter` sees a websocket handshake.
+    Decide how a websocket request is marked as enforced, or refused before the upgrade as Ktor's `beforeEach` does.
 
 ## Documentation
 
