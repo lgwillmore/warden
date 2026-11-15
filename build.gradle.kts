@@ -34,4 +34,5 @@ dependencies {
   dokka(project(":warden-core"))
   dokka(project(":warden-atts"))
   dokka(project(":warden-ktor3"))
+  dokka(project(":warden-http4k6"))
 }

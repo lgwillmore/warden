@@ -4,6 +4,7 @@
 [versions]
 kotlin = "2.3.20"
 ktor = "3.3.3"
+http4k = "6.61.0.0"
 slf4j = "2.0.17"
 kotlinxCoroutines = "1.10.2"
 assertk = "0.25"
@@ -26,6 +27,8 @@ ktorServerWebsockets = { module = "io.ktor:ktor-server-websockets", version.ref 
 ktorServerStatusPages = { module = "io.ktor:ktor-server-status-pages", version.ref = "ktor" }
 ktorServerTestHost = { module = "io.ktor:ktor-server-test-host", version.ref = "ktor" }
 ktorClientWebsockets = { module = "io.ktor:ktor-client-websockets", version.ref = "ktor" }
+
+http4kCore = { module = "org.http4k:http4k-core", version.ref = "http4k" }
 
 assertk = { module = "com.willowtreeapps.assertk:assertk-jvm", version.ref = "assertk" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }

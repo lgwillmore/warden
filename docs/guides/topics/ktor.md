@@ -14,7 +14,8 @@ dependencies {
 
 ## How it works
 
-`EnforcementPointKtor` is an `EnforcementPoint` that also marks the current call as enforced when it grants access.
+`EnforcementPointKtor` is an `EnforcementPoint` that also marks the current call as enforced when it is asked for a
+decision.
 It wraps any enforcement point, or builds one from a decision point or from policies, so your services take it in
 place of `EnforcementPointDefault`.
 

@@ -63,4 +63,4 @@ exercise directly.
 ## Next steps
 
 - [](decision-and-enforcement.md): deny policies, and enriching a request that arrives with only an ID.
-- [](ktor.md): make every HTTP route go through an enforcement point.
+- [](ktor.md) or [](http4k.md): make every HTTP route go through an enforcement point.

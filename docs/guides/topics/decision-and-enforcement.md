@@ -76,4 +76,5 @@ with the evaluated request and the denial's properties:
 the resources that were granted. `ArticleService.listArticles` in [](getting-started.md) uses it.
 
 Implement `EnforcementPoint` yourself to enforce differently, for example by returning a result instead of throwing.
-The Ktor module provides one that also reports to its plugin; see [](ktor.md).
+The Ktor and http4k modules each provide one that also reports to the plugin or filter; see [](ktor.md) and
+[](http4k.md).
