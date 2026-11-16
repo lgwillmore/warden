@@ -35,4 +35,6 @@ dependencies {
   dokka(project(":warden-atts"))
   dokka(project(":warden-ktor3"))
   dokka(project(":warden-http4k6"))
+  dokka(project(":warden-springboot4"))
+  dokka(project(":warden-springboot4-webflux"))
 }

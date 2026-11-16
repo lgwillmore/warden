@@ -5,6 +5,9 @@
 kotlin = "2.3.20"
 ktor = "3.3.3"
 http4k = "6.61.0.0"
+# Spring Boot 4.1 manages Spring Framework 7.0; keep the two in step.
+springBoot = "4.1.2"
+springFramework = "7.0.10"
 slf4j = "2.0.17"
 kotlinxCoroutines = "1.10.2"
 assertk = "0.25"
@@ -20,6 +23,7 @@ dokkaGradlePlugin = { module = "org.jetbrains.dokka:dokka-gradle-plugin", versio
 mavenPublishPlugin = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "mavenPublish" }
 
 kotlinxCoroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
+kotlinxCoroutinesReactor = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-reactor", version.ref = "kotlinxCoroutines" }
 slf4jApi = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
 
 ktorServerCore = { module = "io.ktor:ktor-server-core", version.ref = "ktor" }
@@ -30,13 +34,24 @@ ktorClientWebsockets = { module = "io.ktor:ktor-client-websockets", version.ref 
 
 http4kCore = { module = "org.http4k:http4k-core", version.ref = "http4k" }
 
+springWeb = { module = "org.springframework:spring-web", version.ref = "springFramework" }
+springWebflux = { module = "org.springframework:spring-webflux", version.ref = "springFramework" }
+springTest = { module = "org.springframework:spring-test", version.ref = "springFramework" }
+springBootAutoconfigure = { module = "org.springframework.boot:spring-boot-autoconfigure", version.ref = "springBoot" }
+springBootTest = { module = "org.springframework.boot:spring-boot-test", version.ref = "springBoot" }
+springBootStarterWebflux = { module = "org.springframework.boot:spring-boot-starter-webflux", version.ref = "springBoot" }
+
 assertk = { module = "com.willowtreeapps.assertk:assertk-jvm", version.ref = "assertk" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+# Spring Boot's test support is built on AssertJ and needs JUnit Jupiter 6.
+assertjCore = { module = "org.assertj:assertj-core", version = "3.27.7" }
+junitJupiter = { module = "org.junit.jupiter:junit-jupiter", version = "6.0.3" }
 
 [bundles]
 # Added to every module's test classpath by the kotlin-jvm convention, together with kotlin-test.
 testing = ["assertk", "mockk", "kotlinxCoroutines"]
 ktorTesting = ["ktorServerWebsockets", "ktorServerStatusPages", "ktorServerTestHost", "ktorClientWebsockets"]
+springWebfluxTesting = ["springBootStarterWebflux", "springBootTest", "springTest", "kotlinxCoroutinesReactor", "assertjCore"]
 
 [plugins]
 foojayResolver = { id = "org.gradle.toolchains.foojay-resolver-convention", version.ref = "foojayResolver" }
